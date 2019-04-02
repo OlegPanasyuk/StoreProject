@@ -1,0 +1,16 @@
+{
+    "Sequelize" : {
+        "dbName" : "store_project",
+        "user" : "root",
+        "password" : "root",
+        "additionalParams" : {
+            "host" : "localhost",
+            "dialect" : "mysql",
+            "port" : 3306
+        }
+    },
+    
+    "Server" : {
+        "port" : 3000
+    }
+}
