@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 var winston = require('winston');
 var config = require('config');
+var cors = require('cors');
+var {Catalogue, Goods} = require('./Models/sequalized');
 
 var sequelizeDBConfig = config.get('Sequelize');
 var serverConfig = config.get('Server'); 
@@ -52,37 +55,57 @@ var logger = winston.createLogger({
     ]
 });
 
+app.use(cors());
+app.use(bodyParser.json());
+
 app.route('/catalogue')
     .get(function(req, res) {
         let id = (req.query.id) ? req.query.id : null;
-        if (!id) {
-            sequelize.query(
-                'SELECT * FROM catalogue', { 
-                    raw: false, 
-                    replacements: { 
-                        id: id 
-                    }
-                })
-                .then((rows) => {
-                    if (rows[0].length) {
-                        res.json(rows[0]);
-                    }
-                });
+        if (id) {
+            Catalogue.findAll({ where: { id_catalogue: id } }).then(cat => res.json(cat));    
         } else {
-            sequelize.query(
-                'SELECT * FROM catalogue WHERE parent_id = :id', { 
-                    raw: false, 
-                    replacements: { 
-                        id: id 
-                    }
-                })
-                .then((rows) => {
-                    if (rows[0].length) {
-                        res.json(rows[0]);
-                    }
-                });
+            Catalogue.findAll().then(cat => res.json(cat));    
         }
+        
     });
+
+app.route('/good')
+    .get(function(req, res) {
+        Goods.findAll().then(good => res.json(good));
+    });    
+// app.route('/catalogue')
+//     .get(function(req, res) {
+//         let id = (req.query.id) ? req.query.id : null;
+//         if (!id) {
+//             sequelize.query(
+//                 'SELECT * FROM catalogue', { 
+//                     raw: false, 
+//                     replacements: { 
+//                         id: id 
+//                     }
+//                 })
+//                 .then((rows) => {
+//                     if (rows[0].length) {
+//                         res.json(rows[0]);
+//                     }
+//                 });
+//         } else {
+//             sequelize.query(
+//                 'SELECT * FROM catalogue WHERE parent_id = :id', { 
+//                     raw: false, 
+//                     replacements: { 
+//                         id: id 
+//                     }
+//                 })
+//                 .then((rows) => {
+//                     if (rows[0].length) {
+//                         res.json(rows[0]);
+//                     } else {
+//                         res.json({});
+//                     }
+//                 });
+//         }
+//     });
     
 app.route('/goods')
     .get(function(req, res) {
@@ -99,7 +122,9 @@ app.route('/goods')
             }
         });
         let str = str_query.join(' AND ');
-        str = 'WHERE ' + str;
+        if (str.length > 0) {
+            str = 'WHERE ' + str;
+        }
         sequelize.query(
             'SELECT * FROM goods ' + str, { 
                 raw: false, 
@@ -108,6 +133,8 @@ app.route('/goods')
             .then((rows) => {
                 if (rows[0].length) {
                     res.json(rows[0]);
+                } else {
+                    res.json({});
                 }
             });
     });

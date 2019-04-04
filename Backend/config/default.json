@@ -6,11 +6,17 @@
         "additionalParams" : {
             "host" : "localhost",
             "dialect" : "mysql",
-            "port" : 3306
+            "port" : 3306,
+            "pool": {
+                "max": 10,
+                "min": 0,
+                "acquire": 30000,
+                "idle": 10000
+              }
         }
     },
     
     "Server" : {
-        "port" : 3000
+        "port" : 3300
     }
 }
