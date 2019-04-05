@@ -6,16 +6,8 @@ var config = require('config');
 var cors = require('cors');
 var {Catalogue, Goods} = require('./Models/sequalized');
 
-var sequelizeDBConfig = config.get('Sequelize');
 var serverConfig = config.get('Server'); 
 
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize(
-    sequelizeDBConfig.dbName,  
-    sequelizeDBConfig.user,  
-    sequelizeDBConfig.password,  
-    sequelizeDBConfig.additionalParams
-);  
 
 // function serchNodeTreeInObj(obj, id) {
 //     let node = null;
@@ -66,12 +58,25 @@ app.route('/catalogue')
         } else {
             Catalogue.findAll().then(cat => res.json(cat));    
         }
-        
     });
 
-app.route('/good')
+app.route('/goods')
     .get(function(req, res) {
-        Goods.findAll().then(good => res.json(good));
+        let query = {};
+        Object.keys(req.query).forEach(el => {
+            if (el == 'id') {
+                query.idgoods = req.query[el];
+            } 
+            if (el == 'id_catalogue') {
+                query.catalogue_id_catalogue = req.query[el];
+            }
+        });
+        if (Object.keys(query).length) {
+            Goods.findAll({ where : query }).then(good => res.json(good));
+        } else {
+            Goods.findAll().then(good => res.json(good));
+        }
+        
     });    
 // app.route('/catalogue')
 //     .get(function(req, res) {
@@ -107,37 +112,37 @@ app.route('/good')
 //         }
 //     });
     
-app.route('/goods')
-    .get(function(req, res) {
-        let str_query = [];
-        let replacement = {};
-        Object.keys(req.query).forEach(el => {
-            if (el == 'id') {
-                str_query.push('idgoods = :id_goods');
-                replacement['id_goods'] = req.query['id'];
-            } 
-            if (el == 'id_catalogue') {
-                str_query.push('catalogue_id_catalogue = :id_catalogue');
-                replacement['id_catalogue'] = req.query['id_catalogue'];
-            }
-        });
-        let str = str_query.join(' AND ');
-        if (str.length > 0) {
-            str = 'WHERE ' + str;
-        }
-        sequelize.query(
-            'SELECT * FROM goods ' + str, { 
-                raw: false, 
-                replacements: replacement
-            })
-            .then((rows) => {
-                if (rows[0].length) {
-                    res.json(rows[0]);
-                } else {
-                    res.json({});
-                }
-            });
-    });
+// app.route('/goods')
+//     .get(function(req, res) {
+//         let str_query = [];
+//         let replacement = {};
+//         Object.keys(req.query).forEach(el => {
+//             if (el == 'id') {
+//                 str_query.push('idgoods = :id_goods');
+//                 replacement['id_goods'] = req.query['id'];
+//             } 
+//             if (el == 'id_catalogue') {
+//                 str_query.push('catalogue_id_catalogue = :id_catalogue');
+//                 replacement['id_catalogue'] = req.query['id_catalogue'];
+//             }
+//         });
+//         let str = str_query.join(' AND ');
+//         if (str.length > 0) {
+//             str = 'WHERE ' + str;
+//         }
+//         sequelize.query(
+//             'SELECT * FROM goods ' + str, { 
+//                 raw: false, 
+//                 replacements: replacement
+//             })
+//             .then((rows) => {
+//                 if (rows[0].length) {
+//                     res.json(rows[0]);
+//                 } else {
+//                     res.json({});
+//                 }
+//             });
+//     });
 
 app.listen(serverConfig.port, function() {
     logger.log({

@@ -16,7 +16,7 @@ const Goods = GoodsModel(sequelize, Sequelize);
 
 sequelize.sync()
     .then(() => {
-        console.log(`Database & tables created!`);
+        // console.log(`Database & tables created!`);
     });
 
 module.exports = {
