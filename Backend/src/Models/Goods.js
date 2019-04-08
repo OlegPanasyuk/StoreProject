@@ -11,7 +11,7 @@ module.exports = (sequalize, type) => {
                 allowNull : false
             }
         },
-        decription : {
+        description : {
             type : type.TEXT   
         }
     }, {

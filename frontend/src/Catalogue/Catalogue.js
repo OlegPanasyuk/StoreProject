@@ -25,7 +25,7 @@ class Catalogue extends Component {
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
                 if (Number(key) === id) {
-                    if(key===6) console.log(obj[key]);
+                    // if (key === 6) console.log(obj[key]);
                     return obj[key];
                 } 
             }
@@ -67,22 +67,23 @@ class Catalogue extends Component {
         let self = this;
         arr.forEach((element) => {
             self.obj[element.id_catalogue] = element;
-        })
+        });
     }
 
    
-    requestCatalogue(id=null) {
+    requestCatalogue(id = null) {
         const XHR = new XMLHttpRequest();
         var self = this;
         let body = (id) ? `?id=${id}` : '';
-        XHR.open('GET', 'http://localhost:3300/catalogue'+body, true);
+        XHR.open('GET', 'http://localhost:3300/catalogue' + body, true);
         
         XHR.send();
 
         XHR.onreadystatechange = function() { // (3)
-        if (XHR.readyState !== 4) return;
+            if (XHR.readyState !== 4) return;
             if (XHR.status !== 200) {
-                console.error( XHR.status, XHR.statusText);
+
+                // console.error( XHR.status, XHR.statusText);
             } else {
                 let arr = [];
                 arr.push( { 
@@ -95,34 +96,34 @@ class Catalogue extends Component {
                     itemsBreadCrumbs : arr
                 }));
             }
-        }
+        };
     }
 
     requestGoods(catalogue_id = null, idgoods = null) {
         const XHR = new XMLHttpRequest();
         var self = this;
         let body = (catalogue_id) ? `?id_catalogue=${catalogue_id}` : '';
-            body += (idgoods) ? `?id=${idgoods}` : '';
-        XHR.open('GET', 'http://localhost:3300/goods'+body, true);
+        body += (idgoods) ? `?id=${idgoods}` : '';
+        XHR.open('GET', 'http://localhost:3300/goods' + body, true);
         
         XHR.send();
 
         XHR.onreadystatechange = function() { // (3)
-        if (XHR.readyState !== 4) return;
+            if (XHR.readyState !== 4) return;
             if (XHR.status !== 200) {
-                console.error( XHR.status, XHR.statusText);
+                // console.error( XHR.status, XHR.statusText);
             } else {
                 self.setState(() => ({
                     itemsGoods: JSON.parse( XHR.responseText )
                 }));
-                console.log('как то так',JSON.parse( XHR.responseText ));
+                // console.log('как то так',JSON.parse( XHR.responseText ));
             }
-        }
+        };
     }
  
 
     componentDidMount() {
-       this.requestCatalogue();
+        this.requestCatalogue();
     }
 
     rebiuldTree(id = null) {
@@ -133,7 +134,7 @@ class Catalogue extends Component {
                 let objToPush = {
                     id : parent.id_catalogue,
                     name : parent.name
-                } ;
+                };
                 let a = itemsBreadCrumbs.filter(el => el.id === id);
                 
                 if (a.length === 0) {
@@ -161,38 +162,39 @@ class Catalogue extends Component {
     
     render() {
         let { items, itemsBreadCrumbs, itemsGoods} = this.state;
-        let obj = items;
-        console.log('pre render',obj);
+        // console.log('pre render',obj);
         return (
-           <Container>
+            <Container>
                 <Row>
                     <Col sm='auto'>
                         <BreadCrumbs 
                             obj = { itemsBreadCrumbs } 
                             handleClick = { this.rebiuldTree }
-                            >
+                        >
                         </BreadCrumbs>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm='auto'>
+                       
                         <CatalogueMenu 
                             obj = { items } 
                             handleClick = { this.rebiuldTree }
                             requestGoods = { this.requestGoods }
-                            />
+                        />
                     </Col>
                     <Col>
                         <Goods 
                             obj= { itemsGoods }
-                            >
-
+                        >
                         </Goods>
                     </Col>
-                    
                 </Row>
-                        
             </Container>
-        )
+        );
     }
 }
 
 
 
-export default Catalogue ;
+export default Catalogue;

@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Catalogue from './Catalogue/Catalogue';
 import * as serviceWorker from './serviceWorker';
-import { exportAllDeclaration } from '@babel/types';
 
 
 
 ReactDOM.render(
-        <Catalogue />
+    <Catalogue />
     , document.getElementById('root')
 );
 

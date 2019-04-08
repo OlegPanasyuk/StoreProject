@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Goods Component Component must be created and props must be correct 1`] = `
+<CardColumns
+  style={
+    Object {
+      "columnGap": "1em",
+    }
+  }
+>
+  <Card
+    as="div"
+    body={false}
+    key="Good-1-0"
+  >
+    <CardHeader>
+      Honda Civic
+    </CardHeader>
+    <CardText>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit.         Blanditiis provident quo quaerat repellat fuga debitis nemo voluptates         quis voluptate, dolorem modi non? Nisi, maxime a.
+    </CardText>
+  </Card>
+  <Card
+    as="div"
+    body={false}
+    key="Good-2-1"
+  >
+    <CardHeader>
+      Volvo
+    </CardHeader>
+    <CardText>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit.         Blanditiis provident quo quaerat repellat fuga debitis nemo voluptates         quis voluptate, dolorem modi non? Nisi, maxime a.
+    </CardText>
+  </Card>
+</CardColumns>
+`;

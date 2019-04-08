@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardColumns } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class Goods extends Component {
     constructor(props) {
@@ -11,18 +12,22 @@ class Goods extends Component {
 
     render() {
         let { obj } = this.props;
-        let itemsGoods = Object.keys(obj).map((el)=>{
+        
+        let itemsGoods = Object.keys(obj).map((el, i)=>{
             return (
-                <Card style={{ minWidth: '300px'}}>
+                <Card key={`Good-${obj[el].idgoods}-${i}`}>
                     <Card.Header>
                         {obj[el].name}
                     </Card.Header>
                     <Card.Text>
-                        {obj[el].decription}
+                        {obj[el].description}
                     </Card.Text>
                 </Card>
             );
         });
+        if (itemsGoods.length === 0) {
+            itemsGoods = 'There no any goods in categoty or select another item in menu';
+        }
         return (
             <CardColumns style={{columnGap: '1em'}}>
                 {itemsGoods}
@@ -30,5 +35,9 @@ class Goods extends Component {
         );
     }
 }
+
+Goods.propTypes = {
+    obj : PropTypes.array
+};
 
 export default Goods;

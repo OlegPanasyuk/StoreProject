@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BreadCrumbs Component Component must be created and props must be correct 1`] = `
+<Breadcrumb
+  as="nav"
+  label="breadcrumb"
+  listProps={Object {}}
+  variant="secondary"
+>
+  <BreadcrumbItem
+    active={false}
+    as="li"
+    href="#"
+    key="null"
+    onClick={[Function]}
+  >
+    Home
+  </BreadcrumbItem>
+  <BreadcrumbItem
+    active={true}
+    as="li"
+    href="#"
+    key="1"
+    onClick={[Function]}
+  >
+    Car
+  </BreadcrumbItem>
+</Breadcrumb>
+`;
