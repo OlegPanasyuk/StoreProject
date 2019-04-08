@@ -15,7 +15,8 @@ class Catalogue extends Component {
         this.obj = {};
         this.state = {
             items : {},
-            itemsBreadCrumbs : []
+            itemsBreadCrumbs : [],
+            itemsGoods : []
         };
     }
 
@@ -93,16 +94,16 @@ class Catalogue extends Component {
                     items : self.obj,
                     itemsBreadCrumbs : arr
                 }));
-                // console.log('как то так',self.obj);
             }
         }
     }
 
-    requestGoods(catalogue_id, idgoods) {
+    requestGoods(catalogue_id = null, idgoods = null) {
         const XHR = new XMLHttpRequest();
         var self = this;
-        let body = (catalogue_id) ? `?idgoods=${idgoods}` : '';
-        XHR.open('GET', 'http://localhost:3300/catalogue'+body, true);
+        let body = (catalogue_id) ? `?id_catalogue=${catalogue_id}` : '';
+            body += (idgoods) ? `?id=${idgoods}` : '';
+        XHR.open('GET', 'http://localhost:3300/goods'+body, true);
         
         XHR.send();
 
@@ -111,8 +112,10 @@ class Catalogue extends Component {
             if (XHR.status !== 200) {
                 console.error( XHR.status, XHR.statusText);
             } else {
-                
-                // console.log('как то так',self.obj);
+                self.setState(() => ({
+                    itemsGoods: JSON.parse( XHR.responseText )
+                }));
+                console.log('как то так',JSON.parse( XHR.responseText ));
             }
         }
     }
@@ -141,16 +144,15 @@ class Catalogue extends Component {
                     items : children,
                     itemsBreadCrumbs : itemsBreadCrumbs
                 }));
-                console.log('itemsBreadCrumbs = ', itemsBreadCrumbs);
             }
         } else {
-            console.log('Go home!');
             this.setState(() => ({
                 items : this.obj,
                 itemsBreadCrumbs : [{
                     id : null,
                     name : 'Home'
-                }]
+                }],
+                itemsGoods : []
             }));
         }
         
@@ -158,32 +160,30 @@ class Catalogue extends Component {
 
     
     render() {
-        let { items, itemsBreadCrumbs} = this.state;
+        let { items, itemsBreadCrumbs, itemsGoods} = this.state;
         let obj = items;
         console.log('pre render',obj);
         return (
            <Container>
                 <Row>
-                    <Col>
-                        <h1>
-                            Header
-                        </h1>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
+                    <Col sm='auto'>
                         <BreadCrumbs 
                             obj = { itemsBreadCrumbs } 
                             handleClick = { this.rebiuldTree }
                             >
                         </BreadCrumbs>
                         <CatalogueMenu 
-                            obj = { obj } 
+                            obj = { items } 
                             handleClick = { this.rebiuldTree }
+                            requestGoods = { this.requestGoods }
                             />
                     </Col>
                     <Col>
-                        <Goods></Goods>
+                        <Goods 
+                            obj= { itemsGoods }
+                            >
+
+                        </Goods>
                     </Col>
                     
                 </Row>

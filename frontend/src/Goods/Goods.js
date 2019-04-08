@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Card, CardColumns } from 'react-bootstrap';
 
 class Goods extends Component {
     constructor(props) {
@@ -9,8 +10,23 @@ class Goods extends Component {
     }
 
     render() {
+        let { obj } = this.props;
+        let itemsGoods = Object.keys(obj).map((el)=>{
+            return (
+                <Card style={{ minWidth: '300px'}}>
+                    <Card.Header>
+                        {obj[el].name}
+                    </Card.Header>
+                    <Card.Text>
+                        {obj[el].decription}
+                    </Card.Text>
+                </Card>
+            );
+        });
         return (
-            <div>Hellow We are Goods!</div>
+            <CardColumns style={{columnGap: '1em'}}>
+                {itemsGoods}
+            </CardColumns>
         );
     }
 }

@@ -2,16 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Catalogue from './Catalogue/Catalogue';
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
 import * as serviceWorker from './serviceWorker';
+import { exportAllDeclaration } from '@babel/types';
 
-const theme = createMuiTheme({ typography: { useNextVariants: true } });
+
 
 ReactDOM.render(
-    <ThemeProvider theme={theme}>
         <Catalogue />
-    </ThemeProvider>
     , document.getElementById('root')
 );
 
