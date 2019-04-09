@@ -6,13 +6,13 @@ module.exports = (sequalize, type) => {
             autoIncrement : true
         },
         name : {
-            type : type.STRING(200),
-            validate : {
-                allowNull : false
-            }
+            type : type.STRING(200)
         },
         description : {
             type : type.TEXT   
+        }, 
+        catalogue_id_catalogue : {
+            type : type.INTEGER
         }
     }, {
         timestamps : false,

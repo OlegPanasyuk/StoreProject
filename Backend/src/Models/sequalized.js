@@ -14,6 +14,8 @@ var sequelize = new Sequelize(
 const Catalogue = CatalogueModels(sequelize, Sequelize);
 const Goods = GoodsModel(sequelize, Sequelize);
 
+
+
 sequelize.sync()
     .then(() => {
         // console.log(`Database & tables created!`);

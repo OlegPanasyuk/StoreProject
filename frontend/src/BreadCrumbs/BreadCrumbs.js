@@ -24,7 +24,7 @@ class BreadCrumbs extends Component {
         });
 
         return (
-            <Breadcrumb variant="secondary" > 
+            <Breadcrumb variant="secondary" >
                 {arrItems}
             </Breadcrumb>
         );
@@ -32,8 +32,8 @@ class BreadCrumbs extends Component {
 }
 
 BreadCrumbs.propTypes = {
-    obj : PropTypes.array,
-    handleClick : PropTypes.func 
+    obj: PropTypes.array,
+    handleClick: PropTypes.func
 };
 
 export default BreadCrumbs;

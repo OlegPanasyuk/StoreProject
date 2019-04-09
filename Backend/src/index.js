@@ -46,9 +46,12 @@ var logger = winston.createLogger({
         new winston.transports.Console()
     ]
 });
+const urlencoder = bodyParser.urlencoded({extended: true}); 
 
 app.use(cors());
 app.use(bodyParser.json());
+// app.use(express.json());
+
 
 app.route('/catalogue')
     .get(function(req, res) {
@@ -77,6 +80,33 @@ app.route('/goods')
             Goods.findAll().then(good => res.json(good));
         }
         
+    })
+    .post(urlencoder, function(req, res) {
+        console.log('req.body=',req.body);
+        console.log('req.query=',req.query);
+        
+        let objToCreate = {
+            name : (req.body.name) ? req.body.name : 'No name',
+            description : (req.body.description) ? req.body.description : 'No description',
+            catalogue_id_catalogue : (req.body.catalogue_id_catalogue) ? req.body.catalogue_id_catalogue : 4
+        };
+        Goods.create(objToCreate)
+            .then(good => {
+                res.json(good);
+            })
+            .catch((e) => res.send(e));
+       
+    })
+    .delete(function(req, res) {
+        let objToDelete = {
+            id : req.query.id,
+            name : req.query.name
+        };
+        Goods.findOne({ where : {idgoods : objToDelete.id} })
+            .then(good => good.destroy({forse : true}))
+            .then(() => {
+                res.send('deleted');
+            });
     });    
 // app.route('/catalogue')
 //     .get(function(req, res) {

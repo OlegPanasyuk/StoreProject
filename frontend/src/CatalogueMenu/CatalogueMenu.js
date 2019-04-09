@@ -7,37 +7,37 @@ function CatalogueMenu(props) {
     const obj = props.obj;
     const handleClick = props.handleClick;
     const requestGoods = props.requestGoods;
-    
+
     let arrItems = Object.keys(obj).map((el) => {
         let element;
         if (obj[el].children && (Object.keys(obj[el].children).length > 0)) {
             element = (
-                <ListGroup.Item 
+                <ListGroup.Item
                     onClick={
-                        ()=>handleClick(el)
-                    } 
-                    variant="secondary" 
+                        () => handleClick(el)
+                    }
+                    variant="secondary"
                     key={el}>
                     {`${obj[el].id_catalogue}  ${obj[el].name}`}
                 </ListGroup.Item>
-                
-            );    
+
+            );
         } else {
             element = (
-                <ListGroup.Item 
+                <ListGroup.Item
                     onClick={
-                        ()=> {
+                        () => {
                             handleClick(el);
                             requestGoods(el);
                         }
-                    } 
-                    variant="secondary" 
+                    }
+                    variant="secondary"
                     key={el}>
                     {`${obj[el].id_catalogue}  ${obj[el].name}`}
                 </ListGroup.Item>
-            );  
+            );
         }
-        
+
         return element;
     });
     return (
@@ -50,7 +50,7 @@ function CatalogueMenu(props) {
 }
 
 CatalogueMenu.propTypes = {
-    obj : PropTypes.object
+    obj: PropTypes.object
 };
 
 export default CatalogueMenu;

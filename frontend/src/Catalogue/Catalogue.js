@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col} from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import CatalogueMenu from '../CatalogueMenu/CatalogueMenu';
 import BreadCrumbs from '../BreadCrumbs/BreadCrumbs';
 import Goods from '../Goods/Goods';
@@ -14,33 +14,32 @@ class Catalogue extends Component {
         this.requestGoods = this.requestGoods.bind(this);
         this.obj = {};
         this.state = {
-            items : {},
-            itemsBreadCrumbs : [],
-            itemsGoods : []
+            items: {},
+            itemsBreadCrumbs: [],
+            itemsGoods: []
         };
     }
 
     fintNodeInTree(id, obj = this.obj) {
-        
+
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
                 if (Number(key) === id) {
                     // if (key === 6) console.log(obj[key]);
                     return obj[key];
-                } 
+                }
             }
         }
-        for (let key in obj) { 
-           
+        for (let key in obj) {
             if (obj[key]['children']) {
                 this.fintNodeInTree(id, obj[key]['children']);
             }
-        } 
+        }
     }
 
     sortItems(id, arr) {
         let self = this;
-        let arrPushingElements  = arr.filter((el) => el.parent_id === id);
+        let arrPushingElements = arr.filter((el) => el.parent_id === id);
         arrPushingElements.forEach(element => {
             if (element.parent_id === -1) {
                 self.obj[element.id_catalogue] = element;
@@ -70,30 +69,30 @@ class Catalogue extends Component {
         });
     }
 
-   
+
     requestCatalogue(id = null) {
         const XHR = new XMLHttpRequest();
         var self = this;
         let body = (id) ? `?id=${id}` : '';
         XHR.open('GET', 'http://localhost:3300/catalogue' + body, true);
-        
+
         XHR.send();
 
-        XHR.onreadystatechange = function() { // (3)
+        XHR.onreadystatechange = function () { // (3)
             if (XHR.readyState !== 4) return;
             if (XHR.status !== 200) {
 
                 // console.error( XHR.status, XHR.statusText);
             } else {
                 let arr = [];
-                arr.push( { 
-                    id: null, 
+                arr.push({
+                    id: null,
                     name: 'Home'
-                } );
-                self.sortItems( (id) ? id : -1, JSON.parse( XHR.responseText )); 
+                });
+                self.sortItems((id) ? id : -1, JSON.parse(XHR.responseText));
                 self.setState(() => ({
-                    items : self.obj,
-                    itemsBreadCrumbs : arr
+                    items: self.obj,
+                    itemsBreadCrumbs: arr
                 }));
             }
         };
@@ -105,22 +104,22 @@ class Catalogue extends Component {
         let body = (catalogue_id) ? `?id_catalogue=${catalogue_id}` : '';
         body += (idgoods) ? `?id=${idgoods}` : '';
         XHR.open('GET', 'http://localhost:3300/goods' + body, true);
-        
+
         XHR.send();
 
-        XHR.onreadystatechange = function() { // (3)
+        XHR.onreadystatechange = function () { // (3)
             if (XHR.readyState !== 4) return;
             if (XHR.status !== 200) {
                 // console.error( XHR.status, XHR.statusText);
             } else {
                 self.setState(() => ({
-                    itemsGoods: JSON.parse( XHR.responseText )
+                    itemsGoods: JSON.parse(XHR.responseText)
                 }));
                 // console.log('как то так',JSON.parse( XHR.responseText ));
             }
         };
     }
- 
+
 
     componentDidMount() {
         this.requestCatalogue();
@@ -132,60 +131,59 @@ class Catalogue extends Component {
             if (parent) {
                 let { itemsBreadCrumbs } = this.state;
                 let objToPush = {
-                    id : parent.id_catalogue,
-                    name : parent.name
+                    id: parent.id_catalogue,
+                    name: parent.name
                 };
                 let a = itemsBreadCrumbs.filter(el => el.id === id);
-                
+
                 if (a.length === 0) {
-                    itemsBreadCrumbs.push( objToPush );
+                    itemsBreadCrumbs.push(objToPush);
                 }
                 let children = (parent.children) ? parent.children : {};
                 this.setState(() => ({
-                    items : children,
-                    itemsBreadCrumbs : itemsBreadCrumbs
+                    items: children,
+                    itemsBreadCrumbs: itemsBreadCrumbs
                 }));
             }
         } else {
             this.setState(() => ({
-                items : this.obj,
-                itemsBreadCrumbs : [{
-                    id : null,
-                    name : 'Home'
+                items: this.obj,
+                itemsBreadCrumbs: [{
+                    id: null,
+                    name: 'Home'
                 }],
-                itemsGoods : []
+                itemsGoods: []
             }));
         }
-        
+
     }
 
-    
+
     render() {
-        let { items, itemsBreadCrumbs, itemsGoods} = this.state;
+        let { items, itemsBreadCrumbs, itemsGoods } = this.state;
         // console.log('pre render',obj);
         return (
             <Container>
                 <Row>
                     <Col sm='auto'>
-                        <BreadCrumbs 
-                            obj = { itemsBreadCrumbs } 
-                            handleClick = { this.rebiuldTree }
+                        <BreadCrumbs
+                            obj={itemsBreadCrumbs}
+                            handleClick={this.rebiuldTree}
                         >
                         </BreadCrumbs>
                     </Col>
                 </Row>
                 <Row>
                     <Col sm='auto'>
-                       
-                        <CatalogueMenu 
-                            obj = { items } 
-                            handleClick = { this.rebiuldTree }
-                            requestGoods = { this.requestGoods }
+                        <CatalogueMenu
+                            obj={items}
+                            handleClick={this.rebiuldTree}
+                            requestGoods={this.requestGoods}
                         />
                     </Col>
                     <Col>
-                        <Goods 
-                            obj= { itemsGoods }
+                        <Goods
+                            obj={itemsGoods}
                         >
                         </Goods>
                     </Col>
