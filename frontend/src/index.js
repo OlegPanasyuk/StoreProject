@@ -2,12 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Catalogue from './Catalogue/Catalogue';
+import LoginForm from './LoginForm/LoginForm';
 import * as serviceWorker from './serviceWorker';
 
 
 
 ReactDOM.render(
-    <Catalogue />
+    <React.Fragment>
+        <LoginForm>
+            Log in me now!!!
+        </LoginForm>
+        <Catalogue />
+    </React.Fragment>
+    
     , document.getElementById('root')
 );
 

@@ -16,7 +16,7 @@ function setupComponent(props = {
         id : 1,
         name : 'Car'
     }],
-    handleClick : (i) => { alert(`Кликнули по бред крамбс${i}`);}
+    handleClick : (i) => { alert(`Click by BreadCrumb.Item${i}`);}
 }) {
     let component = shallow(<BreadCrumbs {...props} />);
     return { component, props };
@@ -40,7 +40,7 @@ describe('BreadCrumbs Component', () => {
         window.alert = jest.fn();
         for (let i = 0; i < props.obj.length; i++) {
             component.find(Breadcrumb.Item).at(i).simulate('click');
-            expect(window.alert).toHaveBeenCalledWith(`Кликнули по бред крамбс${props.obj[i].id}`);
+            expect(window.alert).toHaveBeenCalledWith(`Click by BreadCrumb.Item${props.obj[i].id}`);
         }
     });
 });

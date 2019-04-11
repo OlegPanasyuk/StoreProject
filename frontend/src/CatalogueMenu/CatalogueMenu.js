@@ -1,6 +1,7 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import './CatalogueMenu.css';
 
 
 function CatalogueMenu(props) {
@@ -16,7 +17,7 @@ function CatalogueMenu(props) {
                     onClick={
                         () => handleClick(el)
                     }
-                    variant="secondary"
+                    
                     key={el}>
                     {`${obj[el].id_catalogue}  ${obj[el].name}`}
                 </ListGroup.Item>
@@ -31,7 +32,7 @@ function CatalogueMenu(props) {
                             requestGoods(el);
                         }
                     }
-                    variant="secondary"
+                    
                     key={el}>
                     {`${obj[el].id_catalogue}  ${obj[el].name}`}
                 </ListGroup.Item>

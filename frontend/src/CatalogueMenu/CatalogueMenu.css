@@ -1,0 +1,7 @@
+:root {
+    --storesecondary: #385c80;
+}
+
+.bg-storesecondary {
+    background: var(--storesecondary);
+}

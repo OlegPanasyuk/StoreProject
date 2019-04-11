@@ -21,7 +21,7 @@ function setupComponent(props = {
             description : 'Group 2',
             parent_id : -1
         }},
-    handleClick : (i) => { alert(`Кликнули по Item Menu${i}`);},
+    handleClick : (i) => { alert(`Click by Item Menu${i}`);},
     requestGoods : () => {}
 }) {
     let component = shallow(<CatalogueMenu {...props} />);

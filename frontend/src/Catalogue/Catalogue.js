@@ -163,7 +163,7 @@ class Catalogue extends Component {
         let { items, itemsBreadCrumbs, itemsGoods } = this.state;
         // console.log('pre render',obj);
         return (
-            <Container>
+            <Container >
                 <Row>
                     <Col sm='auto'>
                         <BreadCrumbs
