@@ -25,7 +25,7 @@ class LoginForm extends Component {
             password: this.passWordInput.current.value
         };
         client({method: 'POST', path: 'login', entity: objToRequest}).then(data => {
-            //console.log(data);
+            console.log(data);
             
         }).catch((err)=> {
             //console.log('error in request', err);

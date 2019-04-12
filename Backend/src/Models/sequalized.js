@@ -3,6 +3,7 @@ var sequelizeDBConfig = config.get('Sequelize');
 var Sequelize = require('sequelize');
 var CatalogueModels = require('./CatalogueModels');
 var GoodsModel = require('./Goods');
+var UserModel = require('./Users');
 
 var sequelize = new Sequelize(
     sequelizeDBConfig.dbName,  
@@ -13,7 +14,7 @@ var sequelize = new Sequelize(
 
 const Catalogue = CatalogueModels(sequelize, Sequelize);
 const Goods = GoodsModel(sequelize, Sequelize);
-
+const Users = UserModel(sequelize, Sequelize);
 
 
 sequelize.sync()
@@ -23,5 +24,6 @@ sequelize.sync()
 
 module.exports = {
     Catalogue,
-    Goods
+    Goods, 
+    Users
 };
