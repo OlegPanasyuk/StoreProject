@@ -1,20 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Catalogue from './Catalogue/Catalogue';
-import LoginForm from './LoginForm/LoginForm';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 
 
 ReactDOM.render(
-    <React.Fragment>
-        <LoginForm>
-            Log in me now!!!
-        </LoginForm>
-        <Catalogue />
-    </React.Fragment>
-    
+    <App></App>
     , document.getElementById('root')
 );
 

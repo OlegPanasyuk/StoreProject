@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Form, Col, Button } from 'react-bootstrap';
+import Link from '../Link/Link';
+
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -25,7 +27,7 @@ class LoginForm extends Component {
             password: this.passWordInput.current.value
         };
         client({method: 'POST', path: 'login', entity: objToRequest}).then(data => {
-            console.log(data);
+            //console.log(data);
             
         }).catch((err)=> {
             //console.log('error in request', err);
@@ -33,6 +35,7 @@ class LoginForm extends Component {
     }
 
     render() {
+        let handleConverStatusUser = this.props.handleConverStatusUser;
         return (
             <Container>
                 <Form>
@@ -49,6 +52,15 @@ class LoginForm extends Component {
                             <Button size="sm" variant="secondary" className="mb-3" onClick={this.sendLoginRequest}>
                                 Login
                             </Button>
+                            <Link 
+                                text='Registration' 
+                                href='#' 
+                                className="d-block mb-3 ml-3 p-1" 
+                                ConverStatusUser={handleConverStatusUser}>
+                            </Link>
+                        </Col>
+                        <Col>
+                            
                         </Col>
                     </Form.Row>
                 </Form>

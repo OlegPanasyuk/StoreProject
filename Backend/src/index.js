@@ -10,7 +10,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtStrategy = require('./authorization/jwt');
 const cookieParser = require('cookie-parser');
-
+const registrationUser = require('./authorization/auth');
 
 var serverConfig = config.get('Server');
 
@@ -47,6 +47,8 @@ app.route('/catalogue')
             Catalogue.findAll().then(cat => res.json(cat));
         }
     });
+
+app.use('/', registrationUser);
 
 app.route('/goods')
     .get(function (req, res) {
