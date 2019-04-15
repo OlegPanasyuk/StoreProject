@@ -29,13 +29,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-function checkAdmin(req, res, next) {
-    if (req.body.user && req.body.user.p === 'admin') {
-        next();
-    } else {
-        res.status(401).send('You are not admin');
-    }
-}
 
 
 app.route('/catalogue')
@@ -94,32 +87,7 @@ app.route('/goods')
             });
     });
 
-app.post('/login', (req, res) => {
-    let { email, password } = req.body;
-    // need find user in DB
-    // AND compare pass with pass in DB
-    // secret word must be taken fron env
-    Users.findOne({ where: {email: email} }).then((user) => {
-        if (user && user.email === email) {
-            if (password === user.password) {
-                const opts = {};
-                opts.expiresIn = 120;
-                const secret = 'Oleg';
-                const token = jwt.sign({ email }, secret, opts);
-                return res.status(200).json({
-                    message: 'Auth Passed',
-                    token
-                });
-            }
-        }
-        res.status(401).send(`${email} ${password} Auth failed`);
-    });
-   
-});
 
-app.get('/p', passport.authenticate('jwt', { session: false}) , checkAdmin, (req, res) => {
-    return res.status(200).send('Ok');
-});
 
 
 app.listen(serverConfig.port, function () {

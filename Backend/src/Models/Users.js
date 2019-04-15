@@ -12,6 +12,9 @@ module.exports = (sequalize, type) => {
         }, 
         create_time : {
             type : type.DATE
+        },
+        role: {
+            type: type.STRING(45)
         }
     }, {
         timestamps : false,
