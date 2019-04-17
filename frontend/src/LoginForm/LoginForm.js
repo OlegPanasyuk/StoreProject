@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Form, Col, Button } from 'react-bootstrap';
 import Link from '../Link/Link';
+import PropsTypes from 'prop-types';
 
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
-import { runInThisContext } from 'vm';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
@@ -30,11 +30,18 @@ class LoginForm extends Component {
         client({ method: 'POST', path: 'login', entity: objToRequest }).then(data => {
             //console.log(data);
             let storage = window.localStorage;
-            storage.setItem('Authorization', data.entity.token);
-            this.props.handleSetStateInApp(data.entity);
+
+            if (data.status.code === 200) {
+                storage.setItem('Authorization', data.entity.token);
+                this.props.handleSetStateInApp(data.entity);
+            } else if (data.status.code === 401) {
+                // needs tool tip
+            }
+
+           
 
         }).catch((err) => {
-            //console.log('error in request', err);
+            throw new Error('error in request', err);
         });
     }
 
@@ -42,11 +49,10 @@ class LoginForm extends Component {
         let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
         return (
-            <Container>
+            <Container className='mt-3'>
                 <Form>
                     <Form.Row>
                         <Form.Group as={Col} className="col-3" controlId="formGridEmail">
-                            <Form.Label>Email</Form.Label>
                             <Form.Control 
                                 size="sm" 
                                 type="email" 
@@ -56,7 +62,6 @@ class LoginForm extends Component {
                             />
                         </Form.Group>
                         <Form.Group as={Col} className="col-3" controlId="formGridPassword">
-                            <Form.Label>Password</Form.Label>
                             <Form.Control size="sm" type="password" placeholder="Password" ref={this.passWordInput} />
                         </Form.Group>
                         <Col className='d-flex align-items-end'>
@@ -79,5 +84,11 @@ class LoginForm extends Component {
         );
     }
 }
+
+LoginForm.propTypes = {
+    userState: PropsTypes.object,
+    handleConverStatusUser: PropsTypes.func,
+    handleSetStateInApp: PropsTypes.func
+};
 
 export default LoginForm;

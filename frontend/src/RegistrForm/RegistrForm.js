@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
@@ -62,13 +63,10 @@ class RegisrtForm extends Component {
     render() {
         let { target, message, show, variant } = this.state;
         return (
-            <Container>
+            <Container className='mt-3'>
                 <Form>
                     <Form.Row>
                         <Form.Group as={Col} className="col-2" controlId="formGridEmail">
-                            <Form.Label>
-                                Email
-                            </Form.Label>
                             <Form.Control
                                 size="sm"
                                 type="email"
@@ -77,9 +75,6 @@ class RegisrtForm extends Component {
                             />
                         </Form.Group>
                         <Form.Group as={Col} className="col-2" controlId="formGridPassword">
-                            <Form.Label>
-                                Password
-                            </Form.Label>
                             <Form.Control
                                 size="sm"
                                 type="password"
@@ -88,9 +83,6 @@ class RegisrtForm extends Component {
                             />
                         </Form.Group>
                         <Form.Group as={Col} className="col-2" controlId="formGridRepeatPassword">
-                            <Form.Label>
-                                Repeat password
-                            </Form.Label>
                             <Form.Control
                                 size="sm"
                                 type="password"
@@ -123,5 +115,9 @@ class RegisrtForm extends Component {
 
     }
 }
+
+RegisrtForm.propTypes = {
+    setUserInState: PropTypes.func
+};
 
 export default RegisrtForm;

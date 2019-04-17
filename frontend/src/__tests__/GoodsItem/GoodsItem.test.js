@@ -22,14 +22,12 @@ function addItemGoodsToDB(obj = {
     description: 'Lorem Test For Tests and Only Tests',
     catalogue_id_catalogue: 5
 }) {
-
     return new client({ method: 'POST', path: 'goods', entity: obj });
-
 }
 
 function deleteItemGoodsFromDB(id) {
     let query = '?id=' + id;
-    client({ method: 'DELETE', path: 'goods' + query }).then((res) => {
+    client({ method: 'DELETE', path: 'goods' + query }).then(() => {
 
     });
 }
@@ -47,14 +45,19 @@ function setupComponent(props = {
     return { component, props };
 }
 
+// eslint-disable-next-line no-undef
 describe('GoodsItem ', () => {
+    // eslint-disable-next-line no-undef
     it('Component must be created', () => {
         const { component } = setupComponent();
 
+        // eslint-disable-next-line no-undef
         expect(GoodsItem.propTypes.obj).toBe(PropTypes.object);
+        // eslint-disable-next-line no-undef
         expect(shallowToJson(component)).toMatchSnapshot();
 
     });
+    // eslint-disable-next-line no-undef
     it('Component must be rendered after creation', () => {
         let obj = {};
 
@@ -63,10 +66,11 @@ describe('GoodsItem ', () => {
                 obj = res.entity;
                 const { component } = setupComponent({ obj: obj });
                 deleteItemGoodsFromDB(obj.idgoods);
+                // eslint-disable-next-line no-undef
                 expect(shallowToJson(component)).toMatchSnapshot();
             })
             .catch((e) => {
-                console.log(e);
+                throw new Error(e);
             });
 
     });

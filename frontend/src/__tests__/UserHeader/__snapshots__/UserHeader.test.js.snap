@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserHeader Component must be created 1`] = `
+<Container
+  as="div"
+  fluid={false}
+>
+  <Bootstrap(Row)
+    className="d-flex justify-content-end"
+  >
+    <Col
+      as="div"
+      className="d-flex align-items-center"
+      sm="auto"
+    >
+      <div
+        className="mr-1"
+      >
+        User: 
+        Admin
+      </div>
+      <Button
+        active={false}
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+        variant="light"
+      >
+        Logout
+      </Button>
+    </Col>
+  </Bootstrap(Row)>
+</Container>
+`;

@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReggistrForm Component must be created 1`] = `
+<Container
+  as="div"
+  className="mt-3"
+  fluid={false}
+>
+  <Form
+    as="form"
+    inline={false}
+  >
+    <FormRow>
+      <FormGroup
+        as={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "defaultProps": Object {
+              "as": "div",
+            },
+            "displayName": "Col",
+            "render": [Function],
+          }
+        }
+        className="col-2"
+        controlId="formGridEmail"
+      >
+        <FormControl
+          as="input"
+          placeholder="Enter email"
+          size="sm"
+          type="email"
+        />
+      </FormGroup>
+      <FormGroup
+        as={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "defaultProps": Object {
+              "as": "div",
+            },
+            "displayName": "Col",
+            "render": [Function],
+          }
+        }
+        className="col-2"
+        controlId="formGridPassword"
+      >
+        <FormControl
+          as="input"
+          placeholder="Password"
+          size="sm"
+          type="password"
+        />
+      </FormGroup>
+      <FormGroup
+        as={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "defaultProps": Object {
+              "as": "div",
+            },
+            "displayName": "Col",
+            "render": [Function],
+          }
+        }
+        className="col-2"
+        controlId="formGridRepeatPassword"
+      >
+        <FormControl
+          as="input"
+          placeholder="Repeat password"
+          size="sm"
+          type="password"
+        />
+      </FormGroup>
+      <Col
+        as="div"
+        className="d-flex align-items-end"
+      >
+        <Button
+          active={false}
+          className="mb-3"
+          disabled={false}
+          onClick={[Function]}
+          size="sm"
+          type="button"
+          variant="secondary"
+        >
+          Registration
+        </Button>
+      </Col>
+      <Overlay
+        placement="right"
+        rootClose={false}
+        show={false}
+        target={null}
+        transition={[Function]}
+      >
+        <Component />
+      </Overlay>
+    </FormRow>
+  </Form>
+</Container>
+`;

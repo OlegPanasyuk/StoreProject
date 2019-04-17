@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import Catalogue from './Catalogue/Catalogue';
 import LoginForm from './LoginForm/LoginForm';
 import RegForm from './RegistrForm/RegistrForm';
+import UserHeader from './User/UserHeader';
+// import UserProfile from './User/UserProfile';
+
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
-import { runInThisContext } from 'vm';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
@@ -30,9 +32,7 @@ class App extends Component {
     componentDidMount() {
         let token = window.localStorage.getItem('Authorization');
         const self = this;
-        console.log(token);
         if (token) {
-            //console.log('WiilMount app token ', token);
             client({
                 method: 'POST',
                 path: '/logintoken',
@@ -47,14 +47,14 @@ class App extends Component {
                 }
                 
             }).catch(e => {
-                console.log(e);
+                throw new Error(e);
             });
         } else {
-            // this.setState({
-            //     user: {
-            //         status: 'Guest'
-            //     }
-            // });
+            this.setState({
+                user: {
+                    role: 'Guest'
+                }
+            });
         }
     }
 
@@ -66,6 +66,8 @@ class App extends Component {
             }
         });
     }
+
+    
 
     covertLoginFormToRegForm(e) {
         e.preventDefault();
@@ -100,9 +102,10 @@ class App extends Component {
         } else if (this.roles.indexOf(this.state.user.role) >= 0) {
 
             authElement = (
-                <p>
-                    {`Hello, ${this.state.user.username}`}
-                </p>
+                <UserHeader 
+                    userInfo={this.state.user}
+                    setUserInState={this.setUserInState}
+                />
             );
         }
         return (

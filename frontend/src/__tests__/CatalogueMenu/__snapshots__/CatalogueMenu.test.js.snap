@@ -6,14 +6,12 @@ exports[`CatalogueMenu Component must be created and props must be correct 1`] =
     <Bootstrap(ListGroupItem)
       key="1"
       onClick={[Function]}
-      variant="secondary"
     >
       1  Car
     </Bootstrap(ListGroupItem)>
     <Bootstrap(ListGroupItem)
       key="2"
       onClick={[Function]}
-      variant="secondary"
     >
       2  BigCars
     </Bootstrap(ListGroupItem)>
