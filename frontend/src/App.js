@@ -3,6 +3,9 @@ import Catalogue from './Catalogue/Catalogue';
 import LoginForm from './LoginForm/LoginForm';
 import RegForm from './RegistrForm/RegistrForm';
 import UserHeader from './User/UserHeader';
+import ShoppingBacketHeader from './ShoppingBasket/ShoppingBasketHeader';
+import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
+import { Row, Col, Container } from 'react-bootstrap';
 // import UserProfile from './User/UserProfile';
 
 
@@ -21,11 +24,15 @@ class App extends Component {
         super(props);
         this.covertLoginFormToRegForm = this.covertLoginFormToRegForm.bind(this);
         this.setUserInState = this.setUserInState.bind(this);
+        this.addItemToBacket = this.addItemToBacket.bind(this);
+        this.showCompleteBasket = this.showCompleteBasket.bind(this);
         this.roles = ['Admin', 'User', 'Customer'];
         this.state = {
             user: {
                 role: 'Guest'
-            }
+            },
+            goodsInBasket: new Set(),
+            showBasket: false
         };
     }
 
@@ -36,8 +43,8 @@ class App extends Component {
             client({
                 method: 'POST',
                 path: '/logintoken',
-                headers: { 
-                    Authorization: `Bearers ${token}` 
+                headers: {
+                    Authorization: `Bearers ${token}`
                 }
             }).then(data => {
                 if (data.status.code === 200) {
@@ -45,7 +52,7 @@ class App extends Component {
                     storage.setItem('Authorization', data.entity.token);
                     self.setUserInState(data.entity);
                 }
-                
+
             }).catch(e => {
                 throw new Error(e);
             });
@@ -67,7 +74,13 @@ class App extends Component {
         });
     }
 
-    
+    addItemToBacket(id) {
+        let setOfGoodsItemsInBasket = this.state.goodsInBasket;
+        setOfGoodsItemsInBasket.add(id);
+        this.setState({
+            goodsInBasket: setOfGoodsItemsInBasket
+        });
+    }
 
     covertLoginFormToRegForm(e) {
         e.preventDefault();
@@ -78,6 +91,14 @@ class App extends Component {
         });
     }
 
+    showCompleteBasket() {
+        this.setState((state) => (
+            {
+                showBasket: !state.showBasket
+            }
+        ));
+    }
+
     render() {
 
         let authElement = (
@@ -85,15 +106,29 @@ class App extends Component {
                 {this.state.user.role}
             </p>
         );
+
+        let mainContent = (
+            <Catalogue addItemToBacket={this.addItemToBacket} />
+        );
+
+        if (this.state.showBasket) {
+            mainContent = (
+                <ShoppingBasket goods={this.state.goodsInBasket} />
+            );
+        }
+
         if (this.state.user.role === 'Guest') {
             authElement = (
-                <LoginForm
-                    handleConverStatusUser={this.covertLoginFormToRegForm}
-                    handleSetStateInApp={this.setUserInState}
-                    userState={this.state.user}
-                >
-                    Log in me now!!!
-                </LoginForm>
+                <React.Fragment>
+                    <LoginForm
+                        handleConverStatusUser={this.covertLoginFormToRegForm}
+                        handleSetStateInApp={this.setUserInState}
+                        userState={this.state.user}
+                    >
+                        Log in me now!!!
+                    </LoginForm>
+
+                </React.Fragment>
             );
         } else if (this.state.user.role === 'GuestUnregistr') {
             authElement = (
@@ -102,7 +137,7 @@ class App extends Component {
         } else if (this.roles.indexOf(this.state.user.role) >= 0) {
 
             authElement = (
-                <UserHeader 
+                <UserHeader
                     userInfo={this.state.user}
                     setUserInState={this.setUserInState}
                 />
@@ -110,8 +145,18 @@ class App extends Component {
         }
         return (
             <React.Fragment>
-                {authElement}
-                <Catalogue />
+                <Container>
+                    <Row>
+                        <Col className='col-10'>
+                            {authElement}
+                        </Col>
+                        <Col className='col-2 d-flex justify-content-end align-items-center'>
+                            <ShoppingBacketHeader goods={this.state.goodsInBasket} showCompleteBasket={this.showCompleteBasket} />
+                        </Col>
+                    </Row>
+                </Container>
+                {mainContent}
+
             </React.Fragment>
         );
     }

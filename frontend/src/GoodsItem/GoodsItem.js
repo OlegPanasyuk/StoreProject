@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 class GoodsItem extends Component {
     render() {
-        let { obj } = this.props;
+        let { obj, addItemToBacket, id } = this.props;
         return (
             <Card>
                 <Card.Header>
-                    {obj.name}
+                    <Card.Title>
+                        {obj.name}
+                    </Card.Title>
                 </Card.Header>
-                <Card.Text style={{ padding: '10px' }}>
-                    {obj.description}
-                </Card.Text>
+                <Card.Body className='d-flex flex-column'>
+                    <Card.Text style={{ padding: '10px' }}>
+                        {obj.description}
+                    </Card.Text>
+                    <Button variant='primary' onClick={()=>addItemToBacket(id)}>
+                        Add to backet
+                    </Button>
+                </Card.Body>
             </Card>
         );
     }
 }
 
 GoodsItem.propTypes = {
-    obj : PropTypes.object
+    obj: PropTypes.object
 };
 
 

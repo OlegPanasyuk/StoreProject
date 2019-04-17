@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
+import { Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -41,7 +41,7 @@ class RegisrtForm extends Component {
         }).then(res => {
             self.setState((state) => ({
                 message: res.entity.message,
-                show: (state.show) ? true : true, 
+                show: (state.show) ? true : true,
             }));
             if (res.entity.status) {
                 setInterval(() =>
@@ -50,67 +50,65 @@ class RegisrtForm extends Component {
                         role: 'Guest'
                     }),
                 2000);
-            } 
+            }
         }).catch(err => {
             alert(err);
         });
     }
 
     componentDidMount() {
-       
+
     }
 
     render() {
-        let { target, message, show, variant } = this.state;
+        let { target, message, show } = this.state;
         return (
-            <Container className='mt-3'>
-                <Form>
-                    <Form.Row>
-                        <Form.Group as={Col} className="col-2" controlId="formGridEmail">
-                            <Form.Control
-                                size="sm"
-                                type="email"
-                                placeholder="Enter email"
-                                ref={this.emailInputR}
-                            />
-                        </Form.Group>
-                        <Form.Group as={Col} className="col-2" controlId="formGridPassword">
-                            <Form.Control
-                                size="sm"
-                                type="password"
-                                placeholder="Password"
-                                ref={this.passWordInput1}
-                            />
-                        </Form.Group>
-                        <Form.Group as={Col} className="col-2" controlId="formGridRepeatPassword">
-                            <Form.Control
-                                size="sm"
-                                type="password"
-                                placeholder="Repeat password"
-                                ref={this.passWordInput2}
-                            />
-                        </Form.Group>
-                        <Col className='d-flex align-items-end'>
-                            <Button
-                                ref={this.attachRef}
-                                size="sm"
-                                variant="secondary"
-                                className="mb-3"
-                                onClick={this.sendRequestForRegistration}
-                            >
-                                Registration
-                            </Button>
-                        </Col>
-                        <Overlay target={target} show={show} placement="right">
-                            {props => (
-                                <Tooltip id="overlay-example" {...props} show={show.toString()}>
-                                    {message}
-                                </Tooltip>
-                            )}
-                        </Overlay>
-                    </Form.Row>
-                </Form>
-            </Container>
+            <Form className='mt-3'>
+                <Form.Row>
+                    <Form.Group as={Col} className="col-2" controlId="formGridEmail">
+                        <Form.Control
+                            size="sm"
+                            type="email"
+                            placeholder="Enter email"
+                            ref={this.emailInputR}
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="col-2" controlId="formGridPassword">
+                        <Form.Control
+                            size="sm"
+                            type="password"
+                            placeholder="Password"
+                            ref={this.passWordInput1}
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="col-2" controlId="formGridRepeatPassword">
+                        <Form.Control
+                            size="sm"
+                            type="password"
+                            placeholder="Repeat password"
+                            ref={this.passWordInput2}
+                        />
+                    </Form.Group>
+                    <Col className='d-flex align-items-end'>
+                        <Button
+                            ref={this.attachRef}
+                            size="sm"
+                            variant="secondary"
+                            className="mb-3"
+                            onClick={this.sendRequestForRegistration}
+                        >
+                            Registration
+                        </Button>
+                    </Col>
+                    <Overlay target={target} show={show} placement="right">
+                        {props => (
+                            <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                                {message}
+                            </Tooltip>
+                        )}
+                    </Overlay>
+                </Form.Row>
+            </Form>
         );
 
     }

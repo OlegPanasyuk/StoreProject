@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Col, Button } from 'react-bootstrap';
+import { Form, Col, Button } from 'react-bootstrap';
 import Link from '../Link/Link';
 import PropsTypes from 'prop-types';
 
@@ -38,7 +38,7 @@ class LoginForm extends Component {
                 // needs tool tip
             }
 
-           
+
 
         }).catch((err) => {
             throw new Error('error in request', err);
@@ -49,38 +49,33 @@ class LoginForm extends Component {
         let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
         return (
-            <Container className='mt-3'>
-                <Form>
-                    <Form.Row>
-                        <Form.Group as={Col} className="col-3" controlId="formGridEmail">
-                            <Form.Control 
-                                size="sm" 
-                                type="email" 
-                                placeholder="Enter email" 
-                                ref={this.emailInput} 
-                                defaultValue={(userState.email) ? userState.email : ''}
-                            />
-                        </Form.Group>
-                        <Form.Group as={Col} className="col-3" controlId="formGridPassword">
-                            <Form.Control size="sm" type="password" placeholder="Password" ref={this.passWordInput} />
-                        </Form.Group>
-                        <Col className='d-flex align-items-end'>
-                            <Button size="sm" variant="secondary" className="mb-3" onClick={this.sendLoginRequest}>
-                                Login
-                            </Button>
-                            <Link
-                                text='Registration'
-                                href='#'
-                                className="d-block mb-3 ml-3 p-1"
-                                ConverStatusUser={handleConverStatusUser}>
-                            </Link>
-                        </Col>
-                        <Col>
-
-                        </Col>
-                    </Form.Row>
-                </Form>
-            </Container>
+            <Form className='mt-3'>
+                <Form.Row>
+                    <Form.Group as={Col} className="col-3" controlId="formGridEmail">
+                        <Form.Control
+                            size="sm"
+                            type="email"
+                            placeholder="Enter email"
+                            ref={this.emailInput}
+                            defaultValue={(userState.email) ? userState.email : ''}
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="col-3" controlId="formGridPassword">
+                        <Form.Control size="sm" type="password" placeholder="Password" ref={this.passWordInput} />
+                    </Form.Group>
+                    <Col className='d-flex align-items-end'>
+                        <Button size="sm" variant="secondary" className="mb-3" onClick={this.sendLoginRequest}>
+                            Login
+                        </Button>
+                        <Link
+                            text='Registration'
+                            href='#'
+                            className="d-block mb-3 ml-3 p-1"
+                            ConverStatusUser={handleConverStatusUser}>
+                        </Link>
+                    </Col>
+                </Form.Row>
+            </Form>
         );
     }
 }

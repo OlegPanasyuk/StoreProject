@@ -9,7 +9,12 @@ class Goods extends Component {
 
         let itemsGoods = Object.keys(obj).map((el, i) => {
             return (
-                <GoodsItem key={`Goods-${obj[el].idgoods}-${i}`} obj={obj[el]} />
+                <GoodsItem 
+                    key={`Goods-${obj[el].idgoods}-${i}`} 
+                    obj={obj[el]}
+                    id={obj[el].idgoods}  
+                    addItemToBacket={this.props.addItemToBacket}
+                />
             );
         });
         if (itemsGoods.length === 0) {

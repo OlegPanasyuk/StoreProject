@@ -184,6 +184,7 @@ class Catalogue extends Component {
                     <Col>
                         <Goods
                             obj={itemsGoods}
+                            addItemToBacket={this.props.addItemToBacket}
                         >
                         </Goods>
                     </Col>
