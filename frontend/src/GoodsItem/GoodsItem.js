@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addGoodsToBasket } from '../REDUX/actions/actionsShoppingBasket';
 
 class GoodsItem extends Component {
+
+    handleAddToBasket = () => {
+        this.props.addGoodsToBasket(this.props.id);
+        
+    };
+
     render() {
         let { obj, addItemToBacket, id } = this.props;
         return (
@@ -11,12 +19,15 @@ class GoodsItem extends Component {
                     <Card.Title>
                         {obj.name}
                     </Card.Title>
+                    <Card.Text>
+                        {`${obj.price} $`}
+                    </Card.Text>
                 </Card.Header>
                 <Card.Body className='d-flex flex-column'>
                     <Card.Text style={{ padding: '10px' }}>
                         {obj.description}
                     </Card.Text>
-                    <Button variant='primary' onClick={()=>addItemToBacket(id)}>
+                    <Button variant='primary' onClick={ this.handleAddToBasket}>
                         Add to backet
                     </Button>
                 </Card.Body>
@@ -30,4 +41,4 @@ GoodsItem.propTypes = {
 };
 
 
-export default GoodsItem;
+export default connect(null, { addGoodsToBasket })(GoodsItem);

@@ -8,7 +8,6 @@ import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
 import { Row, Col, Container } from 'react-bootstrap';
 // import UserProfile from './User/UserProfile';
 
-
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
@@ -18,7 +17,6 @@ const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
 
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -26,6 +24,7 @@ class App extends Component {
         this.setUserInState = this.setUserInState.bind(this);
         this.addItemToBacket = this.addItemToBacket.bind(this);
         this.showCompleteBasket = this.showCompleteBasket.bind(this);
+        this.removeItemFromBasket = this.removeItemFromBasket.bind(this);
         this.roles = ['Admin', 'User', 'Customer'];
         this.state = {
             user: {
@@ -82,6 +81,14 @@ class App extends Component {
         });
     }
 
+    removeItemFromBasket(id) {
+        let setOfGoodsItemsInBasket = this.state.goodsInBasket;
+        setOfGoodsItemsInBasket.delete(id);
+        this.setState({
+            goodsInBasket: setOfGoodsItemsInBasket
+        });
+    }
+
     covertLoginFormToRegForm(e) {
         e.preventDefault();
         this.setState({
@@ -92,11 +99,9 @@ class App extends Component {
     }
 
     showCompleteBasket() {
-        this.setState((state) => (
-            {
-                showBasket: !state.showBasket
-            }
-        ));
+        this.setState((state) => ({
+            showBasket: !state.showBasket
+        }));
     }
 
     render() {
@@ -113,7 +118,10 @@ class App extends Component {
 
         if (this.state.showBasket) {
             mainContent = (
-                <ShoppingBasket goods={this.state.goodsInBasket} />
+                <ShoppingBasket 
+                    
+                    removeItemFromBasket={this.removeItemFromBasket}
+                />
             );
         }
 
@@ -151,7 +159,11 @@ class App extends Component {
                             {authElement}
                         </Col>
                         <Col className='col-2 d-flex justify-content-end align-items-center'>
-                            <ShoppingBacketHeader goods={this.state.goodsInBasket} showCompleteBasket={this.showCompleteBasket} />
+                            <ShoppingBacketHeader 
+                                goods={this.state.goodsInBasket} 
+                                showCompleteBasket={this.showCompleteBasket} 
+                               
+                            />
                         </Col>
                     </Row>
                 </Container>

@@ -13,6 +13,9 @@ module.exports = (sequalize, type) => {
         }, 
         catalogue_id_catalogue : {
             type : type.INTEGER
+        },
+        price: {
+            type: type.FLOAT
         }
     }, {
         timestamps : false,

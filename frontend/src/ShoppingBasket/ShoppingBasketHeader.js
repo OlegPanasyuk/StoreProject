@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './ShoppingBacketHeader.css';
+import { connect } from 'react-redux';
+import store from '../REDUX/store';
+
 
 class ShoppingBasketHeader extends Component {
 
@@ -38,12 +41,19 @@ class ShoppingBasketHeader extends Component {
                                 shopping-backet-header_size-l 
                                 shopping-backet-header_color-grey"
                     onClick = {()=>showCompleteBasket()}
-                >
-                </i>
+                />
+               
                 {notItem}
             </React.Fragment>
         ); 
     }
 }
 
-export default ShoppingBasketHeader;
+const mapStateToProps = function(state) {
+    
+    return {
+        goods: state.shoppingBasketReducers.goodsInBasket
+    };
+};
+
+export default connect(mapStateToProps)(ShoppingBasketHeader);

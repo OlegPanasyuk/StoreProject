@@ -1,8 +1,11 @@
 module.exports = (sequalize, type) => {
     return sequalize.define( 'user', {
+        id: {
+            type: type.INTEGER,
+            primaryKey: true
+        },
         username : {
             type : type.STRING(16),
-            primaryKey : true
         },
         email : {
             type : type.STRING(255)
