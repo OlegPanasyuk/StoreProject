@@ -1,9 +1,5 @@
 module.exports = (sequalize, type) => {
     return sequalize.define( 'user', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true
-        },
         username : {
             type : type.STRING(16),
         },
@@ -18,6 +14,11 @@ module.exports = (sequalize, type) => {
         },
         role: {
             type: type.STRING(45)
+        },
+        id: {
+            type: type.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
         }
     }, {
         timestamps : false,

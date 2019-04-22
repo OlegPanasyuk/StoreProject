@@ -24,9 +24,9 @@ class ShoppingBascket extends Component {
         super(props);
         this.arrItems = [];
         this.sumTotal = 0;
+        this.sendBasketToWork = this.sendBasketToWork.bind(this);
         this.state = {
-            goods: new Set(),
-            arrItems: []
+            succsefullTransaction: false
         };
     }
 
@@ -38,6 +38,38 @@ class ShoppingBascket extends Component {
         }).then((data) => {
             return data.entity[0];
         });
+    }
+
+    sendBasketToWork() {
+        let token = window.localStorage.getItem('Authorization');
+        let self = this;
+        if (this.props.goodsData.length === 0) {
+            //nothing to do
+
+        } else {
+            client({
+                method: "POST",
+                path: '/basket/',
+                entity: {
+                    cont: JSON.stringify(this.props.goodsData)
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(data => {
+                if (data.entity.id) {
+                    console.log(data);
+                    self.setState({
+                        succsefullTransaction: true
+                    });
+                } else if (data.entity === 'Unauthorized') {
+                    console.log('You\'re not authorized');
+                }
+
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     }
 
     componentDidMount() {
@@ -53,38 +85,53 @@ class ShoppingBascket extends Component {
 
     render() {
         this.sumTotal = 0;
-        return (
-            <Container>
-                <Row>
-                    <h3>Your Basket:</h3>
-                </Row>
-                <Row>
-                    {this.props.goodsData && this.props.goodsData.map((el) => {
-                        this.sumTotal += el.price;
-                        return (
-                            <ShoppingBasketItem
-                                key={el.idgoods}
-                                obj={el}
-                                removeItemFromBasket={() => { this.props.deleteGoodsFromBasket(el.idgoods); }}
-                            />
-                        );
-                    })}
-                </Row>
-                <Row>
-                    <Col className='col-10'>
-                        Total price:
-                    </Col>
-                    <Col className='shopping-basket__total-price'>
-                        {`${this.sumTotal} $`}
-                    </Col>
-                </Row>
-                <Row>
-                    <Button variant='secondary' onClick={()=> alert()}>
-                        Byu
-                    </Button>
-                </Row>
-            </Container>
-        );
+        let message = '';
+        if (this.state.succsefullTransaction) {
+            message = (
+                <p>
+                    Transaction is succsefull.
+                </p>
+            );
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        } else {
+            message = (
+                <Container>
+                    <Row>
+                        <h3>Your Basket:</h3>
+                    </Row>
+                    <Row>
+                        {this.props.goodsData && this.props.goodsData.map((el) => {
+                            this.sumTotal += el.price;
+                            return (
+                                <ShoppingBasketItem
+                                    key={el.idgoods}
+                                    obj={el}
+                                    removeItemFromBasket={() => { this.props.deleteGoodsFromBasket(el.idgoods); }}
+                                />
+                            );
+                        })}
+                    </Row>
+                    <Row>
+                        <Col className='col-10'>
+                            Total price:
+                        </Col>
+                        <Col className='shopping-basket__total-price'>
+                            {`${this.sumTotal} $`}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Button variant='secondary' onClick={() => this.sendBasketToWork()}>
+                            Buy
+                        </Button>
+                    </Row>
+                </Container>
+            );
+        }
+
+
+        return message;
     }
 }
 
@@ -97,7 +144,7 @@ const mapStoreToProps = function (state) {
     );
 };
 
-export default connect(mapStoreToProps, { 
-    showGoodsInBasketSuccess, 
-    deleteGoodsFromBasket 
+export default connect(mapStoreToProps, {
+    showGoodsInBasketSuccess,
+    deleteGoodsFromBasket
 })(ShoppingBascket);

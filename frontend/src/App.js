@@ -43,7 +43,7 @@ class App extends Component {
                 method: 'POST',
                 path: '/logintoken',
                 headers: {
-                    Authorization: `Bearers ${token}`
+                    Authorization: `Bearer ${token}`
                 }
             }).then(data => {
                 if (data.status.code === 200) {
@@ -53,7 +53,7 @@ class App extends Component {
                 }
 
             }).catch(e => {
-                throw new Error(e);
+                console.error(e.entity.message);
             });
         } else {
             this.setState({
@@ -133,7 +133,7 @@ class App extends Component {
                         handleSetStateInApp={this.setUserInState}
                         userState={this.state.user}
                     >
-                        Log in me now!!!
+                        LoginForm
                     </LoginForm>
 
                 </React.Fragment>

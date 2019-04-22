@@ -19,8 +19,8 @@ const Users = UserModel(sequelize, Sequelize);
 const Basket_History_Users = basket_history_users_Model(sequelize, Sequelize);
 
 //Associations
-Users.hasMany(Basket_History_Users);
-Basket_History_Users.belongsTo(Users);
+//Users.hasMany(Basket_History_Users);
+//Basket_History_Users.belongsTo(Users);
 
 
 
