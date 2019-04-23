@@ -6,17 +6,35 @@ exports[`GoodsItem  Component must be created 1`] = `
   body={false}
 >
   <CardHeader>
-    Honda Civic
+    <CardTitle>
+      Honda Civic
+    </CardTitle>
+    <CardText>
+      undefined $
+    </CardText>
   </CardHeader>
-  <CardText
-    style={
-      Object {
-        "padding": "10px",
-      }
-    }
+  <CardBody
+    className="d-flex flex-column"
   >
-    Lorem ipsum dolor sit amet consectetur adipisicing elit.         Blanditiis provident quo quaerat repellat fuga debitis nemo voluptates         quis voluptate, dolorem modi non? Nisi, maxime a.
-  </CardText>
+    <CardText
+      style={
+        Object {
+          "padding": "10px",
+        }
+      }
+    >
+      Lorem ipsum dolor sit amet consectetur adipisicing elit.         Blanditiis provident quo quaerat repellat fuga debitis nemo voluptates         quis voluptate, dolorem modi non? Nisi, maxime a.
+    </CardText>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="primary"
+    >
+      Add to backet
+    </Button>
+  </CardBody>
 </Card>
 `;
 
@@ -26,16 +44,34 @@ exports[`GoodsItem  Component must be rendered after creation 1`] = `
   body={false}
 >
   <CardHeader>
-    TestFromTests
+    <CardTitle>
+      TestFromTests
+    </CardTitle>
+    <CardText>
+      undefined $
+    </CardText>
   </CardHeader>
-  <CardText
-    style={
-      Object {
-        "padding": "10px",
-      }
-    }
+  <CardBody
+    className="d-flex flex-column"
   >
-    Lorem Test For Tests and Only Tests
-  </CardText>
+    <CardText
+      style={
+        Object {
+          "padding": "10px",
+        }
+      }
+    >
+      Lorem Test For Tests and Only Tests
+    </CardText>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="primary"
+    >
+      Add to backet
+    </Button>
+  </CardBody>
 </Card>
 `;

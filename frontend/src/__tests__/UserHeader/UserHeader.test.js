@@ -1,24 +1,24 @@
 import React from 'react';
-import UserHeader from '../../User/UserHeader';
+import { UserHeader } from '../../User/UserHeader';
 import { shallow, configure } from 'enzyme';
 import { shallowToJson } from 'enzyme-to-json';
 import Adapter from 'enzyme-adapter-react-16';
 import PropTypes from 'prop-types';
-import rest from 'rest';
+// import rest from 'rest';
 
 configure({ adapter: new Adapter() });
 
-import pathPrefix from 'rest/interceptor/pathPrefix';
-import errorCode from 'rest/interceptor/errorCode';
-import mime from 'rest/interceptor/mime';
+// import pathPrefix from 'rest/interceptor/pathPrefix';
+// import errorCode from 'rest/interceptor/errorCode';
+// import mime from 'rest/interceptor/mime';
 
-const client = rest.wrap(mime, { mime: 'application/json' })
-    .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
+// const client = rest.wrap(mime, { mime: 'application/json' })
+//     .wrap(errorCode, { code: 500 })
+//     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
 
 
 function setupComponent(props = {
-    setUserInState: ()=>{},
+    setUserInState: () => { },
     userInfo: {
         username: 'Admin',
         email: 'test@test.com',

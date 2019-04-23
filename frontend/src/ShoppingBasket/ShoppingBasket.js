@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import ShoppingBasketItem from './ShoppingBasketItem';
+import PropsTypes from  'prop-types';
 import './ShoppingBasket.css';
 
 //Redux use
@@ -13,13 +14,12 @@ import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
 
-class ShoppingBascket extends Component {
+export class ShoppingBascket extends Component {
     constructor(props) {
         super(props);
         this.arrItems = [];
@@ -102,7 +102,7 @@ class ShoppingBascket extends Component {
                         <h3>Your Basket:</h3>
                     </Row>
                     <Row>
-                        {this.props.goodsData && this.props.goodsData.map((el) => {
+                        {this.props.goodsData.length && this.props.goodsData.map((el) => {
                             this.sumTotal += el.price;
                             return (
                                 <ShoppingBasketItem
@@ -130,7 +130,6 @@ class ShoppingBascket extends Component {
             );
         }
 
-
         return message;
     }
 }
@@ -142,6 +141,11 @@ const mapStoreToProps = function (state) {
             goodsData: state.shoppingBasketReducers.goodsInBasketData
         }
     );
+};
+
+ShoppingBascket.propTypes = {
+    goods: PropsTypes.object,
+    goodsData: PropsTypes.array
 };
 
 export default connect(mapStoreToProps, {

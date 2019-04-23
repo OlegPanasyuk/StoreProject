@@ -1,5 +1,5 @@
 import React from 'react';
-import GoodsItem from '../../GoodsItem/GoodsItem';
+import { GoodsItem } from '../../GoodsItem/GoodsItem';
 import { shallow, configure } from 'enzyme';
 import { shallowToJson } from 'enzyme-to-json';
 import Adapter from 'enzyme-adapter-react-16';

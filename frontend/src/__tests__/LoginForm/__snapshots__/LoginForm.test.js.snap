@@ -1,85 +1,77 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LoginForm Component must be created 1`] = `
-<Container
-  as="div"
+<Form
+  as="form"
   className="mt-3"
-  fluid={false}
+  inline={false}
 >
-  <Form
-    as="form"
-    inline={false}
-  >
-    <FormRow>
-      <FormGroup
-        as={
-          Object {
-            "$$typeof": Symbol(react.forward_ref),
-            "defaultProps": Object {
-              "as": "div",
-            },
-            "displayName": "Col",
-            "render": [Function],
-          }
+  <FormRow>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "as": "div",
+          },
+          "displayName": "Col",
+          "render": [Function],
         }
-        className="col-3"
-        controlId="formGridEmail"
-      >
-        <FormControl
-          as="input"
-          defaultValue="test@test.com"
-          placeholder="Enter email"
-          size="sm"
-          type="email"
-        />
-      </FormGroup>
-      <FormGroup
-        as={
-          Object {
-            "$$typeof": Symbol(react.forward_ref),
-            "defaultProps": Object {
-              "as": "div",
-            },
-            "displayName": "Col",
-            "render": [Function],
-          }
-        }
-        className="col-3"
-        controlId="formGridPassword"
-      >
-        <FormControl
-          as="input"
-          placeholder="Password"
-          size="sm"
-          type="password"
-        />
-      </FormGroup>
-      <Col
-        as="div"
-        className="d-flex align-items-end"
-      >
-        <Button
-          active={false}
-          className="mb-3"
-          disabled={false}
-          onClick={[Function]}
-          size="sm"
-          type="button"
-          variant="secondary"
-        >
-          Login
-        </Button>
-        <Link
-          ConverStatusUser={[Function]}
-          className="d-block mb-3 ml-3 p-1"
-          href="#"
-          text="Registration"
-        />
-      </Col>
-      <Col
-        as="div"
+      }
+      className="col-3"
+      controlId="formGridEmail"
+    >
+      <FormControl
+        as="input"
+        defaultValue="test@test.com"
+        placeholder="Enter email"
+        size="sm"
+        type="email"
       />
-    </FormRow>
-  </Form>
-</Container>
+    </FormGroup>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "as": "div",
+          },
+          "displayName": "Col",
+          "render": [Function],
+        }
+      }
+      className="col-3"
+      controlId="formGridPassword"
+    >
+      <FormControl
+        as="input"
+        placeholder="Password"
+        size="sm"
+        type="password"
+      />
+    </FormGroup>
+    <Col
+      as="div"
+      className="d-flex align-items-end"
+    >
+      <Button
+        active={false}
+        className="mb-3"
+        disabled={false}
+        onClick={[Function]}
+        size="sm"
+        type="button"
+        variant="secondary"
+      >
+        Login
+      </Button>
+      <Link
+        ConverStatusUser={[Function]}
+        className="d-block mb-3 ml-3 p-1"
+        href="#"
+        text="Registration"
+      />
+    </Col>
+  </FormRow>
+</Form>
 `;

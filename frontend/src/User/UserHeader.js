@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Row, Col, Button } from 'react-bootstrap';
-import { request } from 'http';
 
 import store from '../REDUX/store';
 import { connect } from 'react-redux';
@@ -13,13 +12,12 @@ import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
 
-class UserHeader extends Component {
+export class UserHeader extends Component {
 
     requestUserHistoryBasket() {
         let token = window.localStorage.getItem('Authorization');

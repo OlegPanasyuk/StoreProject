@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addGoodsToBasket } from '../REDUX/actions/actionsShoppingBasket';
 
-class GoodsItem extends Component {
+export class GoodsItem extends Component {
 
     handleAddToBasket = () => {
         this.props.addGoodsToBasket(this.props.id);

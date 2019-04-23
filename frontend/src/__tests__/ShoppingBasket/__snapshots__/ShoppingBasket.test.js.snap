@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShoppingBascket --- Snapshot +++capturing Snapshot of ShoppingBascket 1`] = `
+<Container
+  as="div"
+  fluid={false}
+>
+  <Bootstrap(Row)>
+    <h3>
+      Your Basket:
+    </h3>
+  </Bootstrap(Row)>
+  <Bootstrap(Row)>
+    0
+  </Bootstrap(Row)>
+  <Bootstrap(Row)>
+    <Col
+      as="div"
+      className="col-10"
+    >
+      Total price:
+    </Col>
+    <Col
+      as="div"
+      className="shopping-basket__total-price"
+    >
+      0 $
+    </Col>
+  </Bootstrap(Row)>
+  <Bootstrap(Row)>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="secondary"
+    >
+      Buy
+    </Button>
+  </Bootstrap(Row)>
+</Container>
+`;

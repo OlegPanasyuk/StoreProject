@@ -8,7 +8,8 @@ exports[`Goods Component Component must be created and props must be correct 1`]
     }
   }
 >
-  <GoodsItem
+  <ConnectFunction
+    id={1}
     key="Goods-1-0"
     obj={
       Object {
@@ -19,7 +20,8 @@ exports[`Goods Component Component must be created and props must be correct 1`]
       }
     }
   />
-  <GoodsItem
+  <ConnectFunction
+    id={2}
     key="Goods-2-1"
     obj={
       Object {
