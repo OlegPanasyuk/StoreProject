@@ -5,8 +5,14 @@ import RegForm from './RegistrForm/RegistrForm';
 import UserHeader from './User/UserHeader';
 import ShoppingBacketHeader from './ShoppingBasket/ShoppingBasketHeader';
 import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
+import UserHistory from './User/UserHistory';
 import { Row, Col, Container } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 // import UserProfile from './User/UserProfile';
+
+//Redux
+import { connect } from 'react-redux';
+import { showCatalogue, showUserHistory, showShoppingBasket} from './REDUX/actions/actionsMainContent';
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -31,7 +37,6 @@ class App extends Component {
                 role: 'Guest'
             },
             goodsInBasket: new Set(),
-            showBasket: false
         };
     }
 
@@ -53,7 +58,8 @@ class App extends Component {
                 }
 
             }).catch(e => {
-                console.error(e.entity.message);
+                //Needs Error Object to push notifications to UI
+                alert(e.entity.message);
             });
         } else {
             this.setState({
@@ -99,29 +105,45 @@ class App extends Component {
     }
 
     showCompleteBasket() {
-        this.setState((state) => ({
-            showBasket: !state.showBasket
-        }));
+        if (this.props.mainContent.target === 'ShoppingBasket') {
+            this.props.showCatalogue();
+        } else {
+            this.props.showShoppingBasket();
+        }
+        
+        // let str = null;
+        // if (this.state.mainContent === 'showBasket') {
+        //     str = 'Catalogue';
+        // } else {
+        //     str = 'showBasket';
+        // }
+        // this.setState(() => ({
+        //     mainContent: str
+        // }));
     }
 
     render() {
-
+        
         let authElement = (
             <p>
                 {this.state.user.role}
             </p>
         );
-
+        
         let mainContent = (
             <Catalogue addItemToBacket={this.addItemToBacket} />
         );
 
-        if (this.state.showBasket) {
+        if (this.props.mainContent.target === 'ShoppingBasket') {
             mainContent = (
-                <ShoppingBasket 
-                    
+                <ShoppingBasket
                     removeItemFromBasket={this.removeItemFromBasket}
                 />
+            );
+        }
+        if (this.props.mainContent.target === 'UserHistory') {
+            mainContent = (
+                <UserHistory/>
             );
         }
 
@@ -159,10 +181,10 @@ class App extends Component {
                             {authElement}
                         </Col>
                         <Col className='col-2 d-flex justify-content-end align-items-center'>
-                            <ShoppingBacketHeader 
-                                goods={this.state.goodsInBasket} 
-                                showCompleteBasket={this.showCompleteBasket} 
-                               
+                            <ShoppingBacketHeader
+                                goods={this.state.goodsInBasket}
+                                showCompleteBasket={this.showCompleteBasket}
+
                             />
                         </Col>
                     </Row>
@@ -174,4 +196,23 @@ class App extends Component {
     }
 }
 
-export default App;
+App.propTypes = {
+    mainContent: PropTypes.object,
+    showCatalogue: PropTypes.func, 
+    showUserHistory: PropTypes.func, 
+    showShoppingBasket: PropTypes.func
+};
+
+const mapStateToProps = (state) => {
+    return {
+        historyBasket: state.userHeaderReducers.historyBasket,
+        mainContent: state.mainContent
+    };
+};
+
+
+export default connect(mapStateToProps, { 
+    showCatalogue, 
+    showUserHistory, 
+    showShoppingBasket
+})(App);

@@ -6,7 +6,7 @@ import './ShoppingBasket.css';
 
 //Redux use
 import { connect } from 'react-redux';
-import store from '../REDUX/store';
+//import store from '../REDUX/store';
 import { showGoodsInBasketSuccess, deleteGoodsFromBasket } from '../REDUX/actions/actionsShoppingBasket';
 
 // For Requests to server
@@ -58,16 +58,17 @@ export class ShoppingBascket extends Component {
                 }
             }).then(data => {
                 if (data.entity.id) {
-                    console.log(data);
                     self.setState({
                         succsefullTransaction: true
                     });
                 } else if (data.entity === 'Unauthorized') {
-                    console.log('You\'re not authorized');
+                    // Needs Error reporting by object Oushing messages to UI
+                    alert('You\'re not authorized');
                 }
 
             }).catch(err => {
-                console.log(err);
+                // Needs Error reporting by object Oushing messages to UI
+                alert(err);
             });
         }
     }
@@ -145,7 +146,9 @@ const mapStoreToProps = function (state) {
 
 ShoppingBascket.propTypes = {
     goods: PropsTypes.object,
-    goodsData: PropsTypes.array
+    goodsData: PropsTypes.array,
+    showGoodsInBasketSuccess: PropsTypes.func,
+    deleteGoodsFromBasket: PropsTypes.func
 };
 
 export default connect(mapStoreToProps, {

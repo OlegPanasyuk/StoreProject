@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './ShoppingBacketHeader.css';
 import { connect } from 'react-redux';
-import store from '../REDUX/store';
+import PropTypes from 'prop-types';
 
 
 class ShoppingBasketHeader extends Component {
@@ -36,18 +36,24 @@ class ShoppingBasketHeader extends Component {
         return (
             <React.Fragment>
                 <i 
-                    className = " fas 
-                                fa-shopping-basket 
-                                shopping-backet-header_size-l 
-                                shopping-backet-header_color-grey"
+                    className = 'fas \
+                                fa-shopping-basket \
+                                shopping-backet-header_size-l \
+                                shopping-backet-header_color-grey'
                     onClick = {()=>showCompleteBasket()}
                 />
+                
                
                 {notItem}
             </React.Fragment>
         ); 
     }
 }
+
+ShoppingBasketHeader.propTypes = {
+    goods: PropTypes.object,
+    showCompleteBasket: PropTypes.func
+};
 
 const mapStateToProps = function(state) {
     

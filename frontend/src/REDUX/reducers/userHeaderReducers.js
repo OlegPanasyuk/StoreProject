@@ -1,8 +1,7 @@
 import { SHOW_HISTORY_BASKET } from '../actions/actionsTypes';
 
 const initialState = {
-    historyBasket: [],
-    
+    historyBasket: []
 };
 
 export default function (state = initialState, action) {

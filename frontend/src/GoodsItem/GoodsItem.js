@@ -12,7 +12,7 @@ export class GoodsItem extends Component {
     };
 
     render() {
-        let { obj, addItemToBacket, id } = this.props;
+        let { obj } = this.props;
         return (
             <Card>
                 <Card.Header>
@@ -37,7 +37,9 @@ export class GoodsItem extends Component {
 }
 
 GoodsItem.propTypes = {
-    obj: PropTypes.object
+    obj: PropTypes.object,
+    id: PropTypes.number,
+    addGoodsToBasket: PropTypes.func
 };
 
 

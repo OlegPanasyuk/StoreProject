@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Card } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 
 class ShoppingBasketItem extends Component {
-    constructor(props) {
-        super(props);
-
-    }
-
     render() {
         let { obj, removeItemFromBasket } = this.props;
         return (
@@ -40,5 +36,10 @@ class ShoppingBasketItem extends Component {
         );
     }
 }
+
+ShoppingBasketItem.propTypes = {
+    obj: PropTypes.object,
+    removeItemFromBasket: PropTypes.func
+};
 
 export default ShoppingBasketItem;

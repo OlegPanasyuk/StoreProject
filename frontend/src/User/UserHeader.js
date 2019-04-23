@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import { Row, Col, Button } from 'react-bootstrap';
 
-import store from '../REDUX/store';
+//Redux
 import { connect } from 'react-redux';
 import { showHistoryOfShoppping } from '../REDUX/actions/actionsHistoryOfShopping';
+import { showUserHistory } from '../REDUX/actions/actionsMainContent';
 
 // For Requests to server
 import rest from 'rest';
@@ -32,6 +33,7 @@ export class UserHeader extends Component {
                 window.location.reload();
             } else if (data.entity.length > 0) {
                 this.props.showHistoryOfShoppping(data.entity);
+                this.props.showUserHistory();
             }
         });
     }
@@ -81,7 +83,9 @@ export class UserHeader extends Component {
 
 UserHeader.propTypes = {
     userInfo: PropTypes.object,
-    setUserInState: PropTypes.func
+    setUserInState: PropTypes.func,
+    showHistoryOfShoppping: PropTypes.func,
+    showUserHistory: PropTypes.func
 };
 
 const mapStoreToProps = function (state) {
@@ -93,6 +97,7 @@ const mapStoreToProps = function (state) {
 };
 
 export default connect(mapStoreToProps, {
-    showHistoryOfShoppping
+    showHistoryOfShoppping,
+    showUserHistory
 })(UserHeader);
 

@@ -44,7 +44,7 @@ class RegisrtForm extends Component {
                 show: (state.show) ? true : true,
             }));
             if (res.entity.status) {
-                const showLoginForm = setTimeout(() =>
+                setTimeout(() =>
                     setUser({
                         ...res.entity.user,
                         role: 'Guest'
