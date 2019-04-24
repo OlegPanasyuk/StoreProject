@@ -26,3 +26,12 @@ export const showShoppingBasket = () => {
         }
     };
 };
+
+export const showUserProfile = () => {
+    return {
+        type: SHOW_MAIN_CONTENT.USER_PROFILE,
+        payload: {
+            target: 'UserProfile'
+        }
+    };
+};

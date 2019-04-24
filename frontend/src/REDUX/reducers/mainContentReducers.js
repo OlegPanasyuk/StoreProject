@@ -27,6 +27,13 @@ export default function (state = initialState, action) {
             target 
         };
     }
+    case SHOW_MAIN_CONTENT.USER_PROFILE: {
+        let { target } = action.payload;
+        return {
+            ...state,
+            target 
+        };
+    }
     default:
         return state;
     }

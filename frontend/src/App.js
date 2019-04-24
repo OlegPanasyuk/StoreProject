@@ -6,13 +6,19 @@ import UserHeader from './User/UserHeader';
 import ShoppingBacketHeader from './ShoppingBasket/ShoppingBasketHeader';
 import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
 import UserHistory from './User/UserHistory';
+import UserProfile from './User/UserProfile';
 import { Row, Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 // import UserProfile from './User/UserProfile';
 
 //Redux
 import { connect } from 'react-redux';
-import { showCatalogue, showUserHistory, showShoppingBasket} from './REDUX/actions/actionsMainContent';
+import { 
+    showCatalogue, 
+    showUserHistory, 
+    showShoppingBasket,
+    showUserProfile
+} from './REDUX/actions/actionsMainContent';
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -146,6 +152,11 @@ class App extends Component {
                 <UserHistory/>
             );
         }
+        if (this.props.mainContent.target === 'UserProfile') {
+            mainContent = (
+                <UserProfile/>
+            );
+        }
 
         if (this.state.user.role === 'Guest') {
             authElement = (
@@ -214,5 +225,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, { 
     showCatalogue, 
     showUserHistory, 
-    showShoppingBasket
+    showShoppingBasket,
+    showUserProfile
 })(App);

@@ -1,7 +1,8 @@
-import { SHOW_HISTORY_BASKET } from '../actions/actionsTypes';
+import { SHOW_HISTORY_BASKET, USER } from '../actions/actionsTypes';
 
 const initialState = {
-    historyBasket: []
+    historyBasket: [],
+    userInfo: {}
 };
 
 export default function (state = initialState, action) {
@@ -12,6 +13,13 @@ export default function (state = initialState, action) {
         return {
             ...state,
             historyBasket: newArr
+        };
+    }
+    case USER.SET_INFO.SUCCESS: {
+        let userInfo = Object.assign({}, action.payload.user);
+        return {
+            ...state,
+            userInfo
         };
     }
     default:

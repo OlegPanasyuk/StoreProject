@@ -14,6 +14,7 @@ const cookieParser = require('cookie-parser');
 //routers
 const registrationUser = require('./authorization/auth');
 const basketShopping = require('./routers/shoppingBasket');
+const userRouter = require('./routers/userRouters');
 
 var serverConfig = config.get('Server');
 
@@ -47,6 +48,8 @@ app.route('/catalogue')
 app.use('/', registrationUser);
 
 app.use('/basket/', basketShopping);
+
+app.use('/user/', userRouter);
 
 app.route('/goods')
     .get(function (req, res) {

@@ -5,8 +5,9 @@ import { Row, Col, Button } from 'react-bootstrap';
 
 //Redux
 import { connect } from 'react-redux';
+import { setUserInfo } from '../REDUX/actions/actionsUser';
 import { showHistoryOfShoppping } from '../REDUX/actions/actionsHistoryOfShopping';
-import { showUserHistory } from '../REDUX/actions/actionsMainContent';
+import { showUserHistory, showUserProfile } from '../REDUX/actions/actionsMainContent';
 
 // For Requests to server
 import rest from 'rest';
@@ -20,6 +21,24 @@ const client = rest.wrap(mime, { mime: 'application/json' })
 
 export class UserHeader extends Component {
 
+    requestUserInfo() {
+        let token = window.localStorage.getItem('Authorization');
+        client({
+            method: 'GET',
+            path: '/user/',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(data => {
+            if (data.entity === 'Unauthorized') {
+                window.location.reload();
+            } else {
+                this.props.setUserInfo(JSON.parse(data.entity));
+                this.props.showUserProfile();
+            }
+        });
+    }
+
     requestUserHistoryBasket() {
         let token = window.localStorage.getItem('Authorization');
         client({
@@ -29,7 +48,7 @@ export class UserHeader extends Component {
                 Authorization: `Bearer ${token}`
             }
         }).then(data => {
-            if (data.entity === 'Unauthorizated') {
+            if (data.entity === 'Unauthorized') {
                 window.location.reload();
             } else if (data.entity.length > 0) {
                 this.props.showHistoryOfShoppping(data.entity);
@@ -49,7 +68,7 @@ export class UserHeader extends Component {
                         className='mr-1'
                         variant='light'
                         onClick={() => {
-                            alert('Profile');
+                            this.requestUserInfo();
                         }}>
                         Profile
                     </Button>
@@ -85,7 +104,9 @@ UserHeader.propTypes = {
     userInfo: PropTypes.object,
     setUserInState: PropTypes.func,
     showHistoryOfShoppping: PropTypes.func,
-    showUserHistory: PropTypes.func
+    showUserHistory: PropTypes.func,
+    setUserInfo: PropTypes.func,
+    showUserProfile: PropTypes.func
 };
 
 const mapStoreToProps = function (state) {
@@ -98,6 +119,8 @@ const mapStoreToProps = function (state) {
 
 export default connect(mapStoreToProps, {
     showHistoryOfShoppping,
-    showUserHistory
+    showUserHistory,
+    setUserInfo,
+    showUserProfile
 })(UserHeader);
 

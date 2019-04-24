@@ -1,16 +1,37 @@
 import React, { Component } from 'react';
+import { Container } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
-class UserProfile extends Component {
-    constructor(props) {
-        super(props);
-        this.user = this.props.user;
-    }
+//Redux
+import { connect } from 'react-redux';
+
+
+export class UserProfile extends Component {
 
     render() {
+        let { userInfo } = this.props;
         return (
-            <div>Hello I'm UserProfile</div>
+            <Container>
+                <h3>User Profile:</h3>
+                <p> 
+                    <b>Name:</b> {userInfo.username}<br/>
+                    <b>Email:</b> {userInfo.email}<br/>
+                    <b>Role:</b> {userInfo.role}<br/>
+                    <b>Create Time:</b> {userInfo.create_time}<br/>
+                </p>
+            </Container>
         );
     }
 }
 
-export default UserProfile;
+UserProfile.propTypes = {
+    userInfo: PropTypes.object
+};
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo: state.userHeaderReducers.userInfo
+    };
+};
+
+export default connect(mapStateToProps)(UserProfile);
