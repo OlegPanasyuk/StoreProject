@@ -19,6 +19,9 @@ import {
     showShoppingBasket,
     showUserProfile
 } from './REDUX/actions/actionsMainContent';
+import {
+    initBasketFromLocalStorage
+} from './REDUX/actions/actionsShoppingBasket';
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -28,6 +31,16 @@ import mime from 'rest/interceptor/mime';
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
+
+
+function takeGoodsFromLocalStorage() {
+    let storage = window.localStorage;
+    let arr = storage.getItem('ShoppingBasket');
+    let goodsInBasket = (arr) ?
+        new Set( arr.split(',').map(el => +el)) : 
+        new Set(); 
+    return goodsInBasket;
+}
 
 class App extends Component {
     constructor(props) {
@@ -43,10 +56,12 @@ class App extends Component {
                 role: 'Guest'
             },
             goodsInBasket: new Set(),
+            showModalReg: false
         };
     }
 
     componentDidMount() {
+        this.props.initBasketFromLocalStorage(takeGoodsFromLocalStorage());
         let token = window.localStorage.getItem('Authorization');
         const self = this;
         if (token) {
@@ -62,7 +77,6 @@ class App extends Component {
                     storage.setItem('Authorization', data.entity.token);
                     self.setUserInState(data.entity);
                 }
-
             }).catch(e => {
                 //Needs Error Object to push notifications to UI
                 alert(e.entity.message);
@@ -106,7 +120,8 @@ class App extends Component {
         this.setState({
             user: {
                 role: 'GuestUnregistr'
-            }
+            },
+            showModalReg: true
         });
     }
 
@@ -173,7 +188,17 @@ class App extends Component {
             );
         } else if (this.state.user.role === 'GuestUnregistr') {
             authElement = (
-                <RegForm setUserInState={this.setUserInState} />
+                <RegForm 
+                    setUserInState={this.setUserInState} 
+                    show={this.state.showModalReg} 
+                    onHide= {() => { this.setState({
+                        showModalReg: false,
+                        user: {
+                            role: 'Guest'
+                        }
+                    });
+                    }}
+                />
             );
         } else if (this.roles.indexOf(this.state.user.role) >= 0) {
 
@@ -211,7 +236,8 @@ App.propTypes = {
     mainContent: PropTypes.object,
     showCatalogue: PropTypes.func, 
     showUserHistory: PropTypes.func, 
-    showShoppingBasket: PropTypes.func
+    showShoppingBasket: PropTypes.func,
+    initBasketFromLocalStorage: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
@@ -226,5 +252,6 @@ export default connect(mapStateToProps, {
     showCatalogue, 
     showUserHistory, 
     showShoppingBasket,
-    showUserProfile
+    showUserProfile,
+    initBasketFromLocalStorage
 })(App);

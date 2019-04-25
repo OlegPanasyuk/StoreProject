@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
+import { 
+    Form, 
+    Col, 
+    Button, 
+    Overlay, 
+    Tooltip,
+    Modal
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -56,45 +63,70 @@ class RegisrtForm extends Component {
         });
     }
 
-    componentDidMount() {
-
-    }
-
     render() {
         let { target, message, show } = this.state;
         return (
-            <Form className='mt-3'>
-                <Form.Row>
-                    <Form.Group as={Col} className="col-2" controlId="formGridEmail">
-                        <Form.Control
+            <Modal 
+                show={this.props.show} 
+                size="sm" 
+                onHide={this.props.onHide}
+                centered
+            >
+                <Modal.Header closeButton >
+                    <h4>
+                        Registration
+                    </h4>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Row>
+                            <Form.Group as={Col} className="" controlId="formGridEmail">
+                                <Form.Control
+                                    size="sm"
+                                    type="email"
+                                    placeholder="Enter email"
+                                    ref={this.emailInputR}
+                                />
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group as={Col} className="" controlId="formGridPassword">
+                                <Form.Control
+                                    size="sm"
+                                    type="password"
+                                    placeholder="Password"
+                                    ref={this.passWordInput1}
+                                />
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group as={Col} className="" controlId="formGridRepeatPassword">
+                                <Form.Control
+                                    size="sm"
+                                    type="password"
+                                    placeholder="Repeat password"
+                                    ref={this.passWordInput2}
+                                />
+                            </Form.Group>
+                           
+                        </Form.Row>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Col className='col-12 d-flex justify-content-end align-items-end'>
+                        <Button
                             size="sm"
-                            type="email"
-                            placeholder="Enter email"
-                            ref={this.emailInputR}
-                        />
-                    </Form.Group>
-                    <Form.Group as={Col} className="col-2" controlId="formGridPassword">
-                        <Form.Control
-                            size="sm"
-                            type="password"
-                            placeholder="Password"
-                            ref={this.passWordInput1}
-                        />
-                    </Form.Group>
-                    <Form.Group as={Col} className="col-2" controlId="formGridRepeatPassword">
-                        <Form.Control
-                            size="sm"
-                            type="password"
-                            placeholder="Repeat password"
-                            ref={this.passWordInput2}
-                        />
-                    </Form.Group>
-                    <Col className='d-flex align-items-end'>
+                            variant="light"
+                            className=""
+                            onClick={this.props.onHide}
+                        >
+                            Close
+                        </Button>
                         <Button
                             ref={this.attachRef}
                             size="sm"
                             variant="secondary"
-                            className="mb-3"
+                            className="ml-3"
                             onClick={this.sendRequestForRegistration}
                         >
                             Registration
@@ -107,8 +139,8 @@ class RegisrtForm extends Component {
                             </Tooltip>
                         )}
                     </Overlay>
-                </Form.Row>
-            </Form>
+                </Modal.Footer>
+            </Modal>
         );
 
     }

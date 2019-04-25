@@ -7,7 +7,11 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setUserInfo } from '../REDUX/actions/actionsUser';
 import { showHistoryOfShoppping } from '../REDUX/actions/actionsHistoryOfShopping';
-import { showUserHistory, showUserProfile } from '../REDUX/actions/actionsMainContent';
+import { 
+    showUserHistory, 
+    showUserProfile, 
+    showCatalogue
+} from '../REDUX/actions/actionsMainContent';
 
 // For Requests to server
 import rest from 'rest';
@@ -86,6 +90,7 @@ export class UserHeader extends Component {
                         variant='light'
                         onClick={() => {
                             window.localStorage.removeItem('Authorization');
+                            this.props.showCatalogue();
                             setUserInState({
                                 role: 'Guest'
                             });
@@ -106,7 +111,8 @@ UserHeader.propTypes = {
     showHistoryOfShoppping: PropTypes.func,
     showUserHistory: PropTypes.func,
     setUserInfo: PropTypes.func,
-    showUserProfile: PropTypes.func
+    showUserProfile: PropTypes.func,
+    showCatalogue: PropTypes.func
 };
 
 const mapStoreToProps = function (state) {
@@ -121,6 +127,7 @@ export default connect(mapStoreToProps, {
     showHistoryOfShoppping,
     showUserHistory,
     setUserInfo,
-    showUserProfile
+    showUserProfile,
+    showCatalogue
 })(UserHeader);
 

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Col, Button } from 'react-bootstrap';
+import { Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
 import Link from '../Link/Link';
 import PropsTypes from 'prop-types';
-
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -16,9 +15,15 @@ const client = rest.wrap(mime, { mime: 'application/json' })
 class LoginForm extends Component {
     constructor(props) {
         super(props);
+        this.attachRef = target => { this.setState({ target }); };
         this.emailInput = React.createRef();
         this.passWordInput = React.createRef();
         this.sendLoginRequest = this.sendLoginRequest.bind(this);
+        this.state = {
+            target: null,
+            message: '',
+            show: false
+        };
     }
 
     sendLoginRequest(e) {
@@ -27,27 +32,36 @@ class LoginForm extends Component {
             email: this.emailInput.current.value,
             password: this.passWordInput.current.value
         };
-        client({ method: 'POST', path: 'login', entity: objToRequest }).then(data => {
-            //console.log(data);
-            let storage = window.localStorage;
+        client({ method: 'POST', path: 'login', entity: objToRequest })
+            .then(data => {
+                //console.log(data);
+                let storage = window.localStorage;
 
-            if (data.status.code === 200) {
-                storage.setItem('Authorization', data.entity.token);
-                this.props.handleSetStateInApp(data.entity);
-            } else if (data.status.code === 401) {
-                // needs tool tip
-            }
+                if (data.status.code === 200) {
+                    storage.setItem('Authorization', data.entity.token);
+                    this.props.handleSetStateInApp(data.entity);
+                } else if (data.status.code === 401) {
+                    this.setState({
+                        message: data.entity,
+                        show: true
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            show: false
+                        });
+                    }
+                    ,3000);
+                }
 
-
-
-        }).catch((err) => {
-            throw new Error('error in request', err);
-        });
+            }).catch((err) => {
+                throw new Error('error in request', err);
+            });
     }
 
     render() {
         let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
+        let {target, message, show } =  this.state;
         return (
             <Form className='mt-3'>
                 <Form.Row>
@@ -64,9 +78,22 @@ class LoginForm extends Component {
                         <Form.Control size="sm" type="password" placeholder="Password" ref={this.passWordInput} />
                     </Form.Group>
                     <Col className='d-flex align-items-end'>
-                        <Button size="sm" variant="secondary" className="mb-3" onClick={this.sendLoginRequest}>
+                        <Button 
+                            ref={this.attachRef}
+                            size="sm" 
+                            variant="secondary" 
+                            className="mb-3" 
+                            onClick={this.sendLoginRequest}
+                        >
                             Login
                         </Button>
+                        <Overlay target={target} show={show} placement="right">
+                            {props => (
+                                <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                                    {message}
+                                </Tooltip>
+                            )}
+                        </Overlay>
                         <Link
                             text='Registration'
                             href='#'

@@ -1,4 +1,11 @@
-import { ADD_GOODS_TO_BASKET, SHOW_GOODS, DEL_GOODS_FROM_BASKET } from '../actions/actionsTypes';
+import { 
+    ADD_GOODS_TO_BASKET, 
+    SHOW_GOODS, 
+    DEL_GOODS_FROM_BASKET, 
+    INIT_BASKET 
+} from '../actions/actionsTypes';
+
+
 
 const initialState = {
     goodsInBasket: new Set(),
@@ -7,10 +14,19 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+    case INIT_BASKET: {
+        let goodsInBasket = new Set(action.payload.goodsInBasket);
+        return {
+            ...state,
+            goodsInBasket
+        };
+    }    
     case ADD_GOODS_TO_BASKET: {
         const { id } = action.payload;
         let goodsInBasket = new Set(state.goodsInBasket);
         goodsInBasket.add(id);
+        let storage = window.localStorage;
+        storage.setItem('ShoppingBasket', [...goodsInBasket]);
         return {
             ...state,
             goodsInBasket
@@ -28,6 +44,9 @@ export default function (state = initialState, action) {
         const { id } = action.payload;
         let goodsInBasket = new Set(state.goodsInBasket);
         goodsInBasket.delete(id);
+        let storage = window.localStorage;
+        storage.removeItem('ShoppingBasket', [...goodsInBasket]);
+        storage.setItem('ShoppingBasket', [...goodsInBasket]);
         let goodsInBasketData = [...state.goodsInBasketData];
         goodsInBasketData = goodsInBasketData.filter((el) => {
             return el.idgoods !== id;

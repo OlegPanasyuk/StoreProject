@@ -84,11 +84,14 @@ router.post('/login', (req, res) => {
                     role: user.role,
                     username: user.username
                 });
+            } else {
+                res.status(401).send(`Password or email is incorrect`);
             }
+        } else {
+            res.status(401).send(`Password or email is incorrect`);
         }
         res.status(401).send(`${email} ${password} Auth failed`);
     });
-
 });
 
 // router.get('/p', passport.authenticate('jwt', { session: false}, (err, user, info)=>{

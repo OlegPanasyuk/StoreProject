@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import {
+    Container,
+    Row,
+    Col,
+    Button,
+    Tooltip,
+    Overlay
+} from 'react-bootstrap';
 import ShoppingBasketItem from './ShoppingBasketItem';
-import PropsTypes from  'prop-types';
+import PropsTypes from 'prop-types';
 import './ShoppingBasket.css';
 
 //Redux use
@@ -22,11 +29,15 @@ const client = rest.wrap(mime, { mime: 'application/json' })
 export class ShoppingBascket extends Component {
     constructor(props) {
         super(props);
+        this.getTargetTooltip = targetTooltip => { this.setState({ targetTooltip }); };
         this.arrItems = [];
         this.sumTotal = 0;
         this.sendBasketToWork = this.sendBasketToWork.bind(this);
         this.state = {
-            succsefullTransaction: false
+            succsefullTransaction: false,
+            targetTooltip: null,
+            messageTooltip: '',
+            show: false
         };
     }
 
@@ -45,7 +56,16 @@ export class ShoppingBascket extends Component {
         let self = this;
         if (this.props.goodsData.length === 0) {
             //nothing to do
-
+            this.setState({
+                show: true,
+                messageTooltip: 'No goods in basket'
+            });
+            setTimeout(()=>{
+                this.setState({
+                    show: false,
+                    messageTooltip: ''
+                });
+            },3000);
         } else {
             client({
                 method: "POST",
@@ -58,12 +78,22 @@ export class ShoppingBascket extends Component {
                 }
             }).then(data => {
                 if (data.entity.id) {
+                    window.localStorage.removeItem('ShoppingBasket');
                     self.setState({
                         succsefullTransaction: true
                     });
                 } else if (data.entity === 'Unauthorized') {
                     // Needs Error reporting by object Oushing messages to UI
-                    alert('You\'re not authorized');
+                    this.setState({
+                        show: true,
+                        messageTooltip: 'Unauthorized'
+                    });
+                    setTimeout(()=>{
+                        this.setState({
+                            show: false,
+                            messageTooltip: ''
+                        });
+                    },3000);
                 }
 
             }).catch(err => {
@@ -85,6 +115,9 @@ export class ShoppingBascket extends Component {
     }
 
     render() {
+        let target = this.state.targetTooltip;
+        let show = this.state.show;
+        let messageTooltip = this.state.messageTooltip;
         this.sumTotal = 0;
         let message = '';
         if (this.state.succsefullTransaction) {
@@ -123,9 +156,20 @@ export class ShoppingBascket extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Button variant='secondary' onClick={() => this.sendBasketToWork()}>
+                        <Button
+                            ref={this.getTargetTooltip}
+                            variant='secondary'
+                            onClick={() => this.sendBasketToWork()}
+                        >
                             Buy
                         </Button>
+                        <Overlay target={target} show={show} placement="right">
+                            {props => (
+                                <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                                    {messageTooltip}
+                                </Tooltip>
+                            )}
+                        </Overlay>
                     </Row>
                 </Container>
             );

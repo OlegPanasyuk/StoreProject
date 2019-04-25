@@ -1,4 +1,9 @@
-import { ADD_GOODS_TO_BASKET, SHOW_GOODS, DEL_GOODS_FROM_BASKET } from './actionsTypes';
+import { 
+    ADD_GOODS_TO_BASKET, 
+    SHOW_GOODS, 
+    DEL_GOODS_FROM_BASKET,
+    INIT_BASKET
+} from './actionsTypes';
 
 export const addGoodsToBasket = (id) => {
     return {
@@ -23,6 +28,15 @@ export const deleteGoodsFromBasket = (id) => {
         type: DEL_GOODS_FROM_BASKET,
         payload: {
             id
+        }
+    };
+};
+
+export const initBasketFromLocalStorage = (goodsInBasket) => {
+    return {
+        type: INIT_BASKET,
+        payload: {
+            goodsInBasket
         }
     };
 };
