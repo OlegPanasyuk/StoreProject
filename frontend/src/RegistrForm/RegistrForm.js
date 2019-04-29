@@ -147,7 +147,9 @@ class RegisrtForm extends Component {
 }
 
 RegisrtForm.propTypes = {
-    setUserInState: PropTypes.func
+    setUserInState: PropTypes.func,
+    show: PropTypes.bool,
+    onHide: PropTypes.func
 };
 
 export default RegisrtForm;

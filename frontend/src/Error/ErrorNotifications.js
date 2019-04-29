@@ -22,7 +22,7 @@ export class ErrorNotification extends Component {
         this.setState(()=> ({
             id: obj.id
         }));
-        $(`#${this.state.id}`).toast({ autohide: true, delay: 4500 });
+        $(`#${this.state.id}`).toast({ delay: 4500 });
         $(`#${this.state.id}`).toast('show');
         setTimeout(() => {
             $(`#${this.state.id}`).remove();

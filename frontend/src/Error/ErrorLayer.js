@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import ErrorNotification from './ErrorNotifications';
-
+import PropTypes from 'prop-types';
 
 class ErrorLayer extends Component {
-
-
     render() {
         let { Errors } = this.props;
         return (
@@ -21,7 +19,6 @@ class ErrorLayer extends Component {
                     }}
                 >
                     {Errors.map((el) => {
-                        
                         return (
                             <ErrorNotification key={`${el.id}-ErrorNotification`}
                                 obj={el} 
@@ -35,5 +32,10 @@ class ErrorLayer extends Component {
         );
     }
 }
+
+ErrorLayer.propTypes = {
+    Errors: PropTypes.array
+};
+
 
 export default ErrorLayer;

@@ -250,6 +250,7 @@ class App extends Component {
 
 App.propTypes = {
     mainContent: PropTypes.object,
+    errors: PropTypes.array,
     showCatalogue: PropTypes.func,
     showUserHistory: PropTypes.func,
     showShoppingBasket: PropTypes.func,
