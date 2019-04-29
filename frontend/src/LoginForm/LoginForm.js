@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
 import Link from '../Link/Link';
 import PropsTypes from 'prop-types';
+import md5 from 'md5';
+
+//Redux
+import { connect } from 'react-redux';
+import {
+    addErrorToState,
+} from '../REDUX/actions/actionsErrors';
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -41,16 +48,12 @@ class LoginForm extends Component {
                     storage.setItem('Authorization', data.entity.token);
                     this.props.handleSetStateInApp(data.entity);
                 } else if (data.status.code === 401) {
-                    this.setState({
-                        message: data.entity,
-                        show: true
+                    const d = new Date();
+                    this.props.addErrorToState({
+                        id: md5(`${'Notification from LoginForm'}${d.valueOf()}`),
+                        level: 'Warning',
+                        message: data.entity
                     });
-                    setTimeout(() => {
-                        this.setState({
-                            show: false
-                        });
-                    }
-                    ,3000);
                 }
 
             }).catch((err) => {
@@ -110,7 +113,10 @@ class LoginForm extends Component {
 LoginForm.propTypes = {
     userState: PropsTypes.object,
     handleConverStatusUser: PropsTypes.func,
-    handleSetStateInApp: PropsTypes.func
+    handleSetStateInApp: PropsTypes.func,
+    addErrorToState: PropsTypes.func
 };
 
-export default LoginForm;
+export default connect(null, {
+    addErrorToState
+})(LoginForm);

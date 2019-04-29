@@ -10,11 +10,18 @@ import {
 import ShoppingBasketItem from './ShoppingBasketItem';
 import PropsTypes from 'prop-types';
 import './ShoppingBasket.css';
+import md5 from 'md5';
 
 //Redux use
 import { connect } from 'react-redux';
 //import store from '../REDUX/store';
-import { showGoodsInBasketSuccess, deleteGoodsFromBasket } from '../REDUX/actions/actionsShoppingBasket';
+import { 
+    showGoodsInBasketSuccess, 
+    deleteGoodsFromBasket 
+} from '../REDUX/actions/actionsShoppingBasket';
+import {
+    addErrorToState,
+} from '../REDUX/actions/actionsErrors';
 
 // For Requests to server
 import rest from 'rest';
@@ -55,17 +62,22 @@ export class ShoppingBascket extends Component {
         let token = window.localStorage.getItem('Authorization');
         let self = this;
         if (this.props.goodsData.length === 0) {
-            //nothing to do
-            this.setState({
-                show: true,
-                messageTooltip: 'No goods in basket'
+            const d = new Date();
+            this.props.addErrorToState({
+                id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
+                level: 'Warning',
+                message: 'There is nothing in a basket.'
             });
-            setTimeout(()=>{
-                this.setState({
-                    show: false,
-                    messageTooltip: ''
-                });
-            },3000);
+            // this.setState({
+            //     show: true,
+            //     messageTooltip: 'No goods in basket'
+            // });
+            // setTimeout(()=>{
+            //     this.setState({
+            //         show: false,
+            //         messageTooltip: ''
+            //     });
+            // },3000);
         } else {
             client({
                 method: "POST",
@@ -83,22 +95,34 @@ export class ShoppingBascket extends Component {
                         succsefullTransaction: true
                     });
                 } else if (data.entity === 'Unauthorized') {
-                    // Needs Error reporting by object Oushing messages to UI
-                    this.setState({
-                        show: true,
-                        messageTooltip: 'Unauthorized'
+                    // Needs Error reporting by object messages to UI
+                    const d = new Date();
+                    this.props.addErrorToState({
+                        id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
+                        level: 'Warning',
+                        message: 'You are not unauthorized.'
                     });
-                    setTimeout(()=>{
-                        this.setState({
-                            show: false,
-                            messageTooltip: ''
-                        });
-                    },3000);
+                //     this.setState({
+                //         show: true,
+                //         messageTooltip: 'Unauthorized'
+                //     });
+                //     setTimeout(()=>{
+                //         this.setState({
+                //             show: false,
+                //             messageTooltip: ''
+                //         });
+                //     },3000);
+                // }
                 }
-
             }).catch(err => {
                 // Needs Error reporting by object Oushing messages to UI
-                alert(err);
+                const d = new Date();
+                this.props.addErrorToState({
+                    id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
+                    level: 'Error',
+                    message: err
+                });
+                // alert(err);
             });
         }
     }
@@ -122,9 +146,9 @@ export class ShoppingBascket extends Component {
         let message = '';
         if (this.state.succsefullTransaction) {
             message = (
-                <p>
-                    Transaction is succsefull.
-                </p>
+                <Container>
+                    Transaction is successfully.
+                </Container>
             );
             setTimeout(() => {
                 window.location.reload();
@@ -192,10 +216,12 @@ ShoppingBascket.propTypes = {
     goods: PropsTypes.object,
     goodsData: PropsTypes.array,
     showGoodsInBasketSuccess: PropsTypes.func,
-    deleteGoodsFromBasket: PropsTypes.func
+    deleteGoodsFromBasket: PropsTypes.func,
+    addErrorToState: PropsTypes.func
 };
 
 export default connect(mapStoreToProps, {
     showGoodsInBasketSuccess,
-    deleteGoodsFromBasket
+    deleteGoodsFromBasket,
+    addErrorToState
 })(ShoppingBascket);

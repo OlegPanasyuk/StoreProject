@@ -36,3 +36,8 @@ export const USER = {
         FAILED: 'USER_SET_INFO_FAILED'
     }
 };
+
+export const ERROR = {
+    ADD: 'ERROR_ADD',
+    DELETE: 'ERROR_DELETE'
+};

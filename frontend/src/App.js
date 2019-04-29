@@ -3,25 +3,32 @@ import Catalogue from './Catalogue/Catalogue';
 import LoginForm from './LoginForm/LoginForm';
 import RegForm from './RegistrForm/RegistrForm';
 import UserHeader from './User/UserHeader';
-import ShoppingBacketHeader from './ShoppingBasket/ShoppingBasketHeader';
+import ShoppingBasketHeader from './ShoppingBasket/ShoppingBasketHeader';
 import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
 import UserHistory from './User/UserHistory';
 import UserProfile from './User/UserProfile';
+import ErrorLayer from './Error/ErrorLayer';
 import { Row, Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import md5 from 'md5';
 // import UserProfile from './User/UserProfile';
 
 //Redux
 import { connect } from 'react-redux';
-import { 
-    showCatalogue, 
-    showUserHistory, 
+import {
+    showCatalogue,
+    showUserHistory,
     showShoppingBasket,
     showUserProfile
 } from './REDUX/actions/actionsMainContent';
 import {
     initBasketFromLocalStorage
 } from './REDUX/actions/actionsShoppingBasket';
+import {
+    addErrorToState,
+    deleteErrorFromState
+} from './REDUX/actions/actionsErrors';
+
 
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
@@ -37,14 +44,15 @@ function takeGoodsFromLocalStorage() {
     let storage = window.localStorage;
     let arr = storage.getItem('ShoppingBasket');
     let goodsInBasket = (arr) ?
-        new Set( arr.split(',').map(el => +el)) : 
-        new Set(); 
+        new Set(arr.split(',').map(el => +el)) :
+        new Set();
     return goodsInBasket;
 }
 
 class App extends Component {
     constructor(props) {
         super(props);
+        this.addError = this.addError.bind(this);
         this.covertLoginFormToRegForm = this.covertLoginFormToRegForm.bind(this);
         this.setUserInState = this.setUserInState.bind(this);
         this.addItemToBacket = this.addItemToBacket.bind(this);
@@ -79,7 +87,13 @@ class App extends Component {
                 }
             }).catch(e => {
                 //Needs Error Object to push notifications to UI
-                alert(e.entity.message);
+                const d = new Date();
+                this.props.addErrorToState({
+                    id: md5(`${'Notification from App'}${d.valueOf()}`),
+                    level: 'Info',
+                    message: e.entity.message
+                });
+                
             });
         } else {
             this.setState({
@@ -131,26 +145,25 @@ class App extends Component {
         } else {
             this.props.showShoppingBasket();
         }
-        
-        // let str = null;
-        // if (this.state.mainContent === 'showBasket') {
-        //     str = 'Catalogue';
-        // } else {
-        //     str = 'showBasket';
-        // }
-        // this.setState(() => ({
-        //     mainContent: str
-        // }));
+    }
+
+    addError() {
+        const d = new Date();
+        this.props.addErrorToState({
+            id: md5(`${'Lorem ipsum'}${d.valueOf()}`),
+            level: 'Error',
+            message: 'Lorem Ipsum'
+        });
     }
 
     render() {
-        
+
         let authElement = (
             <p>
                 {this.state.user.role}
             </p>
         );
-        
+
         let mainContent = (
             <Catalogue addItemToBacket={this.addItemToBacket} />
         );
@@ -164,12 +177,12 @@ class App extends Component {
         }
         if (this.props.mainContent.target === 'UserHistory') {
             mainContent = (
-                <UserHistory/>
+                <UserHistory />
             );
         }
         if (this.props.mainContent.target === 'UserProfile') {
             mainContent = (
-                <UserProfile/>
+                <UserProfile />
             );
         }
 
@@ -188,15 +201,16 @@ class App extends Component {
             );
         } else if (this.state.user.role === 'GuestUnregistr') {
             authElement = (
-                <RegForm 
-                    setUserInState={this.setUserInState} 
-                    show={this.state.showModalReg} 
-                    onHide= {() => { this.setState({
-                        showModalReg: false,
-                        user: {
-                            role: 'Guest'
-                        }
-                    });
+                <RegForm
+                    setUserInState={this.setUserInState}
+                    show={this.state.showModalReg}
+                    onHide={() => {
+                        this.setState({
+                            showModalReg: false,
+                            user: {
+                                role: 'Guest'
+                            }
+                        });
                     }}
                 />
             );
@@ -217,16 +231,18 @@ class App extends Component {
                             {authElement}
                         </Col>
                         <Col className='col-2 d-flex justify-content-end align-items-center'>
-                            <ShoppingBacketHeader
+                            <ShoppingBasketHeader
                                 goods={this.state.goodsInBasket}
                                 showCompleteBasket={this.showCompleteBasket}
 
                             />
                         </Col>
+                        <ErrorLayer
+                            Errors={this.props.errors}
+                        />
                     </Row>
                 </Container>
                 {mainContent}
-
             </React.Fragment>
         );
     }
@@ -234,24 +250,29 @@ class App extends Component {
 
 App.propTypes = {
     mainContent: PropTypes.object,
-    showCatalogue: PropTypes.func, 
-    showUserHistory: PropTypes.func, 
+    showCatalogue: PropTypes.func,
+    showUserHistory: PropTypes.func,
     showShoppingBasket: PropTypes.func,
-    initBasketFromLocalStorage: PropTypes.func
+    initBasketFromLocalStorage: PropTypes.func,
+    addErrorToState: PropTypes.func,
+    deleteErrorFromState: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
     return {
         historyBasket: state.userHeaderReducers.historyBasket,
-        mainContent: state.mainContent
+        mainContent: state.mainContent,
+        errors: state.errorReducers.Errors
     };
 };
 
 
-export default connect(mapStateToProps, { 
-    showCatalogue, 
-    showUserHistory, 
+export default connect(mapStateToProps, {
+    showCatalogue,
+    showUserHistory,
     showShoppingBasket,
     showUserProfile,
-    initBasketFromLocalStorage
+    initBasketFromLocalStorage,
+    addErrorToState,
+    deleteErrorFromState
 })(App);
