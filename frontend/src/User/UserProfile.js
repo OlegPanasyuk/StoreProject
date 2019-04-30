@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom'
 
 //Redux
 import { connect } from 'react-redux';
@@ -34,4 +35,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps)(UserProfile);
+export default withRouter(connect(mapStateToProps)(UserProfile));

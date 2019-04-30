@@ -22,10 +22,11 @@ export class ErrorNotification extends Component {
         this.setState(()=> ({
             id: obj.id
         }));
-        $(`#${this.state.id}`).toast({ delay: 4500 });
-        $(`#${this.state.id}`).toast('show');
+        let el = $(`#${this.state.id}`);
+        el.toast({ delay: 4500 });
+        el.toast('show');
         setTimeout(() => {
-            $(`#${this.state.id}`).remove();
+            el.remove();
         }, 5000);
     }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './ShoppingBacketHeader.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 
 class ShoppingBasketHeader extends Component {
@@ -35,15 +36,16 @@ class ShoppingBasketHeader extends Component {
         }
         return (
             <React.Fragment>
-                <i 
-                    className = 'fas \
-                                fa-shopping-basket \
-                                shopping-backet-header_size-l \
-                                shopping-backet-header_color-grey'
-                    onClick = {()=>showCompleteBasket()}
-                />
-                
-               
+                <Link to='/basket' className='ml-3'>
+                    <i 
+                        className = 'fas \
+                                    fa-shopping-basket \
+                                    shopping-backet-header_size-l \
+                                    shopping-backet-header_color-grey'
+                        onClick = {()=>showCompleteBasket()}
+                    />
+                    
+                </Link>
                 {notItem}
             </React.Fragment>
         ); 

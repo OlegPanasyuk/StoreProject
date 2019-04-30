@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Col, Button, Overlay, Tooltip } from 'react-bootstrap';
+import { Form, Col, Button } from 'react-bootstrap';
 import Link from '../Link/Link';
 import PropsTypes from 'prop-types';
 import md5 from 'md5';
@@ -64,11 +64,10 @@ class LoginForm extends Component {
     render() {
         let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
-        let {target, message, show } =  this.state;
         return (
-            <Form className='mt-3'>
-                <Form.Row>
-                    <Form.Group as={Col} className="col-3" controlId="formGridEmail">
+            <Form className='ml-auto'>
+                <Form.Row className='d-flex align-items-center justify-content-end'>
+                    <Form.Group as={Col} className="col mb-0" controlId="formGridEmail">
                         <Form.Control
                             size="sm"
                             type="email"
@@ -77,30 +76,24 @@ class LoginForm extends Component {
                             defaultValue={(userState.email) ? userState.email : ''}
                         />
                     </Form.Group>
-                    <Form.Group as={Col} className="col-3" controlId="formGridPassword">
+                    <Form.Group as={Col} className="col mb-0" controlId="formGridPassword">
                         <Form.Control size="sm" type="password" placeholder="Password" ref={this.passWordInput} />
                     </Form.Group>
-                    <Col className='d-flex align-items-end'>
+                    <Col className='d-flex align-items-center'>
                         <Button 
                             ref={this.attachRef}
                             size="sm" 
                             variant="secondary" 
-                            className="mb-3" 
+                            className="" 
                             onClick={this.sendLoginRequest}
                         >
                             Login
                         </Button>
-                        <Overlay target={target} show={show} placement="right">
-                            {props => (
-                                <Tooltip id="overlay-example" {...props} show={show.toString()}>
-                                    {message}
-                                </Tooltip>
-                            )}
-                        </Overlay>
+                        
                         <Link
                             text='Registration'
                             href='#'
-                            className="d-block mb-3 ml-3 p-1"
+                            className="d-block p-3"
                             ConverStatusUser={handleConverStatusUser}>
                         </Link>
                     </Col>

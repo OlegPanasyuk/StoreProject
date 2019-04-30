@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
 
 //Redux
 import { connect } from 'react-redux';
 import { setUserInfo } from '../REDUX/actions/actionsUser';
 import { showHistoryOfShoppping } from '../REDUX/actions/actionsHistoryOfShopping';
-import { 
-    showUserHistory, 
-    showUserProfile, 
+import {
+    showUserHistory,
+    showUserProfile,
     showCatalogue
 } from '../REDUX/actions/actionsMainContent';
 
@@ -38,6 +40,7 @@ export class UserHeader extends Component {
                 window.location.reload();
             } else {
                 this.props.setUserInfo(JSON.parse(data.entity));
+
                 this.props.showUserProfile();
             }
         });
@@ -65,7 +68,7 @@ export class UserHeader extends Component {
         let { userInfo, setUserInState } = this.props;
         return (
 
-            <Row className='d-flex justify-content-end mt-1'>
+            <Row className='d-flex align-items-center justify-content-end mt-1 ml-auto'>
                 <Col sm='auto' className='d-flex align-items-center'>
                     <div className='mr-1'>User: {userInfo.username}</div>
                     <Button
@@ -74,16 +77,23 @@ export class UserHeader extends Component {
                         onClick={() => {
                             this.requestUserInfo();
                         }}>
-                        Profile
+                        <Link
+                            to='/user/profile'
+                        >
+                            Profile
+                        </Link>
                     </Button>
                     <Button
                         className='mr-1'
                         variant='light'
                         onClick={() => {
                             this.requestUserHistoryBasket();
-                            //this.props.showHistoryOfShoppping([1,2,3]);
                         }}>
-                        History
+                        <Link
+                            to='/user/history'
+                        >
+                            History
+                        </Link>
                     </Button>
                     <Button
                         className='mr-1'

@@ -11,6 +11,8 @@ import ErrorLayer from './Error/ErrorLayer';
 import { Row, Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
+import Navigation from './Navigation/Navigation';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 // import UserProfile from './User/UserProfile';
 
 //Redux
@@ -164,28 +166,6 @@ class App extends Component {
             </p>
         );
 
-        let mainContent = (
-            <Catalogue addItemToBacket={this.addItemToBacket} />
-        );
-
-        if (this.props.mainContent.target === 'ShoppingBasket') {
-            mainContent = (
-                <ShoppingBasket
-                    removeItemFromBasket={this.removeItemFromBasket}
-                />
-            );
-        }
-        if (this.props.mainContent.target === 'UserHistory') {
-            mainContent = (
-                <UserHistory />
-            );
-        }
-        if (this.props.mainContent.target === 'UserProfile') {
-            mainContent = (
-                <UserProfile />
-            );
-        }
-
         if (this.state.user.role === 'Guest') {
             authElement = (
                 <React.Fragment>
@@ -215,7 +195,6 @@ class App extends Component {
                 />
             );
         } else if (this.roles.indexOf(this.state.user.role) >= 0) {
-
             authElement = (
                 <UserHeader
                     userInfo={this.state.user}
@@ -225,24 +204,34 @@ class App extends Component {
         }
         return (
             <React.Fragment>
-                <Container>
-                    <Row>
-                        <Col className='col-10'>
-                            {authElement}
-                        </Col>
-                        <Col className='col-2 d-flex justify-content-end align-items-center'>
-                            <ShoppingBasketHeader
-                                goods={this.state.goodsInBasket}
-                                showCompleteBasket={this.showCompleteBasket}
-
+                <Router >
+                    <Container>
+                        <Row>
+                            <Col className='w-100 d-flex'>
+                                <Navigation >
+                                    {authElement}
+                                    <ShoppingBasketHeader
+                                        goods={this.state.goodsInBasket}
+                                        showCompleteBasket={this.showCompleteBasket}
+                                    />
+                                </Navigation>
+                            </Col>
+                            <ErrorLayer
+                                Errors={this.props.errors}
                             />
-                        </Col>
-                        <ErrorLayer
-                            Errors={this.props.errors}
-                        />
-                    </Row>
-                </Container>
-                {mainContent}
+                        </Row>
+                    </Container>
+                
+                    <Route exact path='/' render={()=>(<Container><h1>Hello, I'm MainPage!</h1></Container>)}></Route>
+                    <Route path='/about' render={()=>(<Container><h1>Hello, I'm AboutPage!</h1></Container>)}></Route>
+                    <Route path='/catalogue' component={Catalogue}></Route>
+                    <Route path='/contacts' render={()=>(<Container><h1>Hello, I'm ContactPage!</h1></Container>)}></Route>
+                    <Route path='/user/history' component={UserHistory}></Route>
+                    <Route path='/user/profile' component={UserProfile}></Route>
+                    <Route path='/basket' component={ShoppingBasket}></Route>
+                    
+                </Router>
+                
             </React.Fragment>
         );
     }
