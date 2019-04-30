@@ -37,6 +37,15 @@ exports[`ShoppingBascket --- Snapshot +++capturing Snapshot of ShoppingBascket 1
     >
       Buy
     </Button>
+    <Overlay
+      placement="right"
+      rootClose={false}
+      show={false}
+      target={null}
+      transition={[Function]}
+    >
+      <Component />
+    </Overlay>
   </Bootstrap(Row)>
 </Container>
 `;

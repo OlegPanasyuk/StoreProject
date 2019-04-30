@@ -3,10 +3,12 @@
 exports[`LoginForm Component must be created 1`] = `
 <Form
   as="form"
-  className="mt-3"
+  className="ml-auto"
   inline={false}
 >
-  <FormRow>
+  <FormRow
+    className="d-flex align-items-center justify-content-end"
+  >
     <FormGroup
       as={
         Object {
@@ -18,7 +20,7 @@ exports[`LoginForm Component must be created 1`] = `
           "render": [Function],
         }
       }
-      className="col-3"
+      className="col mb-0"
       controlId="formGridEmail"
     >
       <FormControl
@@ -40,7 +42,7 @@ exports[`LoginForm Component must be created 1`] = `
           "render": [Function],
         }
       }
-      className="col-3"
+      className="col mb-0"
       controlId="formGridPassword"
     >
       <FormControl
@@ -52,11 +54,11 @@ exports[`LoginForm Component must be created 1`] = `
     </FormGroup>
     <Col
       as="div"
-      className="d-flex align-items-end"
+      className="d-flex align-items-center"
     >
       <Button
         active={false}
-        className="mb-3"
+        className=""
         disabled={false}
         onClick={[Function]}
         size="sm"
@@ -67,7 +69,7 @@ exports[`LoginForm Component must be created 1`] = `
       </Button>
       <Link
         ConverStatusUser={[Function]}
-        className="d-block mb-3 ml-3 p-1"
+        className="d-block p-3"
         href="#"
         text="Registration"
       />

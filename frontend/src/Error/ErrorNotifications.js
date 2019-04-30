@@ -25,9 +25,10 @@ export class ErrorNotification extends Component {
         let el = $(`#${this.state.id}`);
         el.toast({ delay: 4500 });
         el.toast('show');
-        setTimeout(() => {
+        el.on('hidden.bs.toast', function () {
+            // do something…
             el.remove();
-        }, 5000);
+        });
     }
 
     render() {

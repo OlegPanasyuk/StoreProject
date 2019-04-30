@@ -2,7 +2,7 @@
 
 exports[`UserHeader Component must be created 1`] = `
 <Bootstrap(Row)
-  className="d-flex justify-content-end mt-1"
+  className="d-flex align-items-center justify-content-end mt-1 ml-auto"
 >
   <Col
     as="div"
@@ -23,7 +23,11 @@ exports[`UserHeader Component must be created 1`] = `
       type="button"
       variant="light"
     >
-      Profile
+      <Link
+        to="/user/profile"
+      >
+        Profile
+      </Link>
     </Button>
     <Button
       active={false}
@@ -33,7 +37,11 @@ exports[`UserHeader Component must be created 1`] = `
       type="button"
       variant="light"
     >
-      History
+      <Link
+        to="/user/history"
+      >
+        History
+      </Link>
     </Button>
     <Button
       active={false}

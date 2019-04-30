@@ -1,82 +1,112 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReggistrForm Component must be created 1`] = `
-<Form
-  as="form"
-  className="mt-3"
-  inline={false}
+<Bootstrap(Modal)
+  centered={true}
+  size="sm"
 >
-  <FormRow>
-    <FormGroup
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "defaultProps": Object {
-            "as": "div",
-          },
-          "displayName": "Col",
-          "render": [Function],
-        }
-      }
-      className="col-2"
-      controlId="formGridEmail"
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <h4>
+      Registration
+    </h4>
+  </ModalHeader>
+  <ModalBody>
+    <Form
+      as="form"
+      inline={false}
     >
-      <FormControl
-        as="input"
-        placeholder="Enter email"
-        size="sm"
-        type="email"
-      />
-    </FormGroup>
-    <FormGroup
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "defaultProps": Object {
-            "as": "div",
-          },
-          "displayName": "Col",
-          "render": [Function],
-        }
-      }
-      className="col-2"
-      controlId="formGridPassword"
-    >
-      <FormControl
-        as="input"
-        placeholder="Password"
-        size="sm"
-        type="password"
-      />
-    </FormGroup>
-    <FormGroup
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "defaultProps": Object {
-            "as": "div",
-          },
-          "displayName": "Col",
-          "render": [Function],
-        }
-      }
-      className="col-2"
-      controlId="formGridRepeatPassword"
-    >
-      <FormControl
-        as="input"
-        placeholder="Repeat password"
-        size="sm"
-        type="password"
-      />
-    </FormGroup>
+      <FormRow>
+        <FormGroup
+          as={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "defaultProps": Object {
+                "as": "div",
+              },
+              "displayName": "Col",
+              "render": [Function],
+            }
+          }
+          className=""
+          controlId="formGridEmail"
+        >
+          <FormControl
+            as="input"
+            placeholder="Enter email"
+            size="sm"
+            type="email"
+          />
+        </FormGroup>
+      </FormRow>
+      <FormRow>
+        <FormGroup
+          as={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "defaultProps": Object {
+                "as": "div",
+              },
+              "displayName": "Col",
+              "render": [Function],
+            }
+          }
+          className=""
+          controlId="formGridPassword"
+        >
+          <FormControl
+            as="input"
+            placeholder="Password"
+            size="sm"
+            type="password"
+          />
+        </FormGroup>
+      </FormRow>
+      <FormRow>
+        <FormGroup
+          as={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "defaultProps": Object {
+                "as": "div",
+              },
+              "displayName": "Col",
+              "render": [Function],
+            }
+          }
+          className=""
+          controlId="formGridRepeatPassword"
+        >
+          <FormControl
+            as="input"
+            placeholder="Repeat password"
+            size="sm"
+            type="password"
+          />
+        </FormGroup>
+      </FormRow>
+    </Form>
+  </ModalBody>
+  <ModalFooter>
     <Col
       as="div"
-      className="d-flex align-items-end"
+      className="col-12 d-flex justify-content-end align-items-end"
     >
       <Button
         active={false}
-        className="mb-3"
+        className=""
+        disabled={false}
+        size="sm"
+        type="button"
+        variant="light"
+      >
+        Close
+      </Button>
+      <Button
+        active={false}
+        className="ml-3"
         disabled={false}
         onClick={[Function]}
         size="sm"
@@ -95,6 +125,6 @@ exports[`ReggistrForm Component must be created 1`] = `
     >
       <Component />
     </Overlay>
-  </FormRow>
-</Form>
+  </ModalFooter>
+</Bootstrap(Modal)>
 `;

@@ -19,7 +19,7 @@ const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
 
-class LoginForm extends Component {
+export class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.attachRef = target => { this.setState({ target }); };

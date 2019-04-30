@@ -6,6 +6,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import PropTypes from 'prop-types';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
+import {BrowserRouter as Router} from 'react-router-dom';
 //import rest from 'rest';
 
 //import { addGoodsToBasket, deleteGoodsFromBasket } from '../../REDUX/actions/actionsShoppingBasket';
@@ -49,7 +50,12 @@ describe('UserProfile', () => {
     let store, wrapper;
     beforeEach(() => {
         store = mockStore(initialState);
-        wrapper = mount(<Provider store={store}><UserProfileConnected /></Provider>);
+        wrapper = mount(
+            <Provider store={store}>
+                <Router>
+                    <UserProfileConnected />
+                </Router>
+            </Provider>);
     });
 
     it('+++ render the connected(SMART) component', () => {
