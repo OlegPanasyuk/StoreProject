@@ -26,7 +26,7 @@ export default function (state = initialState, action) {
         let goodsInBasket = new Set(state.goodsInBasket);
         goodsInBasket.add(id);
         let storage = window.localStorage;
-        storage.setItem('ShoppingBasket', [...goodsInBasket]);
+        storage.setItem('ShoppingBasket', JSON.stringify([...goodsInBasket]));
         return {
             ...state,
             goodsInBasket
@@ -45,8 +45,9 @@ export default function (state = initialState, action) {
         let goodsInBasket = new Set(state.goodsInBasket);
         goodsInBasket.delete(id);
         let storage = window.localStorage;
-        storage.removeItem('ShoppingBasket', [...goodsInBasket]);
-        storage.setItem('ShoppingBasket', [...goodsInBasket]);
+        storage.removeItem('ShoppingBasket');
+        storage.setItem('ShoppingBasket',JSON.stringify([...goodsInBasket]));
+        
         let goodsInBasketData = [...state.goodsInBasketData];
         goodsInBasketData = goodsInBasketData.filter((el) => {
             return el.idgoods !== id;

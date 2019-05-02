@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 export class Navigation extends Component {
     render() {
+        
         return (
             <Navbar  className='w-100'>
                 <Nav className='d-flex align-items-center'>
@@ -12,7 +13,7 @@ export class Navigation extends Component {
                         <NavLink to="/" className='p-3'>Home</NavLink>
                     </Nav.Item>
                     <Nav.Item>
-                        <NavLink to='/about' className='p-3'>About</NavLink>
+                        <NavLink to={`/about`} className='p-3'>About</NavLink>
                     </Nav.Item>
                     <Nav.Item>
                         <NavLink to='/catalogue' className='p-3'>Catalogue</NavLink>

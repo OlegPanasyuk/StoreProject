@@ -2,13 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import AdminPanel from './AdminPanel/AdminPanel';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './REDUX/store';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 ReactDOM.render(
     <Provider store={store}>
-        <App></App>
+        <Router>
+            <Switch>
+                
+                <Route path='/adminpanel' component={AdminPanel}/>
+                <Route path='/' component={App}/>
+            </Switch>
+        </Router>
     </Provider>
     , document.getElementById('root')
 );

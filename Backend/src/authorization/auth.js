@@ -68,22 +68,43 @@ router.post('/reg', (req, res, next) => {
 
 router.post('/login', (req, res) => {
     let { email, password } = req.body;
+    let checkRights = JSON.parse(req.headers['checkrights']);
+    console.log(typeof checkRights);
+    let roles = ['Consultant', 'Admin', 'SuperAdmin'];
     // need find user in DB
     // AND compare pass with pass in DB
-    // secret word must be taken fron env
+    // secret word must be taken from env
     Users.findOne({ where: { email: email } }).then((user) => {
         if (user && user.email === email) {
             if (password === user.password) {
-                const opts = {};
-                opts.expiresIn = 120;
-                const secret = 'Oleg';
-                const token = jwt.sign({ email }, secret, opts);
-                return res.status(200).json({
-                    message: 'Auth Passed',
-                    token,
-                    role: user.role,
-                    username: user.username
-                });
+                if (checkRights === true) {
+                    if (roles.indexOf(user.role) >= 0) {
+                        const opts = {};
+                        const role = user.role;
+                        opts.expiresIn = 120;
+                        const secret = 'Oleg';
+                        const token = jwt.sign({ email, role }, secret, opts);
+                        return res.status(200).json({
+                            message: 'Auth Passed',
+                            token,
+                            role: user.role,
+                            username: user.username
+                        });
+                    } 
+                    
+                } else {
+                    const opts = {};
+                    opts.expiresIn = 120;
+                    const secret = 'Oleg';
+                    const token = jwt.sign({ email }, secret, opts);
+                    return res.status(200).json({
+                        message: 'Auth Passed',
+                        token,
+                        role: user.role,
+                        username: user.username
+                    });
+                }
+                
             } else {
                 res.status(401).send(`Password or email is incorrect`);
             }

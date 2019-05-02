@@ -12,7 +12,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 import Navigation from './Navigation/Navigation';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // import UserProfile from './User/UserProfile';
 
 //Redux
@@ -39,14 +39,15 @@ import mime from 'rest/interceptor/mime';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`});
 
 
 function takeGoodsFromLocalStorage() {
     let storage = window.localStorage;
     let arr = storage.getItem('ShoppingBasket');
+    arr = (arr) ? JSON.parse(arr) :  arr;
     let goodsInBasket = (arr) ?
-        new Set(arr.split(',').map(el => +el)) :
+        new Set([...arr]) :
         new Set();
     return goodsInBasket;
 }
@@ -95,7 +96,7 @@ class App extends Component {
                     level: 'Info',
                     message: e.entity.message
                 });
-                
+                window.localStorage.removeItem('Authorization');
             });
         } else {
             this.setState({
@@ -159,7 +160,7 @@ class App extends Component {
     }
 
     render() {
-
+        const {match} = this.props;
         let authElement = (
             <p>
                 {this.state.user.role}
@@ -202,13 +203,15 @@ class App extends Component {
                 />
             );
         }
+        
         return (
+            
             <React.Fragment>
-                <Router >
+                <Router>
                     <Container>
                         <Row>
                             <Col className='w-100 d-flex'>
-                                <Navigation >
+                                <Navigation match={match}>
                                     {authElement}
                                     <ShoppingBasketHeader
                                         goods={this.state.goodsInBasket}
@@ -221,17 +224,28 @@ class App extends Component {
                             />
                         </Row>
                     </Container>
-                
-                    <Route exact path='/' render={()=>(<Container><h1>Hello, I'm MainPage!</h1></Container>)}></Route>
-                    <Route path='/about' render={()=>(<Container><h1>Hello, I'm AboutPage!</h1></Container>)}></Route>
+                    
+                    <Route exact path='/' render={()=>(
+                        <Container>
+                            <h1>Hello, I am MainPage!</h1>
+                        </Container>
+                    )}></Route>
+                    <Route path={`/about`} render={()=>(
+                        <Container>
+                            <h1>Hello, I am AboutPage!</h1>
+                        </Container>
+                    )}></Route>
                     <Route path='/catalogue' component={Catalogue}></Route>
-                    <Route path='/contacts' render={()=>(<Container><h1>Hello, I'm ContactPage!</h1></Container>)}></Route>
+                    <Route path='/contacts' render={()=>(
+                        <Container>
+                            <h1>Hello, I am ContactPage!</h1>
+                        </Container>)}>
+                    </Route>
                     <Route path='/user/history' component={UserHistory}></Route>
                     <Route path='/user/profile' component={UserProfile}></Route>
                     <Route path='/basket' component={ShoppingBasket}></Route>
                     
                 </Router>
-                
             </React.Fragment>
         );
     }
@@ -245,7 +259,8 @@ App.propTypes = {
     showShoppingBasket: PropTypes.func,
     initBasketFromLocalStorage: PropTypes.func,
     addErrorToState: PropTypes.func,
-    deleteErrorFromState: PropTypes.func
+    deleteErrorFromState: PropTypes.func,
+    match: PropTypes.object
 };
 
 const mapStateToProps = (state) => {
