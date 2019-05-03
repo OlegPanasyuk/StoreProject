@@ -68,8 +68,10 @@ router.post('/reg', (req, res, next) => {
 
 router.post('/login', (req, res) => {
     let { email, password } = req.body;
-    let checkRights = JSON.parse(req.headers['checkrights']);
-    console.log(typeof checkRights);
+    let checkRights = null;
+    if (req.headers['checkrights']) {
+        checkRights = JSON.parse(req.headers['checkrights']);
+    }
     let roles = ['Consultant', 'Admin', 'SuperAdmin'];
     // need find user in DB
     // AND compare pass with pass in DB

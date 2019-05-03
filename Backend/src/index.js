@@ -69,7 +69,7 @@ app.route('/goods')
         }
 
     })
-    .post(urlencoder, function (req, res) {
+    .post(urlencoder, checkRight, function (req, res) {
 
         let objToCreate = {
             name: (req.body.name) ? req.body.name : 'No name',
@@ -83,7 +83,7 @@ app.route('/goods')
             .catch((e) => res.send(e));
 
     })
-    .delete(function (req, res) {
+    .delete(checkRight, function (req, res) {
         let objToDelete = {
             id: req.query.id,
             name: req.query.name
@@ -96,6 +96,44 @@ app.route('/goods')
     });
 
 
+function checkRight(req, res, next) {
+    let roles = ['Admin', 'SuperAdmin'];
+    let token = null;
+    if (req.headers['authorization']) {
+        token = req.headers['authorization'].split(' ')[1];    
+    }
+    if (token) {
+        jwt.verify(token, 'Oleg', (err, decode) => {
+            if (err) {
+                return res.status(500).send({auth: false, message: "Auth failed"});
+            } else {
+                let email = decode.email;
+                if ((decode.role) && (roles.indexOf(decode.role) >= 0)) {
+                    next();
+                } else {
+                    Users.findOne({where: {email: email}}).then((user) => {
+                        if ((user.role) && (roles.indexOf(user.role) >= 0)) {
+                            next();
+                        } else {
+                            res.status(401).send({
+                                auth: true,
+                                right: false, 
+                                message: "You have not permission on operation"
+                            });
+                        }
+                    });
+                }
+                
+            }
+        });
+    } else {
+        res.status(401).send({
+            auth: false,
+            right: false, 
+            message: "Access denied"
+        });
+    }
+}
 
 
 app.listen(serverConfig.port, function () {
