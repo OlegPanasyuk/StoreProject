@@ -161,7 +161,7 @@ export class ShoppingBascket extends Component {
                     </Row>
                     <Row>
                         {this.props.goodsData.length && this.props.goodsData.map((el) => {
-                            if ((el !== null) || (el !== undefined)) {
+                            if (el) {
                                 this.sumTotal += el.price;
                             }
                             return (

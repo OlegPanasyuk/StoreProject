@@ -1,4 +1,4 @@
-import {ADMIN_PANEL_USER_AUTHORIZED} from './actionTypes.js';
+import { ADMIN_PANEL_USER_AUTHORIZED } from './actionTypes.js';
 
 export const userAuthorizedSuccess = (user) => {
     return {

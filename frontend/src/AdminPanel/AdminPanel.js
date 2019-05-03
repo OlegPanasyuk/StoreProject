@@ -4,11 +4,14 @@ import LoginForm from './LoginForm/LoginForm';
 import NavBarAdminPanel from './NavBarAdminPanel/NavBarAdminPanel';
 import { Container } from 'react-bootstrap';
 
+//Place for import components
+import GoodsPanel from './GoodsPanel/GoodsPanel';
+
 //Redux
 import { connect } from 'react-redux';
 
-
 export class AdminPanel extends Component {
+    
     render() {
         const { match } = this.props;
         return (
@@ -25,7 +28,11 @@ export class AdminPanel extends Component {
                                 :
                                 (
                                     <React.Fragment>
-                                        <NavBarAdminPanel match={match} />
+                                        <Router>
+                                            <NavBarAdminPanel match={match} />
+                                            <Route path={`${match.path}/goods`} component={GoodsPanel} />
+                                            <Route path={`${match.path}/users`} render={()=> (<h2>Hello, I am UsersControlPage</h2>)} />
+                                        </Router>
                                     </React.Fragment>
                                 ))} />
                     </Switch>
@@ -37,7 +44,7 @@ export class AdminPanel extends Component {
 
 const mapStoreToProps = (state) => {
     return ({
-        user: state.adminPanel.user
+        user: state.adminPanel_User
     });
 };
 

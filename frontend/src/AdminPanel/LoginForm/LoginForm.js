@@ -32,8 +32,7 @@ export class LoginForm extends Component {
             target: null,
             show: true,
             showTooltip: false,
-            messageToolTip: '',
-
+            messageToolTip: ''
         };
     }
 
@@ -141,7 +140,7 @@ export class LoginForm extends Component {
 
 const mapStoreToProps = (state) => {
     return ({
-        user: state.adminPanel.user
+        user: state.adminPanel_User
     });
 };
 

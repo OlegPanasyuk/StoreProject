@@ -43,9 +43,9 @@ router.post('/reg', (req, res, next) => {
                     role: 'User'
                 }
             }).then(([user, created]) => {
-                console.log(user.get({
-                    plain: true
-                }));
+                // console.log(user.get({
+                //     plain: true
+                // }));
                 res.status(201).json({
                     message: (created) ? 'User was cteated' : `User with '${user.email}' email is exist`,
                     status: created,

@@ -54,6 +54,8 @@ app.use('/user/', userRouter);
 app.route('/goods')
     .get(function (req, res) {
         let query = {};
+        let queryLimit = {};
+        let count = false;
         Object.keys(req.query).forEach(el => {
             if (el == 'id') {
                 query.idgoods = req.query[el];
@@ -61,16 +63,25 @@ app.route('/goods')
             if (el == 'id_catalogue') {
                 query.catalogue_id_catalogue = req.query[el];
             }
+            if (el == 'page') {
+                queryLimit.limit = 10;
+                queryLimit.offset = (req.query[el] - 1) * 10;
+            }
+            if (el == 'count') {
+                count = true;
+            }   
         });
         if (Object.keys(query).length) {
             Goods.findAll({ where: query }).then(good => res.json(good));
+        } else if (Object.keys(queryLimit).length) {
+            Goods.findAll(queryLimit).then(good => res.json(good));
+        } else if (count) {
+            Goods.count().then(good => res.json(good));
         } else {
             Goods.findAll().then(good => res.json(good));
         }
-
     })
     .post(urlencoder, checkRight, function (req, res) {
-
         let objToCreate = {
             name: (req.body.name) ? req.body.name : 'No name',
             description: (req.body.description) ? req.body.description : 'No description',
@@ -81,7 +92,6 @@ app.route('/goods')
                 res.json(good);
             })
             .catch((e) => res.send(e));
-
     })
     .delete(checkRight, function (req, res) {
         let objToDelete = {
@@ -123,7 +133,6 @@ function checkRight(req, res, next) {
                         }
                     });
                 }
-                
             }
         });
     } else {

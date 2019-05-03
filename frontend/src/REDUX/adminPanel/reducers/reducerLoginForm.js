@@ -1,8 +1,6 @@
 import {ADMIN_PANEL_USER_AUTHORIZED} from '../actions/actionTypes';
 
-const initState = {
-    user: {}
-};
+const initState = {};
 
 export default function (state = initState, action) {
     switch (action.type) {
@@ -12,7 +10,7 @@ export default function (state = initState, action) {
         storage.setItem('Authorization', user.token);
         return {
             ...state,
-            user
+            ...user
         };
     }
     default: 
