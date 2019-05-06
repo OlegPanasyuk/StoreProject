@@ -20,7 +20,7 @@ export class AdminPanel extends Component {
                     <Switch>
                         <Route path={`${match.path}/login`} component={LoginForm}></Route>
                         <Route render={() => (
-                            (!this.props.user.token)
+                            (this.props.user.token)
                                 ?
                                 (
                                     <Redirect to={`${match.path}/login`} />

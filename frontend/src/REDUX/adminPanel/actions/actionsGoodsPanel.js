@@ -14,3 +14,9 @@ export const goodsGetFailed = (payload) => {
     };
 };
 
+export const goodsFilter = (payload) => {
+    return {
+        type: ADMIN_PANEL_GOODS_PANEL.GOODS.FILTER.SUCCESS,
+        payload
+    };
+};
