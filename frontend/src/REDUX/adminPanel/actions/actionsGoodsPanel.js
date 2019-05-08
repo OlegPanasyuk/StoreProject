@@ -20,3 +20,27 @@ export const goodsFilter = (payload) => {
         payload
     };
 };
+
+export const openEditGoodsItem = (obj) => {
+    return {
+        type: ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.OPEN,
+        payload: {
+            ...obj
+        }
+    };
+};
+
+export const editGoodsItem = (obj) => {
+    return {
+        type: ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.SUCCESS,
+        payload: {
+            ...obj
+        }
+    };
+};
+
+export const closeEditGoodsItem = () => {
+    return {
+        type: ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.CLOSE
+    };
+};

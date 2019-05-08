@@ -6,6 +6,7 @@ import { Container } from 'react-bootstrap';
 
 //Place for import components
 import GoodsPanel from './GoodsPanel/GoodsPanel';
+import ErrorLayer from '../Error/ErrorLayer';
 
 //Redux
 import { connect } from 'react-redux';
@@ -20,7 +21,7 @@ export class AdminPanel extends Component {
                     <Switch>
                         <Route path={`${match.path}/login`} component={LoginForm}></Route>
                         <Route render={() => (
-                            (this.props.user.token)
+                            (!this.props.user.token)
                                 ?
                                 (
                                     <Redirect to={`${match.path}/login`} />
@@ -32,6 +33,10 @@ export class AdminPanel extends Component {
                                             <NavBarAdminPanel match={match} />
                                             <Route path={`${match.path}/goods`} component={GoodsPanel} />
                                             <Route path={`${match.path}/users`} render={()=> (<h2>Hello, I am UsersControlPage</h2>)} />
+                                            <ErrorLayer
+                                                Errors={this.props.errors}
+                                            />
+
                                         </Router>
                                     </React.Fragment>
                                 ))} />
@@ -44,7 +49,8 @@ export class AdminPanel extends Component {
 
 const mapStoreToProps = (state) => {
     return ({
-        user: state.adminPanel_User
+        user: state.adminPanel_User,
+        errors: state.errorReducers.Errors
     });
 };
 

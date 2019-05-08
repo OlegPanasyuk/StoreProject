@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var bodyParser = require('body-parser');
+
 var { Goods, Users } = require('../Models/sequalized');
 
 const Sequelize = require('sequelize');
@@ -12,6 +14,7 @@ const jwtStrategy = require('../authorization/jwt');
 
 passport.use(jwtStrategy);
 
+router.use(bodyParser.json());
 
 router.get('/', function (req, res) {
     let query = {};
@@ -53,7 +56,7 @@ router.get('/filter', function (req, res) {
     queryLimit.where.price = {[Op.gte]:0};
     Object.keys(req.query).forEach(el => {
         if (el == 'id_catalogue') {
-            queryLimit.catalogue_id_catalogue = req.query[el];
+            queryLimit.where.catalogue_id_catalogue = +req.query[el];
         }
         if (el == 'page') {
             queryLimit.limit = 10;
@@ -99,14 +102,17 @@ router.post('/', checkRight, function (req, res) {
     let objToCreate = {
         name: (req.body.name) ? req.body.name : 'No name',
         description: (req.body.description) ? req.body.description : 'No description',
-        catalogue_id_catalogue: (req.body.catalogue_id_catalogue) ? req.body.catalogue_id_catalogue : 4
+        catalogue_id_catalogue: (req.body.catalogue_id_catalogue) ? req.body.catalogue_id_catalogue : 4,
+        price: (req.body.price) ? req.body.price : 0
     };
+    console.log(req.body);
     Goods.create(objToCreate)
         .then(good => {
             res.json(good);
         })
         .catch((e) => res.send(e));
 });
+
 router.delete('/',checkRight, function (req, res) {
     let objToDelete = {
         id: req.query.id,
@@ -117,6 +123,28 @@ router.delete('/',checkRight, function (req, res) {
         .then(() => {
             res.send('deleted');
         });
+});
+router.put('/:id',checkRight, function(req, res) {
+    let objToUpdate = {
+        idgoods: req.params.id
+    };
+    let dataToUpdate = {
+        ...req.body
+    };
+    Goods.findOne({where: objToUpdate})
+        .then(goods => {
+            goods.update(dataToUpdate)
+                .then(()=> {
+                    res.status(201).send('Data is updated');
+                })
+                .catch((e)=>{
+                    res.status(401).send(`${e}`);
+                });
+        })
+        .catch(e => {
+            res.status(401).send(`${e}`);
+        });
+
 });
 
 

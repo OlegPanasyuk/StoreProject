@@ -6,10 +6,17 @@ import GoodsItem from './GoodsItem';
 import ListOfPages from './ListOfPages';
 import FilterGoodsPanel from './FilterGoodsPanel';
 import AddingGood from './AddingGood';
+import EditGoodsItem from './EditGoodsItem';
 
 //Redux 
 import { connect } from 'react-redux';
-import { goodsGetSuccess, goodsFilter } from '../../REDUX/adminPanel/actions/actionsGoodsPanel';
+import { 
+    goodsGetSuccess, 
+    goodsFilter,
+    closeEditGoodsItem
+} from '../../REDUX/adminPanel/actions/actionsGoodsPanel';
+
+
 
 export class GoodsPanel extends Component {
     constructor(props) {
@@ -27,9 +34,12 @@ export class GoodsPanel extends Component {
     }
 
     prepareSearchRow() {
-        let { priceMore, priceLess, nameSearch, orderPrice } = this.props.filters;
+        let { priceMore, priceLess, nameSearch, orderPrice, id_catalogue } = this.props.filters;
         let searchStr = [];
 
+        if (id_catalogue !== -1) {
+            searchStr.push(`id_catalogue=${id_catalogue}`);
+        }
         if (priceMore > 0) {
             searchStr.push(`priceMore=${priceMore}`);
         }
@@ -75,6 +85,8 @@ export class GoodsPanel extends Component {
         if (e) {
             e.preventDefault();
         }
+
+        // I don't like it
         let a = new Promise((res, rej) => {
             this.props.goodsFilter(obj);
             res(true);
@@ -130,7 +142,27 @@ export class GoodsPanel extends Component {
 
         return (
             <React.Fragment>
-                {(this.state.showModal) ? <AddingGood /> : <div></div>}
+                {(this.state.showModal) ?
+                    <AddingGood
+                        show={this.state.showModal}
+                        onHide={() => {
+                            this.setState({
+                                showModal: false
+                            });
+                        }}
+                    />
+                    :
+                    <div></div>
+                }
+                {
+                    (this.props.editItem.show)
+                        ?
+                        <EditGoodsItem
+                            onHide = {this.props.closeEditGoodsItem}
+                        ></EditGoodsItem>
+                        :
+                        (<div></div>)
+                }
                 <Container>
 
                     <Row>
@@ -180,7 +212,12 @@ export class GoodsPanel extends Component {
                     </Row>
                     <Row>
                         <Col xs={12} className='text-center'>
-                            <ListOfPages count={this.state.count} limit={this.state.limit} />
+                            <ListOfPages
+                                count={this.state.count}
+                                limit={this.state.limit}
+                                activePage={this.state.activePage}
+                                openPage={this.openPage}
+                            />
                         </Col>
                     </Row>
                 </Container>
@@ -193,10 +230,12 @@ const mapsStateToProps = function (state) {
     return {
         goodsToShow: state.adminPanel_goodsPanel.goodsShown,
         filters: state.adminPanel_goodsPanel.filters,
+        editItem: state.adminPanel_goodsPanel.editItem
     };
 };
 
 export default connect(mapsStateToProps, {
     goodsGetSuccess,
-    goodsFilter
+    goodsFilter,
+    closeEditGoodsItem
 })(GoodsPanel);

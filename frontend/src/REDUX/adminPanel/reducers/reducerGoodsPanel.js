@@ -9,7 +9,16 @@ const initialState = {
         priceMore: 0,
         priceLess: 0,
         nameSearch: '',
-        orderPrice: null
+        orderPrice: null,
+        id_catalogue: -1
+    },
+    editItem: {
+        show: false,
+        idgoods: null,
+        name: null,
+        description: null,
+        price: 0,
+        catalogue_id_catalogue: null
     }
 };
 
@@ -34,6 +43,34 @@ export default (state = initialState, action) => {
         return {
             ...state,
             filters
+        };
+    }
+    case ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.OPEN: {
+        let editItem = Object.assign({}, state.editItem, action.payload);
+        return {
+            ...state,
+            editItem
+        };
+    }
+    case ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.SUCCESS: {
+        let editItem = Object.assign({}, state.editItem, action.payload);
+        return {
+            ...state,
+            editItem
+        };
+    }
+    case ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.CLOSE: {
+        let editItem = Object.assign({}, {
+            show: false,
+            idgoods: null,
+            name: null,
+            description: null,
+            price: 0,
+            catalogue_id_catalogue: null
+        } );
+        return {
+            ...state,
+            editItem
         };
     }
     default:
