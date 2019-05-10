@@ -7,13 +7,15 @@ import ListOfPages from './ListOfPages';
 import FilterGoodsPanel from './FilterGoodsPanel';
 import AddingGood from './AddingGood';
 import EditGoodsItem from './EditGoodsItem';
+import DeleteForm from './DeleteForm';
 
 //Redux 
 import { connect } from 'react-redux';
 import { 
     goodsGetSuccess, 
     goodsFilter,
-    closeEditGoodsItem
+    closeEditGoodsItem,
+    permissionToDeleteClose
 } from '../../REDUX/adminPanel/actions/actionsGoodsPanel';
 
 
@@ -29,7 +31,8 @@ export class GoodsPanel extends Component {
             limit: 10,
             count: 0,
             activePage: 1,
-            showModal: false
+            showModal: false,
+            permissionToDelete: false
         };
     }
 
@@ -52,7 +55,6 @@ export class GoodsPanel extends Component {
         if (nameSearch !== '') {
             searchStr.push(`nameSearch=${nameSearch}`);
         }
-        console.log(searchStr.join('&'));
         return searchStr.join('&');
     }
 
@@ -81,7 +83,7 @@ export class GoodsPanel extends Component {
         }
     }
 
-    updateState(e, obj) {
+    updateState(e, obj, page = 1) {
         if (e) {
             e.preventDefault();
         }
@@ -93,7 +95,7 @@ export class GoodsPanel extends Component {
         });
         a.then((res) => {
             this.countFiltered();
-            this.openPage(1);
+            this.openPage(page);
         }, (rej) => {
 
         });
@@ -126,7 +128,10 @@ export class GoodsPanel extends Component {
                 method: 'GET',
                 cache: 'default'
             };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/filter?page=${i}&${searchStr}`, myInit)
+            fetch(
+                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/filter?page=${i}&${searchStr}`, 
+                myInit
+            )
                 .then((res) => {
                     self.setState({
                         activePage: i
@@ -158,10 +163,26 @@ export class GoodsPanel extends Component {
                     (this.props.editItem.show)
                         ?
                         <EditGoodsItem
-                            onHide = {this.props.closeEditGoodsItem}
+                            onHide = {(e) => {
+                                
+                                this.props.closeEditGoodsItem();
+                                this.updateState(e, {}, this.state.activePage);
+                            }}
                         ></EditGoodsItem>
                         :
                         (<div></div>)
+                }
+
+                {
+                    (this.props.deleteItem.show) 
+                        ?
+                        <DeleteForm onHide={(e) => {
+                            this.props.permissionToDeleteClose();
+                            this.updateState(e, {});
+                        }}
+                        />
+                        :
+                        <div></div>
                 }
                 <Container>
 
@@ -230,12 +251,14 @@ const mapsStateToProps = function (state) {
     return {
         goodsToShow: state.adminPanel_goodsPanel.goodsShown,
         filters: state.adminPanel_goodsPanel.filters,
-        editItem: state.adminPanel_goodsPanel.editItem
+        editItem: state.adminPanel_goodsPanel.editItem,
+        deleteItem: state.adminPanel_goodsPanel.deleteItem
     };
 };
 
 export default connect(mapsStateToProps, {
     goodsGetSuccess,
     goodsFilter,
-    closeEditGoodsItem
+    closeEditGoodsItem,
+    permissionToDeleteClose
 })(GoodsPanel);

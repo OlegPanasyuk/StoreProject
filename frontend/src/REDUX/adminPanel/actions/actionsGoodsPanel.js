@@ -44,3 +44,18 @@ export const closeEditGoodsItem = () => {
         type: ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.CLOSE
     };
 };
+
+export const permissionToDelete = (id) => {
+    return {
+        type: ADMIN_PANEL_GOODS_PANEL.GOODS.DELETE.PERMISSION,
+        payload: {
+            id
+        }
+    };
+};
+
+export const permissionToDeleteClose = () => {
+    return {
+        type: ADMIN_PANEL_GOODS_PANEL.GOODS.DELETE.CLOSE
+    };
+};

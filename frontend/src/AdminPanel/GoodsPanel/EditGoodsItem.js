@@ -3,6 +3,9 @@ import { Modal, Form, Button, Overlay, Tooltip } from 'react-bootstrap';
 
 //Redux 
 import { connect } from 'react-redux';
+import {
+    editGoodsItem
+} from '../../REDUX/adminPanel/actions/actionsGoodsPanel';
 
 export class EditGoodsItem extends Component {
     constructor(props) {
@@ -17,18 +20,85 @@ export class EditGoodsItem extends Component {
         this.descriptionRef = React.createRef();
         this.priceRef = React.createRef();
         this.catalogueRef = React.createRef();
+        this.preValidation = this.preValidation.bind(this);
+        this.saveEditData = this.saveEditData.bind(this);
+        this.dropToDefaultValue = this.dropToDefaultValue.bind(this);
         this.state = {
             arrOfCatalogue: [],
             tooltip: {
                 target: null,
                 message: '',
                 show: false
+            },
+            formValid: {
+                priceValid: false
             }
         };
     }
 
     preValidation() {
-        console.log(this.priceRef.current);
+        const price = this.priceRef.current.value.match(/^[0-9]*[.,]?[0-9]+$/g);
+        if (!price) {
+            this.setState((state) => ({
+                formValid: {
+                    ...state.formValid,
+                    priceValid: true
+                }
+            }));
+        } else {
+            this.setState((state) => ({
+                formValid: {
+                    ...state.formValid,
+                    priceValid: false
+                }
+            }));
+        }
+    }
+
+    saveEditData() {
+        const self = this;
+        const storage = window.localStorage;
+        if (fetch) {
+            let myHeaders = new Headers();
+            myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
+            myHeaders.append("Content-type", 'application/json');
+            let body = {
+                name: this.nameRef.current.value,
+                description: this.descriptionRef.current.value,
+                catalogue_id_catalogue: this.catalogueRef.current.value,
+                price: this.priceRef.current.value
+            };
+            
+            let myInit = {
+                method: 'PUT',
+                headers: myHeaders,
+                body: JSON.stringify(body)
+            };
+            fetch(
+                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/${this.props.item.idgoods}`, 
+                myInit
+            )
+                .then(res => {
+                    return res.text();
+                })
+                .then(data => {
+                    self.props.editGoodsItem(body);
+                    self.setState((state)=> ({
+                        tooltip: {
+                            ...state.tooltip,
+                            message: data,
+                            show: true
+                        }
+                    }));
+                });
+        }
+    }
+
+    dropToDefaultValue() {
+        this.nameRef.current.value = this.props.item.name;
+        this.descriptionRef.current.value =  this.props.item.description;
+        this.priceRef.current.value = this.props.item.price;
+        this.catalogueRef.current.value =  this.props.item.catalogue_id_catalogue;
     }
 
     UNSAFE_componentWillMount() {
@@ -69,7 +139,6 @@ export class EditGoodsItem extends Component {
                                 ref={this.nameRef}
                                 type='text'
                                 defaultValue={this.props.item.name}
-
                             />
                         </Form.Group>
                         <Form.Group>
@@ -81,7 +150,6 @@ export class EditGoodsItem extends Component {
                                 as='textarea'
                                 type='text'
                                 defaultValue={this.props.item.description}
-
                             />
                         </Form.Group>
                         <Form.Group>
@@ -92,7 +160,8 @@ export class EditGoodsItem extends Component {
                                 ref={this.priceRef}
                                 type='text'
                                 defaultValue={this.props.item.price}
-
+                                isInvalid={this.state.formValid.priceValid}
+                                onChange={this.preValidation}
                             />
                         </Form.Group>
                         <Form.Group>
@@ -101,10 +170,8 @@ export class EditGoodsItem extends Component {
                             </Form.Label>
                             <Form.Control
                                 as='select'
-
                                 defaultValue={this.props.item.catalogue_id_catalogue}
                                 ref={this.catalogueRef}
-
                             >
                                 <option disabled>Open this select menu</option>
                                 {this.state.arrOfCatalogue.map((el, i) => {
@@ -119,12 +186,18 @@ export class EditGoodsItem extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant='light'>
+                    <Button 
+                        variant='light'
+                        onClick={()=> {
+                            this.dropToDefaultValue();
+                        }}
+                    >
                         Default
                     </Button>
                     <Button
+                        ref={this.attachRef}
                         variant='primary'
-                        onClick = {() => this.preValidation()}
+                        onClick = {() => this.saveEditData()}
                     >
                         Save
                     </Button>
@@ -147,4 +220,6 @@ const mapStateTpProps = (state) => {
     };
 };
 
-export default connect(mapStateTpProps)(EditGoodsItem);
+export default connect(mapStateTpProps, {
+    editGoodsItem
+})(EditGoodsItem);

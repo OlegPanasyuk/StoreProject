@@ -19,6 +19,10 @@ const initialState = {
         description: null,
         price: 0,
         catalogue_id_catalogue: null
+    },
+    deleteItem: {
+        id: null,
+        show: false
     }
 };
 
@@ -71,6 +75,26 @@ export default (state = initialState, action) => {
         return {
             ...state,
             editItem
+        };
+    }
+    case ADMIN_PANEL_GOODS_PANEL.GOODS.DELETE.PERMISSION: {
+        let deleteItem = Object.assign({}, {
+            show: true,
+            id: action.payload.id
+        });
+        return {
+            ...state,
+            deleteItem
+        };
+    }
+    case ADMIN_PANEL_GOODS_PANEL.GOODS.DELETE.CLOSE: {
+        let deleteItem = Object.assign({}, {
+            show: false,
+            id: null
+        });
+        return {
+            ...state,
+            deleteItem
         };
     }
     default:

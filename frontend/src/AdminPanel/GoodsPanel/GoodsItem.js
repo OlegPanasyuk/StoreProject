@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 //Redux 
 import { connect } from 'react-redux';
 import {
-    openEditGoodsItem
+    openEditGoodsItem,
+    permissionToDelete
 } from '../../REDUX/adminPanel/actions/actionsGoodsPanel';
 
 export class GoodsItem extends Component {
@@ -32,7 +33,12 @@ export class GoodsItem extends Component {
                         >
                             <i className="far fa-edit"></i>
                         </Button>
-                        <Button variant='light'>
+                        <Button 
+                            variant='light'
+                            onClick={()=>{
+                                this.props.permissionToDelete(obj.idgoods);
+                            }}
+                        >
                             <i className="fas fa-trash-alt"></i>
                         </Button>
                     </Row>
@@ -52,10 +58,12 @@ export class GoodsItem extends Component {
 GoodsItem.propTypes = {
     obj: PropTypes.object,
     id: PropTypes.number,
-    openEditGoodsItem: PropTypes.func
+    openEditGoodsItem: PropTypes.func,
+    permissionToDelete: PropTypes.func
 };
 
 
 export default connect(null, {
-    openEditGoodsItem
+    openEditGoodsItem,
+    permissionToDelete
 })(GoodsItem);
