@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import LoginForm from './LoginForm/LoginForm';
 import NavBarAdminPanel from './NavBarAdminPanel/NavBarAdminPanel';
 import { Container } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 //Place for import components
 import GoodsPanel from './GoodsPanel/GoodsPanel';
 import ErrorLayer from '../Error/ErrorLayer';
+import UsersPanel from './UsersPanel/UsersPanel';
 
 //Redux
 import { connect } from 'react-redux';
@@ -32,7 +34,7 @@ export class AdminPanel extends Component {
                                         <Router>
                                             <NavBarAdminPanel match={match} />
                                             <Route path={`${match.path}/goods`} component={GoodsPanel} />
-                                            <Route path={`${match.path}/users`} render={()=> (<h2>Hello, I am UsersControlPage</h2>)} />
+                                            <Route path={`${match.path}/users`} component={UsersPanel} />
                                             <ErrorLayer
                                                 Errors={this.props.errors}
                                             />
@@ -46,6 +48,13 @@ export class AdminPanel extends Component {
         );
     }
 }
+
+AdminPanel.propTypes = {
+    match: PropTypes.object,
+    errors: PropTypes.array,
+    user: PropTypes.object
+};
+
 
 const mapStoreToProps = (state) => {
     return ({

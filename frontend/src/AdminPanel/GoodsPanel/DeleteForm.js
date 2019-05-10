@@ -12,19 +12,13 @@ export class DeleteForm extends Component {
     }
 
     deleteObject() {
-        const self = this;
+        
         const storage = window.localStorage;
         if (fetch) {
             let myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
             myHeaders.append("Content-type", 'application/json');
-            // let body = {
-            //     id: this.nameRef.current.value,
-            //     description: this.descriptionRef.current.value,
-            //     catalogue_id_catalogue: this.catalogueRef.current.value,
-            //     price: this.priceRef.current.value
-            // };
-
+          
             let myInit = {
                 method: 'DELETE',
                 headers: myHeaders,

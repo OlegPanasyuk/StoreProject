@@ -27,3 +27,11 @@ export const ADMIN_PANEL_GOODS_PANEL = {
         }
     }
 };
+
+export const ADMIN_PANEL_USERS_PANEL = {
+    USERS: {
+        GET: {
+            SUCCESS: 'ADMIN_PANEL_USERS_PANEL_USERS_GET_SUCCESS'
+        }
+    }
+};

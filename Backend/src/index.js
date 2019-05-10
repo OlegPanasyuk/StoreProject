@@ -16,6 +16,7 @@ const registrationUser = require('./authorization/auth');
 const basketShopping = require('./routers/shoppingBasket');
 const userRouter = require('./routers/userRouters');
 const goodsRouter = require('./routers/goodsRouter');
+const usersRouters = require('./routers/usersRouter');
 
 var serverConfig = config.get('Server');
 
@@ -53,6 +54,8 @@ app.use('/basket/', basketShopping);
 app.use('/user/', userRouter);
 
 app.use('/goods/', goodsRouter);
+
+app.use('/users/', usersRouters);
 
 app.listen(serverConfig.port, function () {
     logger.log({

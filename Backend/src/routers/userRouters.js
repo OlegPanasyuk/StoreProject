@@ -26,55 +26,6 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     });
 });
 
-router.post('/', passport.authenticate('jwt', { session: false }), checkAdminRight, (req, res) => {
-    let { email, password1, password2, role, name } = req.body;
-    const regExEmail = /[\w_.-]+@\w+.\w+/gmi;
-    let arr = regExEmail.exec(email);
-    if (arr) {
-        if (email !== arr[0]) {
-            res.status(401).json({
-                message: 'Incorrect email. Use [0-9a-zA-Z.-_]',
-                status: false
-            });
-        } else if (password1 !== password2) {
-            res.status(401).json({
-                message: 'PASSWORDS NOT EQUALS',
-                status: false
-            });
-        } else {
-            Users.findOrCreate({
-                where: {
-                    email: email
-                },
-                defaults: {
-                    username: name,
-                    password: password1,
-                    create_time: new Date(),
-                    role: role
-                }
-            }).then(([user, created]) => {
-                // console.log(user.get({
-                //     plain: true
-                // }));
-                res.status(201).json({
-                    message: (created) ? 'User was cteated' : `User with '${user.email}' email is exist`,
-                    status: created,
-                    user: (created) ? {
-                        username: user.username,
-                        email: user.email,
-                        role: user.role
-                    } : {}
-                });
-            });
-        }
-    } else {
-        res.status(401).json({
-            message: 'Incorrect email or email has not been entered. Use [0-9a-zA-Z.-_]',
-            status: false
-        });
-    }
-});
-
 router.delete('/', passport.authenticate('jwt', { session: false }), checkSuperAdminRight, (req, res) => {
     let userToDestroy = {
         id: req.body.id,

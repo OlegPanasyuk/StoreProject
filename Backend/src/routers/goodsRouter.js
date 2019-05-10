@@ -86,7 +86,6 @@ router.get('/filter', function (req, res) {
             count = true;
         }
     });
-    console.log(queryLimit);
     if (Object.keys(query).length) {
         Goods.findAll({ where: query }).then(good => res.json(good));
     } else if ((Object.keys(queryLimit).length) && (!count)) {
@@ -105,7 +104,6 @@ router.post('/', checkRight, function (req, res) {
         catalogue_id_catalogue: (req.body.catalogue_id_catalogue) ? req.body.catalogue_id_catalogue : 4,
         price: (req.body.price) ? req.body.price : 0
     };
-    console.log(req.body);
     Goods.create(objToCreate)
         .then(good => {
             res.json(good);
