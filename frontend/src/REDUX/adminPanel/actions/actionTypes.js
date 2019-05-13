@@ -32,6 +32,10 @@ export const ADMIN_PANEL_USERS_PANEL = {
     USERS: {
         GET: {
             SUCCESS: 'ADMIN_PANEL_USERS_PANEL_USERS_GET_SUCCESS'
+        },
+        EDIT: {
+            OPEN: 'ADMIN_PANEL_USERS_PANEL_USERS_EDIT_OPEN',
+            CLOSE: 'ADMIN_PANEL_USERS_PANEL_USERS_EDIT_CLOSE'
         }
     }
 };

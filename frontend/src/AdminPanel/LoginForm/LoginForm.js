@@ -36,6 +36,12 @@ export class LoginForm extends Component {
         };
     }
 
+    handle(e) {
+        if (e.keyCode === 13) {
+            document.getElementById('buttonToLogin').click();
+        }
+    }
+
     hide() {
         this.setState((state) => ({
             show: !state.show
@@ -87,6 +93,14 @@ export class LoginForm extends Component {
                 <Modal
                     show={this.state.show}
                     size="sm"
+                    onHide={this.hide}
+                    onEntering={()=>{
+                        window.onkeydown = this.handle;
+                    }}
+                    onExiting={()=>{
+                        window.onkeydown = null;
+                    }}
+                    keyboard={true}
                     centered
                 >
                     <Modal.Header>
@@ -112,7 +126,9 @@ export class LoginForm extends Component {
                         <Modal.Footer>
                             <Button
                                 ref={this.attachRef}
-                                onClick={this.sendRequestOnAccess}>
+                                onClick={this.sendRequestOnAccess}
+                                id='buttonToLogin'
+                            >
                                 Login
                             </Button>
                             <Button 

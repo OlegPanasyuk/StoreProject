@@ -12,7 +12,7 @@ import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
-
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 
 const client = rest.wrap(mime, { mime: 'application/json' })
@@ -34,6 +34,12 @@ class RegisrtForm extends Component {
         };
     }
 
+    handle(e) {
+        if (e.keyCode === 13) {
+            document.getElementById('buttonToSendRegistration').click();
+        } 
+    }
+
     sendRequestForRegistration() {
         const objToRequest = {
             email: this.emailInputR.current.value,
@@ -41,7 +47,7 @@ class RegisrtForm extends Component {
             password2: this.passWordInput2.current.value
         };
 
-        const setUser = this.props.setUserInState;
+        //const setUser = this.props.setUserInState;
         let self = this;
         client({
             method: 'POST',
@@ -54,10 +60,7 @@ class RegisrtForm extends Component {
             }));
             if (res.entity.status) {
                 setTimeout(() =>
-                    setUser({
-                        ...res.entity.user,
-                        role: 'Guest'
-                    }),
+                    window.location.href = '/',
                 2000);
             }
         }).catch(err => {
@@ -69,9 +72,15 @@ class RegisrtForm extends Component {
         let { target, message, show } = this.state;
         return (
             <Modal 
-                show={this.props.show} 
+                show={true} 
                 size="sm" 
-                onHide={this.props.onHide}
+                autoFocus={true}
+                onEntering={() => {
+                    window.onkeydown = this.handle;
+                }}
+                onHide={()=>{
+                    window.location.href = '/';
+                }}
                 centered
             >
                 <Modal.Header closeButton >
@@ -129,6 +138,7 @@ class RegisrtForm extends Component {
                             size="sm"
                             variant="secondary"
                             className="ml-3"
+                            id='buttonToSendRegistration'
                             onClick={this.sendRequestForRegistration}
                         >
                             Registration

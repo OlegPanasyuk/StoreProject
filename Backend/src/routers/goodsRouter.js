@@ -136,11 +136,11 @@ router.put('/:id',checkRight, function(req, res) {
                     res.status(201).send('Data is updated');
                 })
                 .catch((e)=>{
-                    res.status(401).send(`${e}`);
+                    res.status(400).send(`${e}`);
                 });
         })
         .catch(e => {
-            res.status(401).send(`${e}`);
+            res.status(400).send(`${e}`);
         });
 
 });

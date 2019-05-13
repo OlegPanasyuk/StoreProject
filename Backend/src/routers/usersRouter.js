@@ -125,7 +125,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), checkSup
     Users.findOne({ where: { id: userToDestroy.id } })
         .then(user => user.destroy({ forse: true }))
         .then(() => {
-            res.send('User is deleted');
+            res.status(200).send('User is deleted');
         })
         .catch((e) => {
             res.status(500).send(`${e}`);

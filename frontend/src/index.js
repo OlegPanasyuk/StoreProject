@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import RegForm from './RegistrForm/RegistrForm';
 import AdminPanel from './AdminPanel/AdminPanel';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
@@ -14,7 +15,10 @@ ReactDOM.render(
             <Switch>
                 
                 <Route path='/adminpanel' component={AdminPanel}/>
+                <Route path='/registration' component={RegForm}/>
+                <Route path='/login' component={RegForm}/>
                 <Route path='/' component={App}/>
+
             </Switch>
         </Router>
     </Provider>

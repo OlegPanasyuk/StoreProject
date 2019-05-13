@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, CardColumns } from 'react-bootstrap';
+import { Container, Row, Col, CardColumns, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 //Redux 
 import { connect } from 'react-redux';
 import {
-    showUsers
+    showUsers,
+    editUserClose
 } from '../../REDUX/adminPanel/actions/actionsUsersPanel';
 
 //Components 
 import UserItem from './UserItem';
+import ListOfPages from './ListOfPages';
+import FilterUsers from './FilterUsers';
+import AddingUser from './AddingUser';
+import EditUser from './EditForm';
 
 export class UsersPanel extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showAddingModal: false
+        };
+    }
 
     UNSAFE_componentWillMount() {
         const self = this;
@@ -27,13 +39,6 @@ export class UsersPanel extends Component {
                 cache: 'default'
             };
 
-
-            // let body = {
-            //     name: this.nameRef.current.value,
-            //     description: this.descriptionRef.current.value,
-            //     catalogue_id_catalogue: this.catalogueRef.current.value,
-            //     price: this.priceRef.current.value
-            // };
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users`, myInit)
                 .then((users) => {
                     return users.json();
@@ -45,16 +50,60 @@ export class UsersPanel extends Component {
     }
 
     render() {
+        let addingModal = null;
+        let editModal = null;
+        if (this.state.showAddingModal) {
+            addingModal = (
+                <AddingUser
+                    show={this.state.showAddingModal}
+                    onHide={() => {
+                        this.setState({
+                            showAddingModal: false
+                        });
+                    }}
+                />
+            );
+        }
+        console.log(this.props.userToEdit.show);
+        if (this.props.userToEdit.show) {
+            editModal = (
+                <EditUser 
+                    onHide = {()=> {
+                        this.props.editUserClose();
+                    }}
+                />
+            );
+        }
+
         return (
+
             <Container>
+                {addingModal}
+                {editModal}
                 <Row>
                     <Col>
-                        Top row
+                        <ListOfPages
+                            count={1}
+                            limit={10}
+                            activePage={1}
+                            openPage={() => {
+
+                            }}
+                        />
                     </Col>
                 </Row>
                 <Row>
                     <Col className='col-3'>
-                        Left BAr
+                        <Button
+                            onClick={() => {
+                                this.setState({
+                                    showAddingModal: true
+                                });
+                            }}
+                        >
+                            Add User
+                        </Button>
+                        <FilterUsers />
                     </Col>
                     <Col className='col-9'>
                         <CardColumns>
@@ -79,10 +128,12 @@ UsersPanel.propTypes = {
 const mapStateToProps = (state) => {
     return {
         usersToShow: state.adminPanel_usersPanel.usersToShow.rows,
-        usersToShowCount: state.adminPanel_usersPanel.usersToShow.count
+        usersToShowCount: state.adminPanel_usersPanel.usersToShow.count,
+        userToEdit: state.adminPanel_usersPanel.userToEdit
     };
 };
 
 export default connect(mapStateToProps, {
-    showUsers
+    showUsers,
+    editUserClose
 })(UsersPanel);

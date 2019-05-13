@@ -7,3 +7,16 @@ export const showUsers = (payload) => {
     };
 };
 
+export const editUser = (payload) => {
+    return {
+        type: ADMIN_PANEL_USERS_PANEL.USERS.EDIT.OPEN,
+        payload
+    };
+};
+
+
+export const editUserClose = () => {
+    return {
+        type: ADMIN_PANEL_USERS_PANEL.USERS.EDIT.CLOSE
+    };
+};

@@ -241,6 +241,7 @@ class App extends Component {
                             <h1>Hello, I am ContactPage!</h1>
                         </Container>)}>
                     </Route>
+                    
                     <Route path='/user/history' component={UserHistory}></Route>
                     <Route path='/user/profile' component={UserProfile}></Route>
                     <Route path='/basket' component={ShoppingBasket}></Route>

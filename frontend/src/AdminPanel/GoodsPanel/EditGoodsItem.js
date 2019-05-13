@@ -32,25 +32,28 @@ export class EditGoodsItem extends Component {
             },
             formValid: {
                 priceValid: false
-            }
+            },
+            disabledButton: false
         };
     }
 
     preValidation() {
         const price = this.priceRef.current.value.match(/^[0-9]*[.,]?[0-9]+$/g);
-        if (!price) {
+        if ((!price) && (price >= 0)) {
             this.setState((state) => ({
                 formValid: {
                     ...state.formValid,
                     priceValid: true
-                }
+                },
+                disabledButton: true
             }));
         } else {
             this.setState((state) => ({
                 formValid: {
                     ...state.formValid,
                     priceValid: false
-                }
+                },
+                disabledButton: false
             }));
         }
     }
@@ -68,25 +71,56 @@ export class EditGoodsItem extends Component {
                 catalogue_id_catalogue: this.catalogueRef.current.value,
                 price: this.priceRef.current.value
             };
-            
+
             let myInit = {
                 method: 'PUT',
                 headers: myHeaders,
                 body: JSON.stringify(body)
             };
             fetch(
-                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/${this.props.item.idgoods}`, 
+                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/${this.props.item.idgoods}`,
                 myInit
             )
                 .then(res => {
-                    return res.text();
+                    console.log(res);
+                    if (res.status === 201) {
+                        return res.text();
+                    }
+                    else {
+                        res.text()
+                            .then(text => {
+                                throw text;
+                            })
+                            .catch(err => {
+                                self.setState((state) => ({
+                                    tooltip: {
+                                        ...state.tooltip,
+                                        message: err,
+                                        show: true
+                                    }
+                                }));
+                                
+                            });
+
+                    }
+
                 })
                 .then(data => {
+
                     self.props.editGoodsItem(body);
-                    self.setState((state)=> ({
+                    self.setState((state) => ({
                         tooltip: {
                             ...state.tooltip,
                             message: data,
+                            show: true
+                        }
+                    }));
+                })
+                .catch(err => {
+                    self.setState((state) => ({
+                        tooltip: {
+                            ...state.tooltip,
+                            message: err,
                             show: true
                         }
                     }));
@@ -96,9 +130,9 @@ export class EditGoodsItem extends Component {
 
     dropToDefaultValue() {
         this.nameRef.current.value = this.props.item.name;
-        this.descriptionRef.current.value =  this.props.item.description;
+        this.descriptionRef.current.value = this.props.item.description;
         this.priceRef.current.value = this.props.item.price;
-        this.catalogueRef.current.value =  this.props.item.catalogue_id_catalogue;
+        this.catalogueRef.current.value = this.props.item.catalogue_id_catalogue;
     }
 
     UNSAFE_componentWillMount() {
@@ -120,7 +154,7 @@ export class EditGoodsItem extends Component {
     }
 
     render() {
-        let {target, show, message} = this.state.tooltip;
+        let { target, show, message } = this.state.tooltip;
         return (
             <Modal
                 show={true}
@@ -186,18 +220,28 @@ export class EditGoodsItem extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button 
-                        variant='light'
-                        onClick={()=> {
+                    <Button
+                        variant='secondary'
+                        onClick={() => {
                             this.dropToDefaultValue();
                         }}
                     >
                         Default
                     </Button>
                     <Button
+                        variant='light'
+                        className='ml-auto'
+                        onClick={() => {
+                            this.props.onHide();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
                         ref={this.attachRef}
                         variant='primary'
-                        onClick = {() => this.saveEditData()}
+                        onClick={() => this.saveEditData()}
+                        disabled={this.state.disabledButton}
                     >
                         Save
                     </Button>

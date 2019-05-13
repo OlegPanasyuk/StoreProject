@@ -1,7 +1,15 @@
 import { ADMIN_PANEL_USERS_PANEL } from '../actions/actionTypes';
 
 const initState = {
-    usersToShow: {}
+    usersToShow: {},
+    userToEdit: {
+        show: false,
+        id: null,
+        username: '',
+        email: '',
+        password: '',
+        role: ''
+    }
 };
 
 export default function (state = initState, action) {
@@ -11,6 +19,27 @@ export default function (state = initState, action) {
         return {
             ...state,
             usersToShow
+        };
+    }
+    case ADMIN_PANEL_USERS_PANEL.USERS.EDIT.OPEN: {
+        let userToEdit = Object.assign({}, state.usersToEdit, {show: true},action.payload);
+        return {
+            ...state,
+            userToEdit
+        };
+    }
+    case ADMIN_PANEL_USERS_PANEL.USERS.EDIT.CLOSE: {
+        let userToEdit = Object.assign({}, {
+            show: false,
+            id: null,
+            username: '',
+            email: '',
+            password: '',
+            role: ''
+        });
+        return {
+            ...state,
+            userToEdit
         };
     }
     default: return state;

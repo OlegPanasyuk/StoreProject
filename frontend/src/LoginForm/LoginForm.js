@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Col, Button } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 import Link from '../Link/Link';
 import PropsTypes from 'prop-types';
 import md5 from 'md5';
@@ -33,6 +34,12 @@ export class LoginForm extends Component {
         };
     }
 
+    handle(e) {
+        if (e.keyCode === 13) {
+            document.getElementById('buttonLoginForm').click();
+        }
+    }
+
     sendLoginRequest(e) {
         e.preventDefault();
         const objToRequest = {
@@ -62,7 +69,7 @@ export class LoginForm extends Component {
     }
 
     render() {
-        let handleConverStatusUser = this.props.handleConverStatusUser;
+        //let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
         return (
             <Form className='ml-auto'>
@@ -73,29 +80,38 @@ export class LoginForm extends Component {
                             type="email"
                             placeholder="Enter email"
                             ref={this.emailInput}
+                            onKeyDown = {this.handle}
                             defaultValue={(userState.email) ? userState.email : ''}
                         />
                     </Form.Group>
                     <Form.Group as={Col} className="col mb-0" controlId="formGridPassword">
-                        <Form.Control size="sm" type="password" placeholder="Password" ref={this.passWordInput} />
+                        <Form.Control  
+                            size="sm" 
+                            type="password" 
+                            placeholder="Password" 
+                            ref={this.passWordInput} 
+                            onKeyDown = {this.handle}    
+                        />
                     </Form.Group>
                     <Col className='d-flex align-items-center'>
                         <Button 
                             ref={this.attachRef}
                             size="sm" 
                             variant="secondary" 
-                            className="" 
                             onClick={this.sendLoginRequest}
+                            id='buttonLoginForm'
                         >
                             Login
                         </Button>
                         
-                        <Link
-                            text='Registration'
-                            href='#'
+                        <NavLink 
+                            to='/registration'
                             className="d-block p-3"
-                            ConverStatusUser={handleConverStatusUser}>
-                        </Link>
+                            
+                        >
+                            Registration
+                        </NavLink>
+                       
                     </Col>
                 </Form.Row>
             </Form>
@@ -113,3 +129,14 @@ LoginForm.propTypes = {
 export default connect(null, {
     addErrorToState
 })(LoginForm);
+
+// onClick={()=>{
+//     window.location.href = '/registration';
+// }}
+
+//                         <Link
+//                             text='Registration'
+//                             href='#'
+//                             className="d-block p-3"
+//                             ConverStatusUser={handleConverStatusUser}>
+//                         </Link>
