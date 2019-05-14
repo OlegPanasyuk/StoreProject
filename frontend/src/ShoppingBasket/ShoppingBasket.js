@@ -11,17 +11,22 @@ import ShoppingBasketItem from './ShoppingBasketItem';
 import PropsTypes from 'prop-types';
 import './ShoppingBasket.css';
 import md5 from 'md5';
+import LoginForm from '../LoginForm/LoginForm';
 
 //Redux use
 import { connect } from 'react-redux';
 //import store from '../REDUX/store';
-import { 
-    showGoodsInBasketSuccess, 
-    deleteGoodsFromBasket 
+import {
+    showGoodsInBasketSuccess,
+    deleteGoodsFromBasket
 } from '../REDUX/actions/actionsShoppingBasket';
 import {
     addErrorToState,
 } from '../REDUX/actions/actionsErrors';
+import {
+    askLogin
+} from '../REDUX/actions/actionsUser';
+
 
 // For Requests to server
 import rest from 'rest';
@@ -44,7 +49,8 @@ export class ShoppingBascket extends Component {
             succsefullTransaction: false,
             targetTooltip: null,
             messageTooltip: '',
-            show: false
+            show: false,
+            askLogin: false
         };
     }
 
@@ -96,23 +102,17 @@ export class ShoppingBascket extends Component {
                     });
                 } else if (data.entity === 'Unauthorized') {
                     // Needs Error reporting by object messages to UI
+                    this.setState({
+                        askLogin: true
+                    });
+                    this.props.askLogin();
                     const d = new Date();
                     this.props.addErrorToState({
                         id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
                         level: 'Warning',
                         message: 'You are not unauthorized.'
                     });
-                //     this.setState({
-                //         show: true,
-                //         messageTooltip: 'Unauthorized'
-                //     });
-                //     setTimeout(()=>{
-                //         this.setState({
-                //             show: false,
-                //             messageTooltip: ''
-                //         });
-                //     },3000);
-                // }
+
                 }
             }).catch(err => {
                 // Needs Error reporting by object Oushing messages to UI
@@ -209,7 +209,8 @@ const mapStoreToProps = function (state) {
     return (
         {
             goods: state.shoppingBasketReducers.goodsInBasket,
-            goodsData: state.shoppingBasketReducers.goodsInBasketData
+            goodsData: state.shoppingBasketReducers.goodsInBasketData,
+            userInfo: state.userHeaderReducers.userInfo
         }
     );
 };
@@ -219,11 +220,13 @@ ShoppingBascket.propTypes = {
     goodsData: PropsTypes.array,
     showGoodsInBasketSuccess: PropsTypes.func,
     deleteGoodsFromBasket: PropsTypes.func,
-    addErrorToState: PropsTypes.func
+    addErrorToState: PropsTypes.func,
+    askLogin: PropsTypes.func
 };
 
 export default connect(mapStoreToProps, {
     showGoodsInBasketSuccess,
     deleteGoodsFromBasket,
-    addErrorToState
+    addErrorToState,
+    askLogin
 })(ShoppingBascket);

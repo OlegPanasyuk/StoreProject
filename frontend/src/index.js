@@ -6,19 +6,20 @@ import RegForm from './RegistrForm/RegistrForm';
 import AdminPanel from './AdminPanel/AdminPanel';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import store from './REDUX/store';
+
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 ReactDOM.render(
     <Provider store={store}>
         <Router>
             <Switch>
-                
                 <Route path='/adminpanel' component={AdminPanel}/>
                 <Route path='/registration' component={RegForm}/>
                 <Route path='/login' component={RegForm}/>
                 <Route path='/' component={App}/>
-
             </Switch>
         </Router>
     </Provider>

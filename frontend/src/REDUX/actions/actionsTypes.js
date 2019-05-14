@@ -34,6 +34,9 @@ export const USER = {
     SET_INFO: {
         SUCCESS: 'USER_SET_INFO_SUCCESS',
         FAILED: 'USER_SET_INFO_FAILED'
+    },
+    LOGIN: {
+        ASK: 'USER_LOGIN_ASK'
     }
 };
 

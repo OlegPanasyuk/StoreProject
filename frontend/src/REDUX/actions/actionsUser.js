@@ -8,3 +8,14 @@ export const setUserInfo = (user) => {
         }
     };
 };
+
+export const askLogin = () => {
+    return {
+        type: USER.LOGIN.ASK,
+        payload: {
+            user: {
+                role: 'Login'
+            }
+        }
+    };
+};

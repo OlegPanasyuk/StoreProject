@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import GoodsPanel from './GoodsPanel/GoodsPanel';
 import ErrorLayer from '../Error/ErrorLayer';
 import UsersPanel from './UsersPanel/UsersPanel';
+import ControlCatalogue from './ControlCatalogue/ControlCatalogue';
 
 //Redux
 import { connect } from 'react-redux';
@@ -35,6 +36,7 @@ export class AdminPanel extends Component {
                                             <NavBarAdminPanel match={match} />
                                             <Route path={`${match.path}/goods`} component={GoodsPanel} />
                                             <Route path={`${match.path}/users`} component={UsersPanel} />
+                                            <Route path={`${match.path}/catalogue`} component={ControlCatalogue} />
                                             <ErrorLayer
                                                 Errors={this.props.errors}
                                             />

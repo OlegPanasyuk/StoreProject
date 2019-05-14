@@ -9,6 +9,13 @@ const initState = {
         email: '',
         password: '',
         role: ''
+    },
+    filters: {
+        limit: 10,
+        count: 0,
+        activePage: 1,
+        nameSearch: '',
+        role: ''
     }
 };
 
@@ -40,6 +47,13 @@ export default function (state = initState, action) {
         return {
             ...state,
             userToEdit
+        };
+    }
+    case ADMIN_PANEL_USERS_PANEL.USERS.FILTER.SUCCESS: {
+        let filters = Object.assign({}, state.filters, action.payload);
+        return {
+            ...state,
+            filters
         };
     }
     default: return state;

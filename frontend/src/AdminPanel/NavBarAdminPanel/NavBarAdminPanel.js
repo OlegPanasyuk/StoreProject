@@ -16,6 +16,9 @@ export class NavBarAdminPanel extends Component {
                         <Nav.Item>
                             <NavLink className='p-3' to={`${match.url}/users`}>Users</NavLink>
                         </Nav.Item>
+                        <Nav.Item>
+                            <NavLink className='p-3' to={`${match.url}/catalogue`}>Catalogue</NavLink>
+                        </Nav.Item>
                     </Nav>
                 </Navbar>
             </Container>

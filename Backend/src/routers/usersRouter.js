@@ -6,6 +6,10 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtStratagy = require('../authorization/jwt');
 
+const Sequelize = require('sequelize');
+
+const Op = Sequelize.Op;
+
 passport.use(jwtStratagy);
 
 router.get('/', passport.authenticate('jwt', { session: false }), checkSuperAdminRight, (req, res) => {
@@ -20,10 +24,23 @@ router.get('/', passport.authenticate('jwt', { session: false }), checkSuperAdmi
 });
 
 router.get('/filter', passport.authenticate('jwt', { session: false }), checkSuperAdminRight, (req, res) => {
-    let objToQuery = {
-        role: (!req.query.role) ? '' : req.query.role
-    };
-    Users.findAndCountAll({ where: objToQuery })
+    const objToQuery = {};
+    const limits = {};
+    Object.keys(req.query).forEach((el)=> {
+        if (el === 'role') {
+            objToQuery.role = req.query[el];
+        }
+        if (el === 'nameSearch') {
+            objToQuery.username = {};
+            objToQuery.username[Op.regexp] = `${req.query[el]}`;
+        }
+        if (el === 'page') {
+            limits.limit = 10;
+            limits.offset = (req.query[el] - 1) * 10;
+        }
+    });
+    const query = Object.assign({}, { where: objToQuery }, limits);
+    Users.findAndCountAll(query)
         .then(results => {
             res.status(200).json(results);
         })
@@ -55,7 +72,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), checkSuperA
     };
     Users.findOne({ where: objToQuery })
         .then(results => {
-            results.update(dataToUpdate)
+            results.update(dataToUpdate, Object.keys(dataToUpdate))
                 .then(() => {
                     res.status(200).send('Data is updated');
                 })

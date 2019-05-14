@@ -44,7 +44,7 @@ export class ErrorNotification extends Component {
                     background: 'grey',
                     position: 'relative',
                     minHeight: '100px',
-                    zIndex: 10
+                    zIndex: 1060
                 }}
             >
                 <div className="toast-header">

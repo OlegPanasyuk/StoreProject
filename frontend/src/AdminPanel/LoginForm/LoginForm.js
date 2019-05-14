@@ -65,6 +65,7 @@ export class LoginForm extends Component {
         })
             .then(data => {
                 if (data.entity.token) {
+                    window.onkeydown = null;
                     this.props.userAuthorizedSuccess(data.entity);
                 } else {
                     this.setState({
@@ -97,7 +98,8 @@ export class LoginForm extends Component {
                     onEntering={()=>{
                         window.onkeydown = this.handle;
                     }}
-                    onExiting={()=>{
+                    onExit={()=>{
+                       
                         window.onkeydown = null;
                     }}
                     keyboard={true}

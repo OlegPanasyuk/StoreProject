@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 export class FilterGoodsPanel extends Component {
     constructor(props) {

@@ -22,6 +22,13 @@ export default function (state = initialState, action) {
             userInfo
         };
     }
+    case USER.LOGIN.ASK: {
+        let userInfo = Object.assign({}, action.payload.user);
+        return {
+            ...state,
+            userInfo
+        };
+    }
     default:
         return state;
     }

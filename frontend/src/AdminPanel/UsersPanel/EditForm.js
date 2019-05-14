@@ -21,12 +21,12 @@ export class EditForm extends Component {
         this.emailRef = React.createRef();
         this.passwordRef = React.createRef();
         this.roleRef = React.createRef();
-        this.sendUserToAdd = this.sendUserToAdd.bind(this);
+        this.sendUserToEdit = this.sendUserToEdit.bind(this);
         this.state = {
-            username: '',
-            password: '',
-            email: '',
-            role: '',
+            username: this.props.userToEdit.username,
+            password: this.props.userToEdit.password,
+            email: this.props.userToEdit.email,
+            role: this.props.userToEdit.role,
             tooltip: {
                 target: null,
                 message: '',
@@ -53,7 +53,7 @@ export class EditForm extends Component {
         // }
     }
 
-    sendUserToAdd() {
+    sendUserToEdit() {
         const storage = window.localStorage;
         if (fetch) {
 
@@ -61,25 +61,25 @@ export class EditForm extends Component {
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
             myHeaders.append("Content-type", 'application/json');
             let body = {
-                name: this.state.name,
-                password1: this.state.password,
+                username: this.state.username,
+                password: this.state.password,
                 email: this.state.email,
                 role: this.state.role
             };
             
             let myInit = {
-                method: 'POST',
+                method: 'PUT',
                 headers: myHeaders,
                 body: JSON.stringify(body)
             };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/new`, myInit)
+            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/${this.props.userToEdit.id}`, myInit)
                 .then(res => {
-                    return res.json();
+                    return res.text();
                 })
                 .then(data => {
                     if (data) {
                         this.setState({
-                            name: '',
+                            username: '',
                             password: '',
                             email: '',
                             role: ''
@@ -89,7 +89,7 @@ export class EditForm extends Component {
                         this.props.addErrorToState({
                             id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                             level: 'Success',
-                            message: 'User is added'
+                            message: 'User is updated'
                         });
                     }
                 })
@@ -194,9 +194,9 @@ export class EditForm extends Component {
                 <Modal.Footer>
                     <Button variant="light" onClick={() => {
                         this.setState({
-                            username: '',
+                            username: this.props.userToEdit.username,
                             password: this.props.userToEdit.password,
-                            email: '',
+                            email: this.props.userToEdit.email,
                             role: this.props.userToEdit.role
                         });
 
@@ -206,7 +206,7 @@ export class EditForm extends Component {
                     </Button>
                     <Button variant="primary"
                         onClick={() => {
-                            //this.sendUserToAdd();
+                            this.sendUserToEdit();
                         }}
                         ref={this.attachRef}
                     >

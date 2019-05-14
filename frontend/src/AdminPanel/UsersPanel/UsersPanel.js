@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
     showUsers,
-    editUserClose
+    editUserClose,
+    filterUsers
 } from '../../REDUX/adminPanel/actions/actionsUsersPanel';
 
 //Components 
@@ -17,12 +18,72 @@ import AddingUser from './AddingUser';
 import EditUser from './EditForm';
 
 export class UsersPanel extends Component {
-
     constructor(props) {
         super(props);
+        this.openPage = this.openPage.bind(this);
+        this.prepareSearchRow = this.prepareSearchRow.bind(this);
+        this.updateState = this.updateState.bind(this);
         this.state = {
             showAddingModal: false
         };
+    }
+
+    prepareSearchRow() {
+        let searchStr = [];
+        let { filters } = this.props;
+        Object.keys(filters).forEach((el) => {
+            if ((el === 'nameSearch') && (filters[el] !== '')) {
+                searchStr.push(`${el}=${filters[el]}`);
+            } 
+            if ((el === 'role') && (filters[el] !== '')) {
+                searchStr.push(`${el}=${filters[el]}`);
+            }
+        });
+
+        return searchStr.join('&');
+    }
+
+    updateState(e, obj, page = 1) {
+        if (e) {
+            e.preventDefault();
+        }
+
+        // I don't like it
+        let a = new Promise((res, rej) => {
+            this.props.filterUsers(obj);
+            res(true);
+        });
+        a.then((res) => {
+            this.openPage(page);
+        }, (rej) => {
+
+        });
+    }
+
+    openPage(i) {
+        let self = this;
+        const storage = window.localStorage;
+        if (fetch) {
+            let searchStr = this.prepareSearchRow();
+            let myHeaders = new Headers();
+            myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
+            myHeaders.append("Content-type", 'application/json');
+            let myInit = {
+                method: 'GET',
+                headers: myHeaders,
+                cache: 'default'
+            };
+            fetch(
+                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/filter?page=${i}&${searchStr}`,
+                myInit
+            )
+                .then((res) => {
+                    self.props.filterUsers({activePage: i});
+                    res.json().then(function (data) {
+                        self.props.showUsers(data);
+                    });
+                });
+        }
     }
 
     UNSAFE_componentWillMount() {
@@ -39,7 +100,7 @@ export class UsersPanel extends Component {
                 cache: 'default'
             };
 
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users`, myInit)
+            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/filter?page=1`, myInit)
                 .then((users) => {
                     return users.json();
                 })
@@ -52,6 +113,8 @@ export class UsersPanel extends Component {
     render() {
         let addingModal = null;
         let editModal = null;
+        let count = this.props.usersToShowCount;
+        let {limit, activePage} = this.props.filters;
         if (this.state.showAddingModal) {
             addingModal = (
                 <AddingUser
@@ -64,11 +127,11 @@ export class UsersPanel extends Component {
                 />
             );
         }
-        console.log(this.props.userToEdit.show);
+
         if (this.props.userToEdit.show) {
             editModal = (
-                <EditUser 
-                    onHide = {()=> {
+                <EditUser
+                    onHide={() => {
                         this.props.editUserClose();
                     }}
                 />
@@ -83,12 +146,10 @@ export class UsersPanel extends Component {
                 <Row>
                     <Col>
                         <ListOfPages
-                            count={1}
-                            limit={10}
-                            activePage={1}
-                            openPage={() => {
-
-                            }}
+                            count={count}
+                            limit={limit}
+                            activePage={activePage}
+                            openPage={this.openPage}
                         />
                     </Col>
                 </Row>
@@ -103,7 +164,9 @@ export class UsersPanel extends Component {
                         >
                             Add User
                         </Button>
-                        <FilterUsers />
+                        <FilterUsers 
+                            updateState = {this.updateState}
+                        />
                     </Col>
                     <Col className='col-9'>
                         <CardColumns>
@@ -129,11 +192,13 @@ const mapStateToProps = (state) => {
     return {
         usersToShow: state.adminPanel_usersPanel.usersToShow.rows,
         usersToShowCount: state.adminPanel_usersPanel.usersToShow.count,
-        userToEdit: state.adminPanel_usersPanel.userToEdit
+        userToEdit: state.adminPanel_usersPanel.userToEdit,
+        filters: state.adminPanel_usersPanel.filters
     };
 };
 
 export default connect(mapStateToProps, {
     showUsers,
-    editUserClose
+    editUserClose,
+    filterUsers
 })(UsersPanel);

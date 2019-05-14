@@ -15,7 +15,7 @@ class ErrorLayer extends Component {
                         position: 'fixed',
                         bottom: 0,
                         right: 0,
-                        zIndex: 10
+                        zIndex: 1060
                     }}
                 >
                     {Errors.map((el) => {

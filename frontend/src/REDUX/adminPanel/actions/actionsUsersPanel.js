@@ -20,3 +20,10 @@ export const editUserClose = () => {
         type: ADMIN_PANEL_USERS_PANEL.USERS.EDIT.CLOSE
     };
 };
+
+export const filterUsers = (payload) => {
+    return {
+        type: ADMIN_PANEL_USERS_PANEL.USERS.FILTER.SUCCESS,
+        payload
+    };
+};

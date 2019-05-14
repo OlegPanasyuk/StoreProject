@@ -12,7 +12,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 import Navigation from './Navigation/Navigation';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, NavLink } from 'react-router-dom';
 // import UserProfile from './User/UserProfile';
 
 //Redux
@@ -30,6 +30,10 @@ import {
     addErrorToState,
     deleteErrorFromState
 } from './REDUX/actions/actionsErrors';
+import {
+    askLogin,
+    setUserInfo
+} from './REDUX/actions/actionsUser';
 
 
 import rest from 'rest';
@@ -39,13 +43,13 @@ import mime from 'rest/interceptor/mime';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`});
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
 
 
 function takeGoodsFromLocalStorage() {
     let storage = window.localStorage;
     let arr = storage.getItem('ShoppingBasket');
-    arr = (arr) ? JSON.parse(arr) :  arr;
+    arr = (arr) ? JSON.parse(arr) : arr;
     let goodsInBasket = (arr) ?
         new Set([...arr]) :
         new Set();
@@ -61,7 +65,7 @@ class App extends Component {
         this.addItemToBacket = this.addItemToBacket.bind(this);
         this.showCompleteBasket = this.showCompleteBasket.bind(this);
         this.removeItemFromBasket = this.removeItemFromBasket.bind(this);
-        this.roles = ['Admin', 'User', 'Customer'];
+        this.roles = ['Admin', 'User', 'Customer', 'SuperAdmin'];
         this.state = {
             user: {
                 role: 'Guest'
@@ -160,24 +164,46 @@ class App extends Component {
     }
 
     render() {
-        const {match} = this.props;
+        const { match } = this.props;
         let authElement = (
-            <p>
-                {this.state.user.role}
-            </p>
+            <React.Fragment>
+                <Col className='d-flex justify-content-end'>
+                    <NavLink
+                        className="p-3"
+                        onClick={() => {
+                            this.props.askLogin();
+                        }}
+                    >
+                        Login
+                    </NavLink>
+                    <NavLink
+                        to='/registration'
+                        className="p-3"
+                        onClick={() => {
+                            window.location.href = '/registration';
+                        }}
+                    >
+                        Registration
+                    </NavLink>
+                </Col>
+            </React.Fragment>
         );
 
-        if (this.state.user.role === 'Guest') {
+        if (this.props.userInfo.role === 'Login') {
             authElement = (
                 <React.Fragment>
-                    <LoginForm
-                        handleConverStatusUser={this.covertLoginFormToRegForm}
-                        handleSetStateInApp={this.setUserInState}
-                        userState={this.state.user}
-                    >
-                        LoginForm
-                    </LoginForm>
-
+                    <Col className='ml-auto d-flex justify-content-end'>
+                        <LoginForm
+                            handleConverStatusUser={this.covertLoginFormToRegForm}
+                            handleSetStateInApp={this.setUserInState}
+                            userState={this.state.user}
+                            onHide={() => {
+                                this.props.setUserInfo({role: ''});
+                            }}
+                        >
+                            LoginForm
+                        </LoginForm>
+                    </Col>
                 </React.Fragment>
             );
         } else if (this.state.user.role === 'GuestUnregistr') {
@@ -203,9 +229,9 @@ class App extends Component {
                 />
             );
         }
-        
+
         return (
-            
+
             <React.Fragment>
                 <Router>
                     <Container>
@@ -213,9 +239,11 @@ class App extends Component {
                             <Col className='w-100 d-flex'>
                                 <Navigation match={match}>
                                     {authElement}
+
                                     <ShoppingBasketHeader
                                         goods={this.state.goodsInBasket}
                                         showCompleteBasket={this.showCompleteBasket}
+                                        
                                     />
                                 </Navigation>
                             </Col>
@@ -224,28 +252,28 @@ class App extends Component {
                             />
                         </Row>
                     </Container>
-                    
-                    <Route exact path='/' render={()=>(
+
+                    <Route exact path='/' render={() => (
                         <Container>
                             <h1>Hello, I am MainPage!</h1>
                         </Container>
                     )}></Route>
-                    <Route path={`/about`} render={()=>(
+                    <Route path={`/about`} render={() => (
                         <Container>
                             <h1>Hello, I am AboutPage!</h1>
                         </Container>
                     )}></Route>
                     <Route path='/catalogue' component={Catalogue}></Route>
-                    <Route path='/contacts' render={()=>(
+                    <Route path='/contacts' render={() => (
                         <Container>
                             <h1>Hello, I am ContactPage!</h1>
                         </Container>)}>
                     </Route>
-                    
+
                     <Route path='/user/history' component={UserHistory}></Route>
                     <Route path='/user/profile' component={UserProfile}></Route>
                     <Route path='/basket' component={ShoppingBasket}></Route>
-                    
+
                 </Router>
             </React.Fragment>
         );
@@ -261,14 +289,17 @@ App.propTypes = {
     initBasketFromLocalStorage: PropTypes.func,
     addErrorToState: PropTypes.func,
     deleteErrorFromState: PropTypes.func,
-    match: PropTypes.object
+    match: PropTypes.object,
+    askLogin: PropTypes.func,
+    setUserInfo: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
     return {
         historyBasket: state.userHeaderReducers.historyBasket,
         mainContent: state.mainContent,
-        errors: state.errorReducers.Errors
+        errors: state.errorReducers.Errors,
+        userInfo: state.userHeaderReducers.userInfo
     };
 };
 
@@ -280,5 +311,7 @@ export default connect(mapStateToProps, {
     showUserProfile,
     initBasketFromLocalStorage,
     addErrorToState,
-    deleteErrorFromState
+    deleteErrorFromState,
+    askLogin,
+    setUserInfo
 })(App);

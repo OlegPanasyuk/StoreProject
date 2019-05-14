@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Col, Button } from 'react-bootstrap';
+import { Form, Col, Button, Modal } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import Link from '../Link/Link';
 import PropsTypes from 'prop-types';
 import md5 from 'md5';
 
@@ -54,6 +53,7 @@ export class LoginForm extends Component {
                 if (data.status.code === 200) {
                     storage.setItem('Authorization', data.entity.token);
                     this.props.handleSetStateInApp(data.entity);
+                    this.props.onHide();
                 } else if (data.status.code === 401) {
                     const d = new Date();
                     this.props.addErrorToState({
@@ -72,49 +72,68 @@ export class LoginForm extends Component {
         //let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
         return (
-            <Form className='ml-auto'>
-                <Form.Row className='d-flex align-items-center justify-content-end'>
-                    <Form.Group as={Col} className="col mb-0" controlId="formGridEmail">
-                        <Form.Control
-                            size="sm"
-                            type="email"
-                            placeholder="Enter email"
-                            ref={this.emailInput}
-                            onKeyDown = {this.handle}
-                            defaultValue={(userState.email) ? userState.email : ''}
-                        />
-                    </Form.Group>
-                    <Form.Group as={Col} className="col mb-0" controlId="formGridPassword">
-                        <Form.Control  
-                            size="sm" 
-                            type="password" 
-                            placeholder="Password" 
-                            ref={this.passWordInput} 
-                            onKeyDown = {this.handle}    
-                        />
-                    </Form.Group>
-                    <Col className='d-flex align-items-center'>
-                        <Button 
-                            ref={this.attachRef}
-                            size="sm" 
-                            variant="secondary" 
-                            onClick={this.sendLoginRequest}
-                            id='buttonLoginForm'
-                        >
-                            Login
-                        </Button>
-                        
-                        <NavLink 
-                            to='/registration'
-                            className="d-block p-3"
-                            
-                        >
-                            Registration
-                        </NavLink>
-                       
-                    </Col>
-                </Form.Row>
-            </Form>
+            <Modal
+                show={true}
+                onHide={()=> {
+                    this.props.onHide();
+                    
+                }}
+                onEntering = {() => {
+                    window.onkeydown = this.handle;
+                }}
+                onExiting={()=>{
+                    window.onkeydown = null;
+                }}
+                keyboard={true}
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h4>LoginForm</h4>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form className='ml-auto'>
+                        <Form.Row className='d-flex align-items-center justify-content-end'>
+                            <Form.Group as={Col} className="col mb-0" controlId="formGridEmail">
+                                <Form.Control
+                                    size="sm"
+                                    type="email"
+                                    placeholder="Enter email"
+                                    ref={this.emailInput}
+                                    onKeyDown={this.handle}
+                                    defaultValue={(userState.email) ? userState.email : ''}
+                                />
+                            </Form.Group>
+                            <Form.Group as={Col} className="col mb-0" controlId="formGridPassword">
+                                <Form.Control
+                                    size="sm"
+                                    type="password"
+                                    placeholder="Password"
+                                    ref={this.passWordInput}
+                                    onKeyDown={this.handle}
+                                />
+                            </Form.Group>
+                            <Col className='d-flex align-items-center'>
+                                <Button
+                                    ref={this.attachRef}
+                                    size="sm"
+                                    variant="secondary"
+                                    onClick={this.sendLoginRequest}
+                                    id='buttonLoginForm'
+                                >
+                                    Login
+                                </Button>
+                                <NavLink
+                                    to='/registration'
+                                    className="d-block p-3"
+
+                                >
+                                    Registration
+                                </NavLink>
+                            </Col>
+                        </Form.Row>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         );
     }
 }
@@ -130,9 +149,7 @@ export default connect(null, {
     addErrorToState
 })(LoginForm);
 
-// onClick={()=>{
-//     window.location.href = '/registration';
-// }}
+
 
 //                         <Link
 //                             text='Registration'
