@@ -43,3 +43,12 @@ export const ADMIN_PANEL_USERS_PANEL = {
         }
     }
 };
+
+export const ADMIN_PANEL_CATALOGUE_CONTROL_PANEL = {
+    CATALOGUE: {
+
+    },
+    ITEM: {
+        EDIT: 'ADMIN_PANEL_CATALOGUE_CONTROL_PANEL_ITEM_EDIT'
+    }
+};

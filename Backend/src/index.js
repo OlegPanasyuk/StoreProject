@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var winston = require('winston');
 var config = require('config');
 var cors = require('cors');
-var { Catalogue } = require('./Models/sequalized');
 // const auth = require('./authorization');
 const passport = require('passport');
 //const jwt = require('jsonwebtoken');
@@ -17,6 +16,7 @@ const basketShopping = require('./routers/shoppingBasket');
 const userRouter = require('./routers/userRouters');
 const goodsRouter = require('./routers/goodsRouter');
 const usersRouters = require('./routers/usersRouter');
+const catalogueRouter = require('./routers/catalogueRouter');
 
 var serverConfig = config.get('Server');
 
@@ -37,15 +37,7 @@ app.use(cookieParser());
 
 
 
-app.route('/catalogue')
-    .get(function (req, res) {
-        let id = (req.query.id) ? req.query.id : null;
-        if (id) {
-            Catalogue.findAll({ where: { id_catalogue: id } }).then(cat => res.json(cat));
-        } else {
-            Catalogue.findAll().then(cat => res.json(cat));
-        }
-    });
+app.use('/catalogue', catalogueRouter);
 
 app.use('/', registrationUser);
 

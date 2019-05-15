@@ -8,21 +8,13 @@ module.exports = (sequalize, type) => {
             autoIncrement : true
         },
         name : {
-            type : type.STRING(45),
-            validate : {
-                allowNull : false,
-                
-            }
+            type : type.STRING(45)
         },
         description : {
             type : type.TEXT
         },
         parent_id : {
-            type : type.INTEGER,
-            validate : {
-                allowNull : false,
-                
-            }
+            type : type.INTEGER
         }
     }, {
         timestamps : false,

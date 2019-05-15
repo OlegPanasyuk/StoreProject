@@ -2,6 +2,10 @@
     margin: 0;
     position: relative;
   }
+
+.tree-element-hover {
+    background-color: lightgrey;
+}
   
   div.tree-element:before {
     content: '';
