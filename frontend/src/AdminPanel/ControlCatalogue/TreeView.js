@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './TreeView.css';
 import md5 from 'md5';
 
-function handleClick(e, id, data, f) {
+function handleClick(e, id, data, f, f1) {
     let t = document.getElementById(id);
     let elements = document.querySelectorAll('.tree-element-hover');
     elements.forEach((e)=>{
@@ -13,30 +13,34 @@ function handleClick(e, id, data, f) {
         target = target.parentNode;
     }
     if (target == t) {
+        console.log(id);
         target.classList.add('tree-element-hover');
-        f(data);
+        // f(data);
+        // f1();
     }
 }
 
-export function TreeView(props) {
-    let {
-        data,
-        toggled = true,
-        onItemClick,
-        name = null,
-        isLast = true,
-        isChildElement = false,
-        isParentToggled = true,
-        editCatalogueItem
-    } = props;
+export function TreeView({
+    data,
+    selected = false,
+    toggled = true,
+    name = null,
+    isLast = true,
+    isChildElement = false,
+    isParentToggled = true,
+    editCatalogueItem,
+    showEditForm
+}) {
+    
     const [isToggled, setIsToggled] = React.useState(toggled);
+    const [isSelected, setIsSelected] = React.useState(selected);
     const id = md5(`${data.id_catalogue}`);
     let innerClick = null;
     if (isChildElement) {
         innerClick = handleClick;
     } else {
         innerClick = () => {
-
+            
         };
     }
 
@@ -44,15 +48,17 @@ export function TreeView(props) {
     return (
         <div
             style={{ marginLeft: isChildElement ? 16 : 4 + 'px' }}
-            className={isParentToggled ? 'tree-element' : 'tree-element collapsed'}
+            className={`${isParentToggled ? 'tree-element' : 'tree-element collapsed'} ${isSelected ? 'tree-element-hover' : ''}`}
             id={id}
             onClick={(e) => {
-                innerClick(e, id, data, editCatalogueItem);
+                console.log(e.target);
+                {/* innerClick(e, id, data); */}
+                {/* setIsSelected(!isSelected); */}
             }}
         >
             <span
                 className={isToggled ? 'toggler' : 'toggler closed'}
-                onClick={() => setIsToggled(!isToggled)}
+                onClick={() => {setIsToggled(!isToggled);}}
             />
             {name ? <strong>&nbsp;&nbsp;{name}: </strong> : <span>&nbsp;&nbsp;</span>}
             {Array.isArray(data) ? '[' : '{'}
@@ -61,13 +67,13 @@ export function TreeView(props) {
                 typeof data[v] == 'object' ? (
                     <TreeView
                         data={data[v]}
-                        onItemClick={onItemClick}
                         isLast={i === a.length - 1}
                         name={Array.isArray(data) ? null : v}
                         isChildElement
                         isParentToggled={isParentToggled && isToggled}
                         key={`${i} - ${data[v]} - ${Math.random()}`}
                         editCatalogueItem={editCatalogueItem}
+                        showEditForm={showEditForm}
                     />
                 ) : (
                     <p

@@ -21,6 +21,32 @@ router.get('/', function (req, res) {
     }
 });
 
+router.post('/',
+    passport.authenticate('jwt', { session: false }),
+    checkAdminRight,
+    (req, res) => {
+        let objToCreate = {
+            ...req.body
+        };
+
+        Catalogue.findOrCreate({ where: objToCreate })
+            .then(([item, created]) => {
+                res.status(201).json({
+                    message: (created) ? 'Item was cteated' : `Item with '${item.id_catalogue}' id is exist`,
+                    status: created,
+                    item: (created) ? {
+                        id_catalogue: item.id_catalogue,
+                        name: item.name,
+                        description: item.description,
+                        parent_id: item.parent_id
+                    } : {}
+                });
+            }).catch(e=>{
+                res.status(500).send(e);
+            });
+        
+    });
+
 router.put(
     '/:id',
     passport.authenticate('jwt', { session: false }),
@@ -35,8 +61,6 @@ router.put(
             description: req.body.description,
             parent_id: req.body.parent_id
         };
-
-        console.log(dataToUpdate, objToUpdate);
 
         Catalogue.findOne({ where: objToUpdate })
             .then(item => {
