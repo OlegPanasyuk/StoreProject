@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
 import md5 from 'md5';
+import PropTypes from 'prop-types'; 
 
 //Redux
 import { connect } from 'react-redux';
@@ -55,7 +56,6 @@ export class AddingGood extends Component {
     }
 
     sendGoodsToAdd() {
-        const  self = this;
         const storage = window.localStorage;
         if (fetch) {
             let myHeaders = new Headers();
@@ -226,6 +226,10 @@ export class AddingGood extends Component {
     }
 }
 
+AddingGood.propTypes  = {
+    onHide: PropTypes.func,
+    addErrorToState: PropTypes.func
+};
 
 
 export default connect(null, {

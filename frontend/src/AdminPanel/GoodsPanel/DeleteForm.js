@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 //Redux
 import { connect } from 'react-redux';
@@ -30,7 +31,7 @@ export class DeleteForm extends Component {
                 .then(res => {
                     return res.text();
                 })
-                .then(data => {
+                .then(() => {
                     this.props.onHide();
                 });
         }
@@ -65,6 +66,11 @@ export class DeleteForm extends Component {
         );
     }
 }
+
+DeleteForm.propTypes = {
+    item: PropTypes.object,
+    onHide: PropTypes.func
+};
 
 const mapStateToProps = (state) => {
     return {

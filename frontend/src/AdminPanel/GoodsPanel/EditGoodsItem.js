@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Modal, Form, Button, Overlay, Tooltip } from 'react-bootstrap';
+import { 
+    Modal, 
+    Form, 
+    Button, 
+    Overlay, 
+    Tooltip 
+} from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 //Redux 
 import { connect } from 'react-redux';
@@ -82,7 +89,6 @@ export class EditGoodsItem extends Component {
                 myInit
             )
                 .then(res => {
-                    console.log(res);
                     if (res.status === 201) {
                         return res.text();
                     }
@@ -106,7 +112,6 @@ export class EditGoodsItem extends Component {
 
                 })
                 .then(data => {
-
                     self.props.editGoodsItem(body);
                     self.setState((state) => ({
                         tooltip: {
@@ -257,6 +262,11 @@ export class EditGoodsItem extends Component {
         );
     }
 }
+
+EditGoodsItem.propTypes = {
+    item: PropTypes.object,
+    onHide: PropTypes.func
+};
 
 const mapStateTpProps = (state) => {
     return {

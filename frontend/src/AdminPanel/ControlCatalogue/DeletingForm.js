@@ -6,6 +6,7 @@ import {
     Button
 } from 'react-bootstrap';
 import md5 from 'md5';
+import PropTypes from 'prop-types';
 
 //Redux
 import { connect } from 'react-redux';
@@ -34,7 +35,11 @@ class DeletingForm extends Component {
                 headers: myHeaders,
             };
             fetch(
-                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue/${self.props.editItem.id_catalogue}`,
+                `${
+                    process.env.REACT_APP_API_HOST
+                }:${
+                    process.env.REACT_APP_API_PORT
+                }/catalogue/${self.props.editItem.id_catalogue}`,
                 myInit
             )
                 .then(res => {
@@ -67,7 +72,12 @@ class DeletingForm extends Component {
                     }
                 })
                 .catch((e) => {
-                    console.log(e);
+                    let d = new Date();
+                    this.props.addErrorToState({
+                        id: md5(`${'Notification from DeletingItem'}${d.valueOf()}`),
+                        level: 'Error',
+                        message: e
+                    });
                 });
         }
 
@@ -103,6 +113,14 @@ class DeletingForm extends Component {
         );
     }
 }
+
+DeletingForm.propTypes = {
+    getCatalogue: PropTypes.func,
+    onHide: PropTypes.func,
+    editCatalogueItem: PropTypes.func,
+    addErrorToState: PropTypes.func,
+    show: PropTypes.bool
+};
 
 const mapStateToProps = (state) => {
     return {

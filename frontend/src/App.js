@@ -12,7 +12,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 import Navigation from './Navigation/Navigation';
-import { BrowserRouter as Router, Route, Switch, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 // import UserProfile from './User/UserProfile';
 
 //Redux
@@ -62,7 +62,7 @@ class App extends Component {
         this.addError = this.addError.bind(this);
         this.covertLoginFormToRegForm = this.covertLoginFormToRegForm.bind(this);
         this.setUserInState = this.setUserInState.bind(this);
-        this.addItemToBacket = this.addItemToBacket.bind(this);
+        this.addItemToBasket = this.addItemToBasket.bind(this);
         this.showCompleteBasket = this.showCompleteBasket.bind(this);
         this.removeItemFromBasket = this.removeItemFromBasket.bind(this);
         this.roles = ['Admin', 'User', 'Customer', 'SuperAdmin'];
@@ -120,7 +120,7 @@ class App extends Component {
         });
     }
 
-    addItemToBacket(id) {
+    addItemToBasket(id) {
         let setOfGoodsItemsInBasket = this.state.goodsInBasket;
         setOfGoodsItemsInBasket.add(id);
         this.setState({
@@ -291,7 +291,8 @@ App.propTypes = {
     deleteErrorFromState: PropTypes.func,
     match: PropTypes.object,
     askLogin: PropTypes.func,
-    setUserInfo: PropTypes.func
+    setUserInfo: PropTypes.func,
+    userInfo: PropTypes.object
 };
 
 const mapStateToProps = (state) => {

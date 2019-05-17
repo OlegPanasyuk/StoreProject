@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import {
+    Container,
+    Row,
+    Col,
+    Button
+} from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 //Components
 import GoodsItem from './GoodsItem';
@@ -11,8 +17,8 @@ import DeleteForm from './DeleteForm';
 
 //Redux 
 import { connect } from 'react-redux';
-import { 
-    goodsGetSuccess, 
+import {
+    goodsGetSuccess,
     goodsFilter,
     closeEditGoodsItem,
     permissionToDeleteClose
@@ -90,13 +96,17 @@ export class GoodsPanel extends Component {
 
         // I don't like it
         let a = new Promise((res, rej) => {
-            this.props.goodsFilter(obj);
-            res(true);
+            try {
+                this.props.goodsFilter(obj);
+                res(true);
+            } catch (e) {
+                rej(e);
+            }
         });
-        a.then((res) => {
+        a.then(() => {
             this.countFiltered();
             this.openPage(page);
-        }, (rej) => {
+        }, () => {
 
         });
     }
@@ -109,7 +119,13 @@ export class GoodsPanel extends Component {
                 method: 'GET',
                 cache: 'default'
             };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/filter?count&${str}`, myInit)
+            fetch(`${
+                process.env.REACT_APP_API_HOST
+            }:${
+                process.env.REACT_APP_API_PORT
+            }/goods/filter?count&${
+                str
+            }`, myInit)
                 .then((res) => {
                     res.text().then(function (data) {
                         self.setState({
@@ -129,7 +145,15 @@ export class GoodsPanel extends Component {
                 cache: 'default'
             };
             fetch(
-                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/filter?page=${i}&${searchStr}`, 
+                `${
+                    process.env.REACT_APP_API_HOST
+                }:${
+                    process.env.REACT_APP_API_PORT
+                }/goods/filter?page=${
+                    i
+                }&${
+                    searchStr
+                }`,
                 myInit
             )
                 .then((res) => {
@@ -163,8 +187,8 @@ export class GoodsPanel extends Component {
                     (this.props.editItem.show)
                         ?
                         <EditGoodsItem
-                            onHide = {(e) => {
-                                
+                            onHide={(e) => {
+
                                 this.props.closeEditGoodsItem();
                                 this.updateState(e, {}, this.state.activePage);
                             }}
@@ -174,7 +198,7 @@ export class GoodsPanel extends Component {
                 }
 
                 {
-                    (this.props.deleteItem.show) 
+                    (this.props.deleteItem.show)
                         ?
                         <DeleteForm onHide={(e) => {
                             this.props.permissionToDeleteClose();
@@ -246,6 +270,17 @@ export class GoodsPanel extends Component {
         );
     }
 }
+
+GoodsPanel.propTypes = {
+    filters: PropTypes.object,
+    goodsFilter: PropTypes.func,
+    closeEditGoodsItem: PropTypes.func,
+    deleteItem: PropTypes.func,
+    permissionToDelete: PropTypes.func,
+    permissionToDeleteClose: PropTypes.func,
+    editItem: PropTypes.object,
+    goodsToShow: PropTypes.array
+};
 
 const mapsStateToProps = function (state) {
     return {

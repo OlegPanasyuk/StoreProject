@@ -11,7 +11,6 @@ import ShoppingBasketItem from './ShoppingBasketItem';
 import PropsTypes from 'prop-types';
 import './ShoppingBasket.css';
 import md5 from 'md5';
-import LoginForm from '../LoginForm/LoginForm';
 
 //Redux use
 import { connect } from 'react-redux';
@@ -38,7 +37,7 @@ const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
 
-export class ShoppingBascket extends Component {
+export class ShoppingBasket extends Component {
     constructor(props) {
         super(props);
         this.getTargetTooltip = targetTooltip => { this.setState({ targetTooltip }); };
@@ -46,7 +45,7 @@ export class ShoppingBascket extends Component {
         this.sumTotal = 0;
         this.sendBasketToWork = this.sendBasketToWork.bind(this);
         this.state = {
-            succsefullTransaction: false,
+            successfulTransaction: false,
             targetTooltip: null,
             messageTooltip: '',
             show: false,
@@ -74,16 +73,6 @@ export class ShoppingBascket extends Component {
                 level: 'Warning',
                 message: 'There is nothing in a basket.'
             });
-            // this.setState({
-            //     show: true,
-            //     messageTooltip: 'No goods in basket'
-            // });
-            // setTimeout(()=>{
-            //     this.setState({
-            //         show: false,
-            //         messageTooltip: ''
-            //     });
-            // },3000);
         } else {
             client({
                 method: "POST",
@@ -98,10 +87,9 @@ export class ShoppingBascket extends Component {
                 if (data.entity.id) {
                     window.localStorage.removeItem('ShoppingBasket');
                     self.setState({
-                        succsefullTransaction: true
+                        successfulTransaction: true
                     });
                 } else if (data.entity === 'Unauthorized') {
-                    // Needs Error reporting by object messages to UI
                     this.setState({
                         askLogin: true
                     });
@@ -112,17 +100,14 @@ export class ShoppingBascket extends Component {
                         level: 'Warning',
                         message: 'You are not unauthorized.'
                     });
-
                 }
             }).catch(err => {
-                // Needs Error reporting by object Oushing messages to UI
                 const d = new Date();
                 this.props.addErrorToState({
                     id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
                     level: 'Error',
                     message: err
                 });
-                // alert(err);
             });
         }
     }
@@ -144,7 +129,7 @@ export class ShoppingBascket extends Component {
         let messageTooltip = this.state.messageTooltip;
         this.sumTotal = 0;
         let message = '';
-        if (this.state.succsefullTransaction) {
+        if (this.state.successfulTransaction) {
             message = (
                 <Container>
                     Transaction is successfully.
@@ -215,7 +200,7 @@ const mapStoreToProps = function (state) {
     );
 };
 
-ShoppingBascket.propTypes = {
+ShoppingBasket.propTypes = {
     goods: PropsTypes.object,
     goodsData: PropsTypes.array,
     showGoodsInBasketSuccess: PropsTypes.func,
@@ -229,4 +214,4 @@ export default connect(mapStoreToProps, {
     deleteGoodsFromBasket,
     addErrorToState,
     askLogin
-})(ShoppingBascket);
+})(ShoppingBasket);

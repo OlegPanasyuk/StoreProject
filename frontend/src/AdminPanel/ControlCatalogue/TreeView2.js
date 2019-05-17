@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './TreeView.css';
 import { ListGroup } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+
 
 //Redux
 import { connect } from 'react-redux';
@@ -40,7 +42,7 @@ class TreeView extends Component {
         } = this.props;
 
         let { isToggled } = this.state;
-        
+
         let arrItems = data.map((el) => {
             if (el.id_catalogue === -1) {
                 isChildElement = false;
@@ -66,7 +68,7 @@ class TreeView extends Component {
             } else {
                 return (
                     <ListGroup.Item
-                        active={editItem.id_catalogue == el.id_catalogue}
+                        active={editItem.id_catalogue === el.id_catalogue}
                         key={`${el.id_catalogue}`}
                         onClick={(e) => handlerClickSpan(e, showEditForm, editCatalogueItem, el)}
                         style={{
@@ -88,20 +90,26 @@ class TreeView extends Component {
 
                     {obj.name ?
                         <ListGroup.Item
-                            active={(editItem.id_catalogue == obj.id_catalogue)}
+                            active={(editItem.id_catalogue === obj.id_catalogue)}
                             onClick={(e) => handlerClickSpan(e, showEditForm, editCatalogueItem, obj)}
                             style={{
                                 paddingLeft: isChildElement ? (17 * level) : 4 + 'px',
 
                             }}>
                             {
-                                haveChildren ? <span
-                                    className={isToggled ? 'toggler' : 'toggler closed'}
-                                    style={{
-                                        left: isChildElement ? (16 * level - 15) : 4 + 'px'
-                                    }}
-                                    onClick={() => { this.setState((state) => ({ isToggled: !state.isToggled })); }}><i className="fas fa-plus"></i>
-                                </span> : <span></span>
+                                haveChildren ?
+                                    <span
+                                        className={isToggled ? 'toggler' : 'toggler closed'}
+                                        style={{
+                                            left: isChildElement ? (16 * level - 15) : 4 + 'px'
+                                        }}
+                                        onClick={() => {
+                                            this.setState((state) => ({
+                                                isToggled: !state.isToggled
+                                            }));
+                                        }}>
+                                        <i className="fas fa-plus"></i>
+                                    </span> : <span></span>
                             }
                             {obj.name}
                         </ListGroup.Item> : <span>&nbsp;&nbsp;</span>}
@@ -111,6 +119,18 @@ class TreeView extends Component {
         );
     }
 }
+
+TreeView.propTypes = {
+    data: PropTypes.array,
+    isChildElement: PropTypes.bool,
+    haveChildren: PropTypes.bool,
+    obj: PropTypes.object,
+    isParentToggled: PropTypes.bool,
+    level: PropTypes.number,
+    showEditForm: PropTypes.func,
+    editCatalogueItem: PropTypes.func,
+    editItem: PropTypes.func
+};
 
 const mapStateTpProps = (state) => {
     return {

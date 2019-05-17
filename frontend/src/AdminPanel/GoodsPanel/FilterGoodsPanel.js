@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 export class FilterGoodsPanel extends Component {
     constructor(props) {
@@ -95,5 +96,9 @@ export class FilterGoodsPanel extends Component {
         );
     }
 }
+
+FilterGoodsPanel.propTypes = {
+    updateState: PropTypes.func
+};
 
 export default FilterGoodsPanel;

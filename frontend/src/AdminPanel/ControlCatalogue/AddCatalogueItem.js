@@ -67,24 +67,6 @@ export class AddCatalogueItem extends Component {
                             message: data.message
                         });
                     }
-                    // if (data) {
-                    //     let d = new Date();
-                    //     if (data === 'Data is updated') {
-                    //        
-                    //         this.props.addErrorToState({
-                    //             id: md5(`${'Notification from AddCatalogueItem'}${d.valueOf()}`),
-                    //             level: 'Success',
-                    //             message: data
-                    //         });
-                    //     } else {
-
-                    //         this.props.addErrorToState({
-                    //             id: md5(`${'Notification from AddCatalogueItem'}${d.valueOf()}`),
-                    //             level: 'Error',
-                    //             message: data
-                    //         });
-                    //     }
-                    // }
                 })
                 .catch((e) => {
                     console.log(e);

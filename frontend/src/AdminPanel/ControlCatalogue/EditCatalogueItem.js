@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import md5 from 'md5';
+import PropTypes from 'prop-types';
 
 //Components
 import DeletingForm from './DeletingForm';
@@ -46,7 +47,13 @@ export class EditCatalogueItem extends Component {
                 body: JSON.stringify(body)
             };
             fetch(
-                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue/${self.props.editItem.id_catalogue}`,
+                `${
+                    process.env.REACT_APP_API_HOST
+                }:${
+                    process.env.REACT_APP_API_PORT
+                }/catalogue/${
+                    self.props.editItem.id_catalogue
+                }`,
                 myInit
             )
                 .then(res => {
@@ -73,7 +80,12 @@ export class EditCatalogueItem extends Component {
                     }
                 })
                 .catch((e) => {
-                    console.log(e);
+                    let d = new Date();
+                    this.props.addErrorToState({
+                        id: md5(`${'Notification from EditCatalogueItem'}${d.valueOf()}`),
+                        level: 'Error',
+                        message: e
+                    });
                 });
         }
 
@@ -169,6 +181,13 @@ export class EditCatalogueItem extends Component {
         );
     }
 }
+
+EditCatalogueItem.propTypes = {
+    getCatalogue: PropTypes.func,
+    addErrorToState: PropTypes.func,
+    editItem: PropTypes.object,
+    cancel: PropTypes.func
+};
 
 const mapStateToProps = (state) => {
     return {

@@ -12,8 +12,6 @@ import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })

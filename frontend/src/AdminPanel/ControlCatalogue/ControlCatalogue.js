@@ -5,13 +5,12 @@ import {
     Col,
     Button
 } from 'react-bootstrap';
-import $ from 'jquery';
+import PropTypes from 'prop-types'; 
 
 //Redux
 import { connect } from 'react-redux';
 import {
     editCatalogueItem,
-    addCatalogueItem,
     editCatalogueItemOpen,
     editCatalogueItemClose,
     addCatalogueItemOpen,
@@ -71,61 +70,6 @@ export class ControlCatalogue extends Component {
             return obj;
         }
         return sorting(arrG1, tree).children;
-    }
-
-    sendRequestToAddItem() {
-        // let self = this;
-        // let storage = window.localStorage;
-        // if (fetch) {
-        //     let myHeaders = new Headers();
-        //     myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-        //     myHeaders.append("Content-type", 'application/json');
-
-        //     let body = {
-
-        //     };
-        //     let myInit = {
-        //         method: 'POST',
-        //         headers: myHeaders,
-        //     };
-        //     fetch(
-        //         `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue`,
-        //         myInit
-        //     )
-        //         .then(res => {
-        //             return res.text();
-        //         })
-        //         .then(data => {
-        //             if (data) {
-        //                 let d = new Date();
-        //                 if (data === 'Item is deleted') {
-        //                     this.props.getCatalogue();
-        //                     this.props.editCatalogueItem({
-        //                         id_catalogue: '',
-        //                         name: '',
-        //                         description: '',
-        //                         parent_id: ''
-        //                     });
-        //                     this.props.onHide();
-        //                     this.props.addErrorToState({
-        //                         id: md5(`${'Notification from DeletingItem'}${d.valueOf()}`),
-        //                         level: 'Success',
-        //                         message: data
-        //                     });
-        //                 } else {
-
-        //                     this.props.addErrorToState({
-        //                         id: md5(`${'Notification from DeletingItem'}${d.valueOf()}`),
-        //                         level: 'Error',
-        //                         message: data
-        //                     });
-        //                 }
-        //             }
-        //         })
-        //         .catch((e) => {
-        //             console.log(e);
-        //         });
-        // }
     }
 
     getCatalogue() {
@@ -219,6 +163,11 @@ const mapStateToProps = (state) => {
         editItem: state.adminPanel_catalogue.editItem,
         addItem: state.adminPanel_catalogue.addItem
     };
+};
+
+ControlCatalogue.propTypes = {
+    editCatalogueItem: PropTypes.func,
+    addCatalogueItemClose: PropTypes.func
 };
 
 export default connect(mapStateToProps, {
