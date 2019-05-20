@@ -142,18 +142,12 @@ LoginForm.propTypes = {
     userState: PropsTypes.object,
     handleConverStatusUser: PropsTypes.func,
     handleSetStateInApp: PropsTypes.func,
-    addErrorToState: PropsTypes.func
+    addErrorToState: PropsTypes.func,
+    onHide: PropsTypes.func,
+
 };
 
 export default connect(null, {
     addErrorToState
 })(LoginForm);
 
-
-
-//                         <Link
-//                             text='Registration'
-//                             href='#'
-//                             className="d-block p-3"
-//                             ConverStatusUser={handleConverStatusUser}>
-//                         </Link>

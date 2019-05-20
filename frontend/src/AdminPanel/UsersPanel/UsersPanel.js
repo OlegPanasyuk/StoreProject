@@ -50,12 +50,14 @@ export class UsersPanel extends Component {
 
         // I don't like it
         let a = new Promise((res, rej) => {
+            const obj = {};
             this.props.filterUsers(obj);
             res(true);
+            if (!obj) rej();
         });
-        a.then((res) => {
+        a.then(() => {
             this.openPage(page);
-        }, (rej) => {
+        }, () => {
 
         });
     }
@@ -74,7 +76,15 @@ export class UsersPanel extends Component {
                 cache: 'default'
             };
             fetch(
-                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/filter?page=${i}&${searchStr}`,
+                `${
+                    process.env.REACT_APP_API_HOST
+                }:${
+                    process.env.REACT_APP_API_PORT
+                }/users/filter?page=${
+                    i
+                }&${
+                    searchStr
+                }`,
                 myInit
             )
                 .then((res) => {
@@ -185,7 +195,13 @@ export class UsersPanel extends Component {
 }
 
 UsersPanel.propTypes = {
-    showUsers: PropTypes.func
+    showUsers: PropTypes.func,
+    filters: PropTypes.object,
+    filterUsers: PropTypes.func,
+    userToEdit: PropTypes.object,
+    usersToShow: PropTypes.object,
+    usersToShowCount: PropTypes.object,
+    editUserClose: PropTypes.func
 };
 
 const mapStateToProps = (state) => {

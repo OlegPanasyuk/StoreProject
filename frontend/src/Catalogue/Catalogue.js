@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import CatalogueMenu from '../CatalogueMenu/CatalogueMenu';
 import BreadCrumbs from '../BreadCrumbs/BreadCrumbs';
 import Goods from '../Goods/Goods';
+import PropTypes from 'prop-types';
 
 /* The requesting to server needs push to single file(object) */
 
@@ -10,7 +11,7 @@ class Catalogue extends Component {
     constructor(props) {
         super(props);
         this.requestCatalogue = this.requestCatalogue.bind(this);
-        this.rebiuldTree = this.rebiuldTree.bind(this);
+        this.rebuildTree = this.rebuildTree.bind(this);
         this.requestGoods = this.requestGoods.bind(this);
         this.obj = {};
         this.state = {
@@ -20,7 +21,7 @@ class Catalogue extends Component {
         };
     }
 
-    fintNodeInTree(id, obj = this.obj) {
+    findNodeInTree(id, obj = this.obj) {
 
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
@@ -32,7 +33,7 @@ class Catalogue extends Component {
         }
         for (let key in obj) {
             if (obj[key]['children']) {
-                this.fintNodeInTree(id, obj[key]['children']);
+                this.findNodeInTree(id, obj[key]['children']);
             }
         }
     }
@@ -47,7 +48,7 @@ class Catalogue extends Component {
                     self.obj[element.id_catalogue]['children'] = {};
                 }
             } else {
-                let parent = self.fintNodeInTree(element.parent_id);
+                let parent = self.findNodeInTree(element.parent_id);
                 // if (element.parent_id === 6) console.log(parent, element, self.obj);
                 if (parent) {
                     if (parent.children) {
@@ -115,7 +116,6 @@ class Catalogue extends Component {
                 self.setState(() => ({
                     itemsGoods: JSON.parse(XHR.responseText)
                 }));
-                // console.log('как то так',JSON.parse( XHR.responseText ));
             }
         };
     }
@@ -125,9 +125,9 @@ class Catalogue extends Component {
         this.requestCatalogue();
     }
 
-    rebiuldTree(id = null) {
+    rebuildTree(id = null) {
         if (id) {
-            let parent = this.fintNodeInTree(Number(id));
+            let parent = this.findNodeInTree(Number(id));
             if (parent) {
                 let { itemsBreadCrumbs } = this.state;
                 let objToPush = {
@@ -168,7 +168,7 @@ class Catalogue extends Component {
                     <Col sm='auto'>
                         <BreadCrumbs
                             obj={itemsBreadCrumbs}
-                            handleClick={this.rebiuldTree}
+                            handleClick={this.rebuildTree}
                         >
                         </BreadCrumbs>
                     </Col>
@@ -177,7 +177,7 @@ class Catalogue extends Component {
                     <Col sm='auto'>
                         <CatalogueMenu
                             obj={items}
-                            handleClick={this.rebiuldTree}
+                            handleClick={this.rebuildTree}
                             requestGoods={this.requestGoods}
                         />
                     </Col>
@@ -194,6 +194,9 @@ class Catalogue extends Component {
     }
 }
 
+Catalogue.propTypes = { 
+    addItemToBacket: PropTypes.func
+};
 
 
 export default Catalogue;

@@ -51,7 +51,9 @@ function CatalogueMenu(props) {
 }
 
 CatalogueMenu.propTypes = {
-    obj: PropTypes.object
+    obj: PropTypes.object,
+    handleClick: PropTypes.func,
+    requestGoods: PropTypes.func
 };
 
 export default CatalogueMenu;

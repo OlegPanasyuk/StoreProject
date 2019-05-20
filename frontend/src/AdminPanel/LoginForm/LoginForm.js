@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 //Redux 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
     userAuthorizedSuccess
 } from '../../REDUX/adminPanel/actions/actionsLoginForm';
@@ -16,7 +17,7 @@ import mime from 'rest/interceptor/mime';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`});
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
 
 
 export class LoginForm extends Component {
@@ -27,7 +28,7 @@ export class LoginForm extends Component {
         this.sendRequestOnAccess = this.sendRequestOnAccess.bind(this);
         this.emailRef = React.createRef();
         this.passRef = React.createRef();
-        
+
         this.state = {
             target: null,
             show: true,
@@ -58,7 +59,7 @@ export class LoginForm extends Component {
             entity: {
                 email: this.emailRef.current.value,
                 password: this.passRef.current.value
-            }, 
+            },
             headers: {
                 checkrights: true
             }
@@ -74,32 +75,35 @@ export class LoginForm extends Component {
                     });
                 }
             })
-            .catch( err=> {
-                console.log(err);
+            .catch(err => {
+                this.setState({
+                    showTooltip: true,
+                    message: err.toString()
+                });
             });
     }
 
     render() {
-        let loginCont = ''; 
+        let loginCont = '';
         if (this.props.user.token) {
             let path = this.props.match.path;
             let p = path.slice(0, path.indexOf('/login'));
             loginCont = (
                 <Redirect to={p} />
             );
-        } 
-        let {target, showTooltip, message } = this.state;
+        }
+        let { target, showTooltip, message } = this.state;
         return (
             <React.Fragment>
                 <Modal
                     show={this.state.show}
                     size="sm"
                     onHide={this.hide}
-                    onEntering={()=>{
+                    onEntering={() => {
                         window.onkeydown = this.handle;
                     }}
-                    onExit={()=>{
-                       
+                    onExit={() => {
+
                         window.onkeydown = null;
                     }}
                     keyboard={true}
@@ -111,18 +115,18 @@ export class LoginForm extends Component {
                     <Form>
                         <Modal.Body>
                             <Form.Group>
-                                <Form.Control 
-                                    type="email" 
-                                    placeholder="Enter email" 
+                                <Form.Control
+                                    type="email"
+                                    placeholder="Enter email"
                                     ref={this.emailRef}
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control 
-                                    type="password" 
-                                    placeholder="Password" 
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Password"
                                     ref={this.passRef}
-                                />       
+                                />
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
@@ -133,13 +137,13 @@ export class LoginForm extends Component {
                             >
                                 Login
                             </Button>
-                            <Button 
+                            <Button
                                 onClick={this.hide}
-                                variant = 'light'
+                                variant='light'
                             >
                                 Close
                             </Button>
-                            
+
                         </Modal.Footer>
                     </Form>
                 </Modal>
@@ -155,6 +159,12 @@ export class LoginForm extends Component {
         );
     }
 }
+
+LoginForm.propTypes = {
+    match: PropTypes.object,
+    user: PropTypes.object,
+    userAuthorizedSuccess: PropTypes.func
+};
 
 const mapStoreToProps = (state) => {
     return ({

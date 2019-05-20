@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'; 
 
 //Components
 import { Nav, Pagination } from 'react-bootstrap';
@@ -27,5 +28,12 @@ export class ListOfPages extends Component {
         );
     }
 }
+
+ListOfPages.propTypes = {
+    count: PropTypes.number,
+    limit: PropTypes.number,
+    activePage: PropTypes.number,
+    openPage: PropTypes.func
+};
 
 export default ListOfPages;

@@ -29,7 +29,8 @@ class Goods extends Component {
 }
 
 Goods.propTypes = {
-    obj: PropTypes.array
+    obj: PropTypes.array,
+    addItemToBacket: PropTypes.func
 };
 
 export default Goods;

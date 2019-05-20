@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 //Redux 
 import { connect } from 'react-redux';
@@ -43,6 +44,9 @@ export class FilterUsers extends Component {
     }
 }
 
+FilterUsers.propTypes = {
+    updateState: PropTypes.func
+};
 
 
 export default connect(null, { filterUsers })(FilterUsers);

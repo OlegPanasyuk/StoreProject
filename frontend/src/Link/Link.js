@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Link extends Component {
     render() {
@@ -14,5 +15,12 @@ class Link extends Component {
         );
     }
 }
+
+Link.propTypes = {
+    text: PropTypes.string,
+    href: PropTypes.string,
+    className: PropTypes.string,
+    ConverStatusUser: PropTypes.func
+};
 
 export default Link;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 //Redux 
 import { connect } from 'react-redux';
@@ -63,6 +64,11 @@ export class UserItem extends Component {
         );
     }
 }
+
+UserItem.propTypes = {
+    obj: PropTypes.object,
+    editUser: PropTypes.func
+};
 
 export default connect(null, {
     editUser

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-
+import PropTypes from 'prop-types';
 
 export class DeletingUser extends Component {
     constructor(props) {
@@ -66,5 +66,10 @@ export class DeletingUser extends Component {
         );
     }
 }
+
+DeletingUser.propTypes = {
+    id: PropTypes.number,
+    onHide: PropTypes.func
+};
 
 export default DeletingUser;

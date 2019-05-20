@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
 import md5 from 'md5';
+import PropTypes from 'prop-types';
 
 //Redux
 import { connect } from 'react-redux';
@@ -35,24 +36,6 @@ export class EditForm extends Component {
         };
     }
 
-    UNSAFE_componentWillMount() {
-        // const  self = this;
-        // if (fetch) {
-        //     let myInit = {
-        //         method: 'GET',
-        //     };
-        //     fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue`, myInit)
-        //         .then(res => {
-        //             return res.json();
-        //         })
-        //         .then(data=>{
-        //             self.setState({
-        //                 arrOfCatalogue: data
-        //             });
-        //         });
-        // }
-    }
-
     sendUserToEdit() {
         const storage = window.localStorage;
         if (fetch) {
@@ -72,7 +55,15 @@ export class EditForm extends Component {
                 headers: myHeaders,
                 body: JSON.stringify(body)
             };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/${this.props.userToEdit.id}`, myInit)
+            fetch(
+                `${
+                    process.env.REACT_APP_API_HOST
+                }:${
+                    process.env.REACT_APP_API_PORT
+                }/users/${
+                    this.props.userToEdit.id
+                }`, 
+                myInit)
                 .then(res => {
                     return res.text();
                 })
@@ -224,6 +215,12 @@ export class EditForm extends Component {
         );
     }
 }
+
+EditForm.propTypes = {
+    userToEdit: PropTypes.object,
+    onHide: PropTypes.func,
+    addErrorToState: PropTypes.func
+};
 
 const mapStateToProps = (state) => {
     return {

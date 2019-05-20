@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import md5 from 'md5';
-
-
+import PropTypes from 'prop-types';
 
 //Redux
 import { connect } from 'react-redux';
@@ -69,7 +68,12 @@ export class AddCatalogueItem extends Component {
                     }
                 })
                 .catch((e) => {
-                    console.log(e);
+                    let d = new Date();
+                    this.props.addErrorToState({
+                        id: md5(`${'Notification from AddCatalogueItem'}${d.valueOf()}`),
+                        level: 'Error',
+                        message: e.toString()
+                    });
                 });
         }
 
@@ -145,6 +149,14 @@ export class AddCatalogueItem extends Component {
         );
     }
 }
+
+AddCatalogueItem.propTypes = {
+    getCatalogue: PropTypes.func,
+    addErrorToState: PropTypes.func,
+    addCatalogueItem: PropTypes.func,
+    addItem: PropTypes.object,
+    cancel: PropTypes.func
+};
 
 const mapStateToProps = (state) => {
     return {
