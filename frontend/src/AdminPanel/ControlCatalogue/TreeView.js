@@ -18,7 +18,7 @@ function handlerClickSpan(e, f, f1, el) {
     }
 }
 
-class TreeView extends Component {
+export class TreeView extends Component {
     constructor(props) {
         super(props);
 
@@ -129,7 +129,7 @@ TreeView.propTypes = {
     level: PropTypes.number,
     showEditForm: PropTypes.func,
     editCatalogueItem: PropTypes.func,
-    editItem: PropTypes.func
+    editItem: PropTypes.object
 };
 
 const mapStateTpProps = (state) => {

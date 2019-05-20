@@ -18,7 +18,7 @@ import {
 } from '../../REDUX/adminPanel/actions/actionsCatalogueControl';
 
 //Component
-import TreeView from './TreeView2';
+import TreeView from './TreeView';
 import EditCatalogueItem from './EditCatalogueItem';
 import AddCatalogueItem from './AddCatalogueItem';
 

@@ -17,7 +17,7 @@ import {
     editCatalogueItem
 } from '../../REDUX/adminPanel/actions/actionsCatalogueControl';
 
-class DeletingForm extends Component {
+export class DeletingForm extends Component {
     constructor(props) {
         super(props);
         this.sendRequestToDelete = this.sendRequestToDelete.bind(this);

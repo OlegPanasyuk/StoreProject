@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddCatalogueItem --- Snapshot Component must be rendered 1`] = `
+<Fragment>
+  <Form
+    as="form"
+    inline={false}
+  >
+    <h4>
+      Add item to catalogue: 
+    </h4>
+    <FormGroup
+      as="div"
+    >
+      <FormLabel
+        column={false}
+        srOnly={false}
+      >
+        Name:
+      </FormLabel>
+      <FormControl
+        as="input"
+        defaultValue=""
+        type="text"
+      />
+    </FormGroup>
+    <FormGroup
+      as="div"
+    >
+      <FormLabel
+        column={false}
+        srOnly={false}
+      >
+        description:
+      </FormLabel>
+      <FormControl
+        as="input"
+        defaultValue=""
+        type="text"
+      />
+    </FormGroup>
+    <FormGroup
+      as="div"
+    >
+      <FormLabel
+        column={false}
+        srOnly={false}
+      >
+        Parent:
+      </FormLabel>
+      <FormControl
+        as="input"
+        defaultValue=""
+        type="number"
+      />
+    </FormGroup>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="primary"
+    >
+      Save
+    </Button>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="light"
+    >
+      Cancel
+    </Button>
+  </Form>
+</Fragment>
+`;

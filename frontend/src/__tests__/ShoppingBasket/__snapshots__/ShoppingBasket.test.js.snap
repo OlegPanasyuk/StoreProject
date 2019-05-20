@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ShoppingBascket --- Snapshot +++capturing Snapshot of ShoppingBascket 1`] = `
+exports[`ShoppingBasket --- Snapshot +++capturing Snapshot of ShoppingBasket 1`] = `
 <Container
   as="div"
   fluid={false}

@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TreeView --- Snapshot Component must be rendered 1`] = `
+<Fragment>
+  <ForwardRef
+    style={
+      Object {
+        "display": "block",
+      }
+    }
+  >
+    <Bootstrap(ListGroupItem)
+      active={false}
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 17,
+        }
+      }
+    >
+      <span
+        className="toggler"
+        onClick={[Function]}
+        style={
+          Object {
+            "left": 1,
+          }
+        }
+      >
+        <i
+          className="fas fa-plus"
+        />
+      </span>
+      Catalogue
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="1"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Cars
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="2"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      BigCars
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="3"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Tanks
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="4"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Sedans
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="5"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Hatchbacks
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="6"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Trucks
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="7"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Common
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="9"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Light Tanks
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="12"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Carss
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="13"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      Carssssss
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      active={false}
+      key="14"
+      onClick={[Function]}
+      style={
+        Object {
+          "display": "block",
+          "paddingLeft": 34,
+        }
+      }
+    >
+      BigCars
+    </Bootstrap(ListGroupItem)>
+  </ForwardRef>
+</Fragment>
+`;

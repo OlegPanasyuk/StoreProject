@@ -2,7 +2,11 @@
 
 exports[`ReggistrForm Component must be created 1`] = `
 <Bootstrap(Modal)
+  autoFocus={true}
   centered={true}
+  onEntering={[Function]}
+  onHide={[Function]}
+  show={true}
   size="sm"
 >
   <ModalHeader
@@ -108,6 +112,7 @@ exports[`ReggistrForm Component must be created 1`] = `
         active={false}
         className="ml-3"
         disabled={false}
+        id="buttonToSendRegistration"
         onClick={[Function]}
         size="sm"
         type="button"

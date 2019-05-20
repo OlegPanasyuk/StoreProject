@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdminPanel --- snapshots Component must be rendered 1`] = `
+<BrowserRouter>
+  <Container
+    as="div"
+    fluid={false}
+  >
+    <Switch>
+      <Route
+        component={
+          Object {
+            "$$typeof": Symbol(react.memo),
+            "WrappedComponent": [Function],
+            "compare": null,
+            "displayName": "Connect(LoginForm)",
+            "type": [Function],
+            Symbol(Symbol.hasInstance): [Function],
+          }
+        }
+        path="/login"
+      />
+      <Route
+        render={[Function]}
+      />
+    </Switch>
+  </Container>
+</BrowserRouter>
+`;

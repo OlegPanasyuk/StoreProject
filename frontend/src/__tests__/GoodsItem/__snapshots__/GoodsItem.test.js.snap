@@ -44,9 +44,7 @@ exports[`GoodsItem  Component must be rendered after creation 1`] = `
   body={false}
 >
   <CardHeader>
-    <CardTitle>
-      TestFromTests
-    </CardTitle>
+    <CardTitle />
     <CardText>
       undefined $
     </CardText>
@@ -60,9 +58,7 @@ exports[`GoodsItem  Component must be rendered after creation 1`] = `
           "padding": "10px",
         }
       }
-    >
-      Lorem Test For Tests and Only Tests
-    </CardText>
+    />
     <Button
       active={false}
       disabled={false}

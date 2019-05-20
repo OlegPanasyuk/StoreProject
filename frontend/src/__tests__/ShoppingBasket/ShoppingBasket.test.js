@@ -1,5 +1,5 @@
 import React from 'react';
-import ShoppingBasketConnected, { ShoppingBascket } from '../../ShoppingBasket/ShoppingBasket';
+import ShoppingBasketConnected, { ShoppingBasket } from '../../ShoppingBasket/ShoppingBasket';
 import { shallow, configure, mount } from 'enzyme';
 import { shallowToJson } from 'enzyme-to-json';
 import Adapter from 'enzyme-adapter-react-16';
@@ -26,21 +26,21 @@ function setupComponent(props = {
     goods: new Set([1, 2, 3]),
     goodsData: []
 }) {
-    let component = shallow(<ShoppingBascket {...props} />);
+    let component = shallow(<ShoppingBasket {...props} />);
     return { component, props };
 }
 
-describe('ShoppingBascket --- Snapshot', () => {
-    it('+++capturing Snapshot of ShoppingBascket', () => {
+describe('ShoppingBasket --- Snapshot', () => {
+    it('+++capturing Snapshot of ShoppingBasket', () => {
         const obj = setupComponent();
-        expect(ShoppingBascket.propTypes.goods).toBe(PropTypes.object);
-        expect(ShoppingBascket.propTypes.goodsData).toBe(PropTypes.array);
+        expect(ShoppingBasket.propTypes.goods).toBe(PropTypes.object);
+        expect(ShoppingBasket.propTypes.goodsData).toBe(PropTypes.array);
         expect(shallowToJson(obj.component)).toMatchSnapshot();
     });
 });
 
 
-describe('ShoppingBascket', () => {
+describe('ShoppingBasket', () => {
 
     const initialState = {
         shoppingBasketReducers: {
@@ -74,6 +74,11 @@ describe('ShoppingBascket', () => {
                     price: 121358
                 }
             ]
+        },
+        userHeaderReducers: {
+            userInfo: {
+                
+            }
         }
     };
     const mockStore = configureStore();

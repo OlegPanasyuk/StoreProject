@@ -1,79 +1,100 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LoginForm Component must be created 1`] = `
-<Form
-  as="form"
-  className="ml-auto"
-  inline={false}
+<Bootstrap(Modal)
+  centered={true}
+  keyboard={true}
+  onEntering={[Function]}
+  onExiting={[Function]}
+  onHide={[Function]}
+  show={true}
 >
-  <FormRow
-    className="d-flex align-items-center justify-content-end"
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
   >
-    <FormGroup
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "defaultProps": Object {
-            "as": "div",
-          },
-          "displayName": "Col",
-          "render": [Function],
-        }
-      }
-      className="col mb-0"
-      controlId="formGridEmail"
+    <h4>
+      LoginForm
+    </h4>
+  </ModalHeader>
+  <ModalBody>
+    <Form
+      as="form"
+      className="ml-auto"
+      inline={false}
     >
-      <FormControl
-        as="input"
-        defaultValue="test@test.com"
-        placeholder="Enter email"
-        size="sm"
-        type="email"
-      />
-    </FormGroup>
-    <FormGroup
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "defaultProps": Object {
-            "as": "div",
-          },
-          "displayName": "Col",
-          "render": [Function],
-        }
-      }
-      className="col mb-0"
-      controlId="formGridPassword"
-    >
-      <FormControl
-        as="input"
-        placeholder="Password"
-        size="sm"
-        type="password"
-      />
-    </FormGroup>
-    <Col
-      as="div"
-      className="d-flex align-items-center"
-    >
-      <Button
-        active={false}
-        className=""
-        disabled={false}
-        onClick={[Function]}
-        size="sm"
-        type="button"
-        variant="secondary"
+      <FormRow
+        className="d-flex align-items-center justify-content-end"
       >
-        Login
-      </Button>
-      <Link
-        ConverStatusUser={[Function]}
-        className="d-block p-3"
-        href="#"
-        text="Registration"
-      />
-    </Col>
-  </FormRow>
-</Form>
+        <FormGroup
+          as={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "defaultProps": Object {
+                "as": "div",
+              },
+              "displayName": "Col",
+              "render": [Function],
+            }
+          }
+          className="col mb-0"
+          controlId="formGridEmail"
+        >
+          <FormControl
+            as="input"
+            defaultValue="test@test.com"
+            onKeyDown={[Function]}
+            placeholder="Enter email"
+            size="sm"
+            type="email"
+          />
+        </FormGroup>
+        <FormGroup
+          as={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "defaultProps": Object {
+                "as": "div",
+              },
+              "displayName": "Col",
+              "render": [Function],
+            }
+          }
+          className="col mb-0"
+          controlId="formGridPassword"
+        >
+          <FormControl
+            as="input"
+            onKeyDown={[Function]}
+            placeholder="Password"
+            size="sm"
+            type="password"
+          />
+        </FormGroup>
+        <Col
+          as="div"
+          className="d-flex align-items-center"
+        >
+          <Button
+            active={false}
+            disabled={false}
+            id="buttonLoginForm"
+            onClick={[Function]}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            Login
+          </Button>
+          <NavLink
+            className="d-block p-3"
+            to="/registration"
+          >
+            Registration
+          </NavLink>
+        </Col>
+      </FormRow>
+    </Form>
+  </ModalBody>
+</Bootstrap(Modal)>
 `;
