@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeletingUser --- Snapshot Component must be rendered 1`] = `
+<Bootstrap(Modal)
+  centered={true}
+  onHide={[Function]}
+  show={true}
+>
+  <ModalHeader
+    closeButton={false}
+    closeLabel="Close"
+  >
+    Delete this User?
+  </ModalHeader>
+  <ModalBody
+    className="d-flex justify-content-end"
+  >
+    <Button
+      active={false}
+      className="ml-3"
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="primary"
+    >
+      Yes
+    </Button>
+    <Button
+      active={false}
+      className="ml-3"
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="light"
+    >
+      No
+    </Button>
+  </ModalBody>
+</Bootstrap(Modal)>
+`;

@@ -237,7 +237,7 @@ export class GoodsPanel extends Component {
                         </Col>
                         <Col xs={8} className='d-flex flex-column justify-content-between'>
                             {
-                                this.props.goodsToShow.map((el) => {
+                                this.props.goodsToShow && this.props.goodsToShow.map((el) => {
                                     return (
                                         <GoodsItem key={`GoodsInAdminPanel ${el.idgoods}`} obj={el} />
                                     );
@@ -275,7 +275,7 @@ GoodsPanel.propTypes = {
     filters: PropTypes.object,
     goodsFilter: PropTypes.func,
     closeEditGoodsItem: PropTypes.func,
-    deleteItem: PropTypes.func,
+    deleteItem: PropTypes.object,
     permissionToDelete: PropTypes.func,
     permissionToDeleteClose: PropTypes.func,
     editItem: PropTypes.object,

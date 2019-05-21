@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GoodsPanel --- Snapshot Component must be rendered 1`] = `
+<Fragment>
+  <div />
+  <div />
+  <div />
+  <Container
+    as="div"
+    fluid={false}
+  >
+    <Bootstrap(Row)>
+      <Col
+        as="div"
+        className="text-center"
+        xs={12}
+      >
+        <ListOfPages
+          activePage={1}
+          count={0}
+          limit={10}
+          openPage={[Function]}
+        />
+      </Col>
+    </Bootstrap(Row)>
+    <Bootstrap(Row)>
+      <Col
+        as="div"
+        className="text-center d-flex justify-content-center"
+        xs={12}
+      >
+        Price:
+        <a
+          href="#up"
+          onClick={[Function]}
+        >
+          Up
+        </a>
+        <a
+          href="#down"
+          onClick={[Function]}
+        >
+          Down
+        </a>
+      </Col>
+    </Bootstrap(Row)>
+    <Bootstrap(Row)>
+      <Col
+        as="div"
+        xs={2}
+      >
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+          variant="primary"
+        >
+          Add goods
+        </Button>
+      </Col>
+      <Col
+        as="div"
+        className="d-flex flex-column justify-content-between"
+        xs={8}
+      />
+      <Col
+        as="div"
+        xs={2}
+      >
+        <FilterGoodsPanel
+          countFiltered={[Function]}
+          openPage={[Function]}
+          prepSearchRow={[Function]}
+          updateState={[Function]}
+        />
+      </Col>
+    </Bootstrap(Row)>
+    <Bootstrap(Row)>
+      <Col
+        as="div"
+        className="text-center"
+        xs={12}
+      >
+        <ListOfPages
+          activePage={1}
+          count={0}
+          limit={10}
+          openPage={[Function]}
+        />
+      </Col>
+    </Bootstrap(Row)>
+  </Container>
+</Fragment>
+`;

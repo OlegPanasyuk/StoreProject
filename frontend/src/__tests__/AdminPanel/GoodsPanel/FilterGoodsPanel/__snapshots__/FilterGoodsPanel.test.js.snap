@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditGoodsItem --- Snapshot Component must be rendered 1`] = `
+<Form
+  as="form"
+  inline={false}
+>
+  <FormGroup
+    as="div"
+  >
+    <FormControl
+      as="input"
+      onChange={[Function]}
+      placeholder="text input for search name"
+      type="text"
+    />
+  </FormGroup>
+  <FormGroup
+    as="div"
+  >
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      PriceMore:
+    </FormLabel>
+    <FormControl
+      as="input"
+      min={0}
+      onChange={[Function]}
+      placeholder="0"
+      type="number"
+    />
+  </FormGroup>
+  <FormGroup
+    as="div"
+  >
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      PriceLess:
+    </FormLabel>
+    <FormControl
+      as="input"
+      min={0}
+      onChange={[Function]}
+      placeholder="0"
+      type="number"
+    />
+  </FormGroup>
+  <FormGroup
+    as="div"
+  >
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      Category:
+    </FormLabel>
+    <FormControl
+      as="select"
+      defaultValue="Select category"
+      onChange={[Function]}
+    >
+      <option
+        disabled={true}
+      >
+        Select category
+      </option>
+    </FormControl>
+  </FormGroup>
+</Form>
+`;

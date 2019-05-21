@@ -1,0 +1,210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GoodsItem --- Snapshot Component must be rendered 1`] = `
+<Nav
+  as={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "Ellipsis": [Function],
+      "First": [Function],
+      "Item": [Function],
+      "Last": [Function],
+      "Next": [Function],
+      "Prev": [Function],
+      "defaultProps": undefined,
+      "displayName": "Bootstrap(Pagination)",
+      "propTypes": undefined,
+      "render": [Function],
+    }
+  }
+  className="d-flex justify-content-center"
+  fill={false}
+  justify={false}
+  size="sm"
+>
+  <NavItem
+    active={true}
+    as={[Function]}
+    key="nav-page-list-1"
+    onClick={[Function]}
+  >
+    1
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-2"
+    onClick={[Function]}
+  >
+    2
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-3"
+    onClick={[Function]}
+  >
+    3
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-4"
+    onClick={[Function]}
+  >
+    4
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-5"
+    onClick={[Function]}
+  >
+    5
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-6"
+    onClick={[Function]}
+  >
+    6
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-7"
+    onClick={[Function]}
+  >
+    7
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-8"
+    onClick={[Function]}
+  >
+    8
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-9"
+    onClick={[Function]}
+  >
+    9
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-10"
+    onClick={[Function]}
+  >
+    10
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-11"
+    onClick={[Function]}
+  >
+    11
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-12"
+    onClick={[Function]}
+  >
+    12
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-13"
+    onClick={[Function]}
+  >
+    13
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-14"
+    onClick={[Function]}
+  >
+    14
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-15"
+    onClick={[Function]}
+  >
+    15
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-16"
+    onClick={[Function]}
+  >
+    16
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-17"
+    onClick={[Function]}
+  >
+    17
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-18"
+    onClick={[Function]}
+  >
+    18
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-19"
+    onClick={[Function]}
+  >
+    19
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-20"
+    onClick={[Function]}
+  >
+    20
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-21"
+    onClick={[Function]}
+  >
+    21
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-22"
+    onClick={[Function]}
+  >
+    22
+  </NavItem>
+  <NavItem
+    active={false}
+    as={[Function]}
+    key="nav-page-list-23"
+    onClick={[Function]}
+  >
+    23
+  </NavItem>
+</Nav>
+`;

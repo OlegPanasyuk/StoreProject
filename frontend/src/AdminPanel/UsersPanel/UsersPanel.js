@@ -199,8 +199,8 @@ UsersPanel.propTypes = {
     filters: PropTypes.object,
     filterUsers: PropTypes.func,
     userToEdit: PropTypes.object,
-    usersToShow: PropTypes.object,
-    usersToShowCount: PropTypes.object,
+    usersToShow: PropTypes.array,
+    usersToShowCount: PropTypes.number,
     editUserClose: PropTypes.func
 };
 

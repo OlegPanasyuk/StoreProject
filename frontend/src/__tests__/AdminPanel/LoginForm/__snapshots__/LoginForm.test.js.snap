@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginForm --- Snapshot Component must be rendered 1`] = `
+<Fragment>
+  <Bootstrap(Modal)
+    centered={true}
+    keyboard={true}
+    onEntering={[Function]}
+    onExit={[Function]}
+    onHide={[Function]}
+    show={true}
+    size="sm"
+  >
+    <ModalHeader
+      closeButton={false}
+      closeLabel="Close"
+    >
+      <h4>
+        LoginForm
+      </h4>
+    </ModalHeader>
+    <Form
+      as="form"
+      inline={false}
+    >
+      <ModalBody>
+        <FormGroup
+          as="div"
+        >
+          <FormControl
+            as="input"
+            placeholder="Enter email"
+            type="email"
+          />
+        </FormGroup>
+        <FormGroup
+          as="div"
+        >
+          <FormControl
+            as="input"
+            placeholder="Password"
+            type="password"
+          />
+        </FormGroup>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          active={false}
+          disabled={false}
+          id="buttonToLogin"
+          onClick={[Function]}
+          type="button"
+          variant="primary"
+        >
+          Login
+        </Button>
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+          variant="light"
+        >
+          Close
+        </Button>
+      </ModalFooter>
+    </Form>
+  </Bootstrap(Modal)>
+  <Overlay
+    placement="left"
+    rootClose={false}
+    show={false}
+    target={null}
+    transition={[Function]}
+  >
+    <Component />
+  </Overlay>
+</Fragment>
+`;

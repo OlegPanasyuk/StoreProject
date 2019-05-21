@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilterUsers --- Snapshot Component must be rendered 1`] = `
+<Form
+  as="form"
+  inline={false}
+>
+  <FormGroup
+    as="div"
+  >
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      Role:
+    </FormLabel>
+    <FormControl
+      as="input"
+      onChange={[Function]}
+      placeholder="text input for search name"
+      type="text"
+    />
+  </FormGroup>
+  <FormGroup
+    as="div"
+  >
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      Role:
+    </FormLabel>
+    <FormControl
+      as="input"
+      onChange={[Function]}
+      placeholder="User"
+      type="text"
+    />
+  </FormGroup>
+</Form>
+`;

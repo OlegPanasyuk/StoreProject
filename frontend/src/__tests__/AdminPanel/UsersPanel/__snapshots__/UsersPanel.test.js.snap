@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UsersPanel --- Snapshot Component must be rendered 1`] = `
+<Container
+  as="div"
+  fluid={false}
+>
+  <Bootstrap(Row)>
+    <Col
+      as="div"
+    >
+      <ListOfPages
+        count={0}
+        openPage={[Function]}
+      />
+    </Col>
+  </Bootstrap(Row)>
+  <Bootstrap(Row)>
+    <Col
+      as="div"
+      className="col-3"
+    >
+      <Button
+        active={false}
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+        variant="primary"
+      >
+        Add User
+      </Button>
+      <ConnectFunction
+        updateState={[Function]}
+      />
+    </Col>
+    <Col
+      as="div"
+      className="col-9"
+    >
+      <CardColumns />
+    </Col>
+  </Bootstrap(Row)>
+</Container>
+`;
