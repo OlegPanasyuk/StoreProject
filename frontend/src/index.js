@@ -7,8 +7,9 @@ import AdminPanel from './AdminPanel/AdminPanel';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-// import './css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/bootstrap.min.css';
+//import './css/bootstrap.css';
 import store from './REDUX/store';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';

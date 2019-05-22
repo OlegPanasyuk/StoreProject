@@ -8,12 +8,15 @@ import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
 import UserHistory from './User/UserHistory';
 import UserProfile from './User/UserProfile';
 import ErrorLayer from './Error/ErrorLayer';
-import { Row, Col, Container } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 import Navigation from './Navigation/Navigation';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 // import UserProfile from './User/UserProfile';
+
+//images
+import './css/App.css';
 
 //Redux
 import { connect } from 'react-redux';
@@ -198,7 +201,7 @@ class App extends Component {
                             handleSetStateInApp={this.setUserInState}
                             userState={this.state.user}
                             onHide={() => {
-                                this.props.setUserInfo({role: ''});
+                                this.props.setUserInfo({ role: '' });
                             }}
                         >
                             LoginForm
@@ -229,30 +232,22 @@ class App extends Component {
                 />
             );
         }
-
         return (
 
             <React.Fragment>
                 <Router>
-                    <Container>
-                        <Row>
-                            <Col className='w-100 d-flex'>
-                                <Navigation match={match}>
-                                    {authElement}
+                    <Navigation match={match}>
+                        {authElement}
 
-                                    <ShoppingBasketHeader
-                                        goods={this.state.goodsInBasket}
-                                        showCompleteBasket={this.showCompleteBasket}
-                                        
-                                    />
-                                </Navigation>
-                            </Col>
-                            <ErrorLayer
-                                Errors={this.props.errors}
-                            />
-                        </Row>
-                    </Container>
+                        <ShoppingBasketHeader
+                            goods={this.state.goodsInBasket}
+                            showCompleteBasket={this.showCompleteBasket}
 
+                        />
+                    </Navigation>
+                    <ErrorLayer
+                        Errors={this.props.errors}
+                    />
                     <Route exact path='/' render={() => (
                         <Container>
                             <h1>Hello, I am MainPage!</h1>

@@ -36,7 +36,7 @@ class ShoppingBasketHeader extends Component {
         }
         return (
             <React.Fragment>
-                <Link to='/basket' className='ml-3'>
+                <Link to='/basket' className='ml-1'>
                     <i 
                         className = 'fas \
                                     fa-shopping-basket \

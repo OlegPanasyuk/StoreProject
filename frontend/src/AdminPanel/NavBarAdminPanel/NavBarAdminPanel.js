@@ -7,8 +7,11 @@ export class NavBarAdminPanel extends Component {
     render() {
         let { match } = this.props;
         return (
-            <Container>
-                <Navbar>
+
+            <Navbar style={{
+                backgroundColor: 'var(--primary)'
+            }}>
+                <Container>
                     <Nav>
                         <Nav.Item>
                             <NavLink className='p-3' exact to={`${match.url}/goods`}>Goods</NavLink>
@@ -20,8 +23,9 @@ export class NavBarAdminPanel extends Component {
                             <NavLink className='p-3' to={`${match.url}/catalogue`}>Catalogue</NavLink>
                         </Nav.Item>
                     </Nav>
-                </Navbar>
-            </Container>
+                </Container>
+            </Navbar>
+
         );
     }
 }

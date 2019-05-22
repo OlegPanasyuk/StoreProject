@@ -15,37 +15,39 @@ import ControlCatalogue from './ControlCatalogue/ControlCatalogue';
 import { connect } from 'react-redux';
 
 export class AdminPanel extends Component {
-    
+
     render() {
-        const { match } = this.props;
+        const { match = { path: '', url: '' } } = this.props;
         return (
             <Router>
-                <Container>
-                    <Switch>
-                        <Route path={`${match.path}/login`} component={LoginForm}></Route>
-                        <Route render={() => (
-                            (!this.props.user.token)
-                                ?
-                                (
-                                    <Redirect to={`${match.path}/login`} />
-                                )
-                                :
-                                (
-                                    <React.Fragment>
-                                        <Router>
-                                            <NavBarAdminPanel match={match} />
+
+                <Switch>
+                    <Route path={`${match.path}/login`} component={LoginForm}></Route>
+                    <Route render={() => (
+                        (!this.props.user.token)
+                            ?
+                            (
+                                <Redirect to={`${match.path}/login`} />
+                            )
+                            :
+                            (
+                                <React.Fragment>
+                                    <Router>
+                                        <NavBarAdminPanel match={match} />
+                                        <Container className='mt-3'>
                                             <Route path={`${match.path}/goods`} component={GoodsPanel} />
                                             <Route path={`${match.path}/users`} component={UsersPanel} />
                                             <Route path={`${match.path}/catalogue`} component={ControlCatalogue} />
-                                            <ErrorLayer
-                                                Errors={this.props.errors}
-                                            />
+                                        </Container>
+                                        <ErrorLayer
+                                            Errors={this.props.errors}
+                                        />
 
-                                        </Router>
-                                    </React.Fragment>
-                                ))} />
-                    </Switch>
-                </Container>
+                                    </Router>
+                                </React.Fragment>
+                            ))} />
+                </Switch>
+
             </Router>
         );
     }

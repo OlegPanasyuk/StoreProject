@@ -8,14 +8,19 @@ export class GoodsItem extends Component {
 
     handleAddToBasket = () => {
         this.props.addGoodsToBasket(this.props.id);
-        
+
     };
 
     render() {
         let { obj } = this.props;
         return (
             <Card>
-                <Card.Header>
+                
+                <Card.Img variant='top' src='http://placeimg.com/1280/768/tech'>
+
+                </Card.Img>
+                <Card.Header style={{
+                }}>
                     <Card.Title>
                         {obj.name}
                     </Card.Title>
@@ -27,7 +32,7 @@ export class GoodsItem extends Component {
                     <Card.Text style={{ padding: '10px' }}>
                         {obj.description}
                     </Card.Text>
-                    <Button variant='primary' onClick={ this.handleAddToBasket}>
+                    <Button onClick={this.handleAddToBasket}>
                         Add to backet
                     </Button>
                 </Card.Body>

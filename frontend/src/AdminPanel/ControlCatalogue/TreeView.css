@@ -29,6 +29,6 @@
     transform: rotate(90deg);
   }
   
-  .collapsed {
+  .tree-item_collapsed {
     display: none;
   }
