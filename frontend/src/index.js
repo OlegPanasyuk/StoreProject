@@ -6,6 +6,7 @@ import RegForm from './RegistrForm/RegistrForm';
 import AdminPanel from './AdminPanel/AdminPanel';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
+import 'jquery';
 import 'bootstrap';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/bootstrap.min.css';

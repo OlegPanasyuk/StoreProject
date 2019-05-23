@@ -113,9 +113,6 @@ router.post('/new', passport.authenticate('jwt', { session: false }), checkSuper
                     role: role
                 }
             }).then(([user, created]) => {
-                // console.log(user.get({
-                //     plain: true
-                // }));
                 res.status(201).json({
                     message: (created) ? 'User was cteated' : `User with '${user.email}' email is exist`,
                     status: created,

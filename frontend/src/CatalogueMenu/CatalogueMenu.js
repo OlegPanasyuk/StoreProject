@@ -19,7 +19,7 @@ function CatalogueMenu(props) {
                     }
                     
                     key={el}>
-                    {`${obj[el].id_catalogue}  ${obj[el].name}`}
+                    {` ${obj[el].name}`}
                 </ListGroup.Item>
 
             );
