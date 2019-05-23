@@ -44,6 +44,7 @@ router.get('/:id', (req, res) => {
     })
         .then((image) => {
             try {
+                
                 res.send(image);
             } catch (e) {
                 res.status(400).send(e);

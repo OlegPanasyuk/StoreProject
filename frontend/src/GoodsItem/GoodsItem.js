@@ -3,6 +3,7 @@ import { Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addGoodsToBasket } from '../REDUX/actions/actionsShoppingBasket';
+import imgDef from '../asserts/imgs/header.jpg';
 
 export class GoodsItem extends Component {
     constructor(props) {
@@ -14,23 +15,37 @@ export class GoodsItem extends Component {
 
     UNSAFE_componentWillMount() {
         let self = this;
+        let { obj } = this.props;
         if (fetch) {
             let myInit = {
                 method: 'GET',
             };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/`, myInit)
+           
+
+            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/goods/${obj.idgoods}`, myInit)
                 .then(res => {
-                    return res.blob();
+                    return res.json();
                 })
                 .then(data => {
-                    return data;
-                })
-                .then(b => {
-                    const objectURL = URL.createObjectURL(b);
-                    this.setState({
-                        url: objectURL.toString()
+                    data && data.forEach(el => {
+                        if (el.title > 0) {
+                            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/${el.imgs_id_img}`, myInit)
+                                .then(img => {
+                                    if (img.ok) {
+                                        return img.json();
+                                    }
+                                })
+                                .then(i => {
+                                    const a = new Uint8Array(i.data.data);
+                                    const b = new Blob([a], { type: "image/jpeg" });
+                                    const objectURL = URL.createObjectURL(b);
+                                    self.setState({
+                                        url: objectURL.toString()
+                                    });
+                                });
+                        }
                     });
-                    console.log(b);
+                    
                 });
         }
     }
@@ -43,7 +58,9 @@ export class GoodsItem extends Component {
     render() {
         let { obj } = this.props;
         let { url } = this.state;
-        console.log(url);
+        if (url.length === 0) {
+            url = imgDef;
+        }
         return (
             <Card>
                 <div style={{

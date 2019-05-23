@@ -8,6 +8,9 @@ module.exports = (sequalize, type) => {
         },
         imgs_id_img: {
             type: type.INTEGER,
+        },
+        title: {
+            type: type.INTEGER
         }
     }, {
         timestamps : false,
