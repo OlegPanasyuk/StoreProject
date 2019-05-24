@@ -16,20 +16,20 @@ export class ListOfPages extends Component {
         let listOfPages = [];
         for (let i = 1; i <= numberOfPages; i++) {
             listOfPages.push((
-                <Nav.Item 
-                    as={Pagination.Item} 
+                <Pagination.Item
+                   
                     key={`nav-page-list-${i}`} 
                     active={i === activePage} 
                     onClick={() => openPage(i)}
                 >
                     {i}
-                </Nav.Item>
+                </Pagination.Item>
             ));
         }
         return (
-            <Nav as={Pagination} size='sm' className='d-flex justify-content-center' >
+            <Pagination as={Pagination} size='sm' className='d-flex justify-content-center' >
                 {listOfPages}
-            </Nav>
+            </Pagination>
         );
     }
 }

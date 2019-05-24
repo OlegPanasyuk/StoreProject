@@ -16,7 +16,7 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 // import UserProfile from './User/UserProfile';
 
 //images
-import './css/App.css';
+import './asserts/css/App.css';
 
 //Redux
 import { connect } from 'react-redux';

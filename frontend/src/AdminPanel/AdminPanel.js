@@ -10,6 +10,7 @@ import GoodsPanel from './GoodsPanel/GoodsPanel';
 import ErrorLayer from '../Error/ErrorLayer';
 import UsersPanel from './UsersPanel/UsersPanel';
 import ControlCatalogue from './ControlCatalogue/ControlCatalogue';
+import ControlOfImages from './ControlOfImages/ControlOfImages';
 
 //Redux
 import { connect } from 'react-redux';
@@ -38,6 +39,7 @@ export class AdminPanel extends Component {
                                             <Route path={`${match.path}/goods`} component={GoodsPanel} />
                                             <Route path={`${match.path}/users`} component={UsersPanel} />
                                             <Route path={`${match.path}/catalogue`} component={ControlCatalogue} />
+                                            <Route path={`${match.path}/images`} component={ControlOfImages} />
                                         </Container>
                                         <ErrorLayer
                                             Errors={this.props.errors}

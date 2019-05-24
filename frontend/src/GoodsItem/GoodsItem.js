@@ -22,7 +22,11 @@ export class GoodsItem extends Component {
             };
            
 
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/goods/${obj.idgoods}`, myInit)
+            fetch(`${
+                process.env.REACT_APP_API_HOST
+            }:${
+                process.env.REACT_APP_API_PORT
+            }/images/goods/${obj.idgoods}`, myInit)
                 .then(res => {
                     return res.json();
                 })

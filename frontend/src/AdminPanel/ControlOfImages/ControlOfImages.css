@@ -1,0 +1,25 @@
+.image-item__buttons-wrapper {
+    margin-bottom: auto
+}
+
+.image-item__buttons-wrapper button.btn {
+    background-color: transparent;
+}
+
+@media (min-width: 576px) {
+    .card-columns.card-columns1 {
+        column-count: 1!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-columns.card-columns1 {
+        column-count: 2!important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card-columns.card-columns1 {
+        column-count: 3!important;
+    }
+}

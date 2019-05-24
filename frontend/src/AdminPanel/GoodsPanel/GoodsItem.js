@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Button, Col, Row } from 'react-bootstrap';
+import { Card, Button, Col, Row, ButtonGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 //Redux 
@@ -24,23 +24,27 @@ export class GoodsItem extends Component {
                                 {`${obj.price} $`}
                             </Card.Text>
                         </Col>
-                        <Button 
-                            variant='light'
-                            onClick={()=>this.props.openEditGoodsItem({
-                                ...obj,
-                                show: true
-                            })}
+                        <ButtonGroup
+                            className='mr-3'
                         >
-                            <i className="far fa-edit"></i>
-                        </Button>
-                        <Button 
-                            variant='light'
-                            onClick={()=>{
-                                this.props.permissionToDelete(obj.idgoods);
-                            }}
-                        >
-                            <i className="fas fa-trash-alt"></i>
-                        </Button>
+                            <Button
+                                variant='light'
+                                onClick={() => this.props.openEditGoodsItem({
+                                    ...obj,
+                                    show: true
+                                })}
+                            >
+                                <i className="far fa-edit"></i>
+                            </Button>
+                            <Button
+                                variant='light'
+                                onClick={() => {
+                                    this.props.permissionToDelete(obj.idgoods);
+                                }}
+                            >
+                                <i className="fas fa-trash-alt"></i>
+                            </Button>
+                        </ButtonGroup>
                     </Row>
 
                 </Card.Header>

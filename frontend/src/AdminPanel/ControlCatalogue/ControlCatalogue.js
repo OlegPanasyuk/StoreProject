@@ -29,6 +29,7 @@ export class ControlCatalogue extends Component {
         this.getCatalogue = this.getCatalogue.bind(this);
         this.state = {
             arrOfCatalogue: [],
+            arrOfCatalogueNotSorted: [],
             showAddForm: false,
             showEditForm: false
         };
@@ -83,9 +84,11 @@ export class ControlCatalogue extends Component {
                     return res.json();
                 })
                 .then(data => {
+                    let arr = new Array(...data);
                     let tree = self.sortData(data);
                     self.setState({
-                        arrOfCatalogue: tree
+                        arrOfCatalogue: tree,
+                        arrOfCatalogueNotSorted: arr,
                     });
                 });
         }
@@ -97,6 +100,7 @@ export class ControlCatalogue extends Component {
 
     render() {
         let data = this.state.arrOfCatalogue;
+        let dataN = this.state.arrOfCatalogueNotSorted;
         return (
             <Container>
                 <Row>
@@ -133,6 +137,7 @@ export class ControlCatalogue extends Component {
                                 <AddCatalogueItem
                                     getCatalogue={this.getCatalogue}
                                     cancel={this.props.addCatalogueItemClose}
+                                    arrOfCatalogueNotSorted={dataN}
                                 /> : ''
 
                         }
@@ -146,6 +151,7 @@ export class ControlCatalogue extends Component {
                                             showAddForm: false
                                         });
                                     }}
+                                    arrOfCatalogueNotSorted={dataN}
                                     getCatalogue={this.getCatalogue}
                                 />
                                 : ''

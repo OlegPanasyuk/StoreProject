@@ -28,6 +28,7 @@ export class EditCatalogueItem extends Component {
         };
     }
 
+
     sendDataToSave() {
         let self = this;
         let storage = window.localStorage;
@@ -48,11 +49,11 @@ export class EditCatalogueItem extends Component {
             };
             fetch(
                 `${
-                    process.env.REACT_APP_API_HOST
+                process.env.REACT_APP_API_HOST
                 }:${
-                    process.env.REACT_APP_API_PORT
+                process.env.REACT_APP_API_PORT
                 }/catalogue/${
-                    self.props.editItem.id_catalogue
+                self.props.editItem.id_catalogue
                 }`,
                 myInit
             )
@@ -95,12 +96,12 @@ export class EditCatalogueItem extends Component {
 
     render() {
         let { name, description, parent_id } = this.props.editItem;
-
+        let { arrOfCatalogueNotSorted } = this.props;
         return (
             <React.Fragment>
-                <DeletingForm 
+                <DeletingForm
                     show={this.state.showModalDeleting}
-                    onHide={()=>{
+                    onHide={() => {
                         this.setState({
                             showModalDeleting: false
                         });
@@ -140,11 +141,20 @@ export class EditCatalogueItem extends Component {
                             Parent:
                         </Form.Label>
                         <Form.Control
+                            as='select'
                             ref={this.parentRef}
-                            type='number'
                             defaultValue={this.props.editItem.parent_id}
-
                         >
+                            <option value='-1'>Root</option>
+                            {
+                                (arrOfCatalogueNotSorted.length > 0) && arrOfCatalogueNotSorted.map(el => {
+                                    return (
+                                        <option key={el.id_catalogue} value={el.id_catalogue}>
+                                            {el.name}
+                                        </option>
+                                    );
+                                })
+                            }
                         </Form.Control>
                     </Form.Group>
                     <Button

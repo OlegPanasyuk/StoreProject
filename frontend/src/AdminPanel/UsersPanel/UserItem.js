@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, ButtonGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 //Redux 
@@ -36,24 +36,28 @@ export class UserItem extends Component {
             <Card>
                 {deleteUser}
                 <Card.Header>
-                    <Button
-                        variant='light'
-                        onClick={()=>{
-                            this.props.editUser(obj);
-                        }}
+                    <ButtonGroup
+                        className='mr-3'
                     >
-                        <i className="far fa-edit"></i>
-                    </Button>
-                    <Button
-                        variant='light'
-                        onClick={() => {
-                            this.setState({
-                                permissionToDelete: true
-                            });
-                        }}
-                    >
-                        <i className="fas fa-trash-alt"></i>
-                    </Button>
+                        <Button
+                            variant='light'
+                            onClick={() => {
+                                this.props.editUser(obj);
+                            }}
+                        >
+                            <i className="far fa-edit"></i>
+                        </Button>
+                        <Button
+                            variant='light'
+                            onClick={() => {
+                                this.setState({
+                                    permissionToDelete: true
+                                });
+                            }}
+                        >
+                            <i className="fas fa-trash-alt"></i>
+                        </Button>
+                    </ButtonGroup>
                 </Card.Header>
                 <Card.Body>
                     <Card.Title>{obj.username}</Card.Title>

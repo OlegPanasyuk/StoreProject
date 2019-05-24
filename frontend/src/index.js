@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import 'jquery';
 import 'bootstrap';
 //import 'bootstrap/dist/css/bootstrap.min.css';
-import './css/bootstrap.min.css';
+import './asserts/css/bootstrap.min.css';
 //import './css/bootstrap.css';
 import store from './REDUX/store';
 
@@ -19,10 +19,10 @@ ReactDOM.render(
     <Provider store={store}>
         <Router>
             <Switch>
-                <Route path='/adminpanel' component={AdminPanel}/>
-                <Route path='/registration' component={RegForm}/>
-                <Route path='/login' component={RegForm}/>
-                <Route path='/' component={App}/>
+                <Route path='/adminpanel' component={AdminPanel} />
+                <Route path='/registration' component={RegForm} />
+                <Route path='/login' component={RegForm} />
+                <Route path='/' component={App} />
             </Switch>
         </Router>
     </Provider>

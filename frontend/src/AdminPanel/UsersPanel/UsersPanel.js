@@ -153,7 +153,7 @@ export class UsersPanel extends Component {
             <Container>
                 {addingModal}
                 {editModal}
-                <Row>
+                <Row className='mb-3'>
                     <Col>
                         <ListOfPages
                             count={count}

@@ -16,7 +16,7 @@ passport.use(jwtStrategy);
 
 
 router.get('/', (req, res) => {
-    Images.findAll().then((image) => {
+    Images.findAndCountAll().then((image) => {
         try {
             res.send(image);
         } catch (e) {
@@ -24,6 +24,30 @@ router.get('/', (req, res) => {
         }
     });
 });
+
+router.get('/filters', (req, res) => {
+    
+    const queryObj = {};
+    queryObj.where = {};
+    queryObj.attributes = ['id_img', 'name', 'type', 'createdAt', 'updatedAt'];
+
+    Object.keys(req.params).forEach(el => {
+        if (el === 'page') {
+            queryObj.limit = 10;
+            queryObj.offset = (req.query[el] - 1) * 10;
+        }
+    });
+
+    Images.findAndCountAll(queryObj)
+        .then(resultObj => {
+            res.status(200).send(resultObj);
+        })
+        .catch(e => {
+            console.log('error', e);
+            res.status(400).send(e);
+        });
+});
+
 
 router.get('/goods/:id', (req, res) => {
     GoodsHasImage.findAll({ where: { goods_idgoods: req.params.id } }).then((images) => {
@@ -44,7 +68,7 @@ router.get('/:id', (req, res) => {
     })
         .then((image) => {
             try {
-                
+
                 res.send(image);
             } catch (e) {
                 res.status(400).send(e);

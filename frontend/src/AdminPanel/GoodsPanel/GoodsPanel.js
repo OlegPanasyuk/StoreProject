@@ -221,10 +221,11 @@ export class GoodsPanel extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} className='text-center d-flex justify-content-center'>
+                        <Col xs={12} className='text-center d-flex justify-content-center mb-3'>
+                        
                             Price:
-                            <a href='#up' onClick={(e) => { this.updateState(e, { orderPrice: 'up' }); }}>Up</a>
-                            <a href='#down' onClick={(e) => { this.updateState(e, { orderPrice: 'down' }); }}>Down</a>
+                            <a href='#up' className='ml-3' onClick={(e) => { this.updateState(e, { orderPrice: 'up' }); }}>Up</a>
+                            <a href='#down' className='ml-3' onClick={(e) => { this.updateState(e, { orderPrice: 'down' }); }}>Down</a>
                         </Col>
                     </Row>
                     <Row>
