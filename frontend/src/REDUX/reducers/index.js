@@ -7,6 +7,7 @@ import loginFormAdminPanel from '../adminPanel/reducers/reducerLoginForm';
 import goodsPanel from '../adminPanel/reducers/reducerGoodsPanel';
 import usersPanel from '../adminPanel/reducers/reducerUsersPanel';
 import catalogueControl from '../adminPanel/reducers/reducersCatalogueControl';
+import imagesControl from '../adminPanel/reducers/reducerImagesControl';
 
 export default combineReducers({
     shoppingBasketReducers,
@@ -16,5 +17,6 @@ export default combineReducers({
     adminPanel_User: loginFormAdminPanel,
     adminPanel_goodsPanel: goodsPanel,
     adminPanel_usersPanel: usersPanel,
-    adminPanel_catalogue: catalogueControl
+    adminPanel_catalogue: catalogueControl,
+    adminPanel_imagesPanel: imagesControl
 });

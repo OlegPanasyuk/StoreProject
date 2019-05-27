@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, CardColumns } from 'react-bootstrap';
+import { Container, Row, Col, CardColumns, Button } from 'react-bootstrap';
 import './ControlOfImages.css';
+
 //Component
 import ImageItem from './ImageItem';
 import ListOfPages from '../GoodsPanel/ListOfPages';
+import AddingForm from './AddingForm';
+
+//Redux 
+import { connect } from 'react-redux';
+import {
+    addingFormOpen,
+    addingFormClose
+} from '../../REDUX/adminPanel/actions/actionsImagesControl';
+
+
 
 export class ControlOfImages extends Component {
 
@@ -52,8 +63,22 @@ export class ControlOfImages extends Component {
 
     render() {
         let { countOfInfoImages, arrOfInfoImages, activePage } = this.state;
+        let {addingForm, addingFormClose, addingFormOpen} = this.props;
         return (
             <Container>
+                <AddingForm 
+                    show={addingForm.show}
+                    onHide = {addingFormClose}
+                />
+                <Row>
+                    <Col>
+                        <Button 
+                            onClick={addingFormOpen}
+                        >
+                            Add Image
+                        </Button>
+                    </Col>
+                </Row>
                 <Row>
                     <Col>
                         <ListOfPages 
@@ -80,4 +105,16 @@ export class ControlOfImages extends Component {
     }
 }
 
-export default ControlOfImages;
+const mapStateToProps = (state) => {
+    return {
+        addingForm: state.adminPanel_imagesPanel.addingForm,
+        editForm: state.adminPanel_imagesPanel.editForm,
+        imageInWork: state.adminPanel_imagesPanel.imageInWork
+    };
+};
+
+
+export default connect(mapStateToProps, {
+    addingFormOpen,
+    addingFormClose
+})(ControlOfImages);
