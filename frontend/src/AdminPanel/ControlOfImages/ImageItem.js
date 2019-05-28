@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
 import { Card, Button, ButtonGroup } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+
+//Redux 
+import { connect } from 'react-redux';
+import {
+    editFormOpen,
+    editFormClose
+} from '../../REDUX/adminPanel/actions/actionsImagesControl';
+
 
 export class ImageItem extends Component {
 
@@ -15,9 +24,9 @@ export class ImageItem extends Component {
             };
             fetch(`${
                 process.env.REACT_APP_API_HOST
-                }:${
+            }:${
                 process.env.REACT_APP_API_PORT
-                }/images/${this.props.obj.id_img}`, myInit)
+            }/images/${this.props.obj.id_img}`, myInit)
                 .then(img => {
                     if (img.ok) {
                         return img.json();
@@ -32,7 +41,6 @@ export class ImageItem extends Component {
                     });
                 });
         }
-
     }
 
     render() {
@@ -52,7 +60,12 @@ export class ImageItem extends Component {
                     }}>
                         <div className='d-flex justify-content-end image-item__buttons-wrapper'>
                             <ButtonGroup>
-                                <Button>
+                                <Button onClick={() => {
+                                    this.props.editFormOpen({
+                                        ...obj,
+                                        url
+                                    });
+                                }}>
                                     <i className="far fa-edit"></i>
                                 </Button>
                                 <Button>
@@ -76,4 +89,12 @@ export class ImageItem extends Component {
     }
 }
 
-export default ImageItem;
+ImageItem.propTypes = {
+    editFormOpen: PropTypes.func,
+    editFormClose: PropTypes.func
+};
+
+export default connect(null, {
+    editFormOpen,
+    editFormClose
+})(ImageItem);

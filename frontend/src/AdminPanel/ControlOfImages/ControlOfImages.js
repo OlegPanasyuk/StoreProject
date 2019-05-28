@@ -6,12 +6,15 @@ import './ControlOfImages.css';
 import ImageItem from './ImageItem';
 import ListOfPages from '../GoodsPanel/ListOfPages';
 import AddingForm from './AddingForm';
+import EditImageForm from './EditImageForm';
 
 //Redux 
 import { connect } from 'react-redux';
 import {
     addingFormOpen,
-    addingFormClose
+    addingFormClose,
+    editFormOpen,
+    editFormClose
 } from '../../REDUX/adminPanel/actions/actionsImagesControl';
 
 
@@ -63,16 +66,22 @@ export class ControlOfImages extends Component {
 
     render() {
         let { countOfInfoImages, arrOfInfoImages, activePage } = this.state;
-        let {addingForm, addingFormClose, addingFormOpen} = this.props;
+        let { addingForm, addingFormClose, addingFormOpen, editForm, editFormClose } = this.props;
         return (
             <Container>
-                <AddingForm 
+                <AddingForm
                     show={addingForm.show}
-                    onHide = {addingFormClose}
+                    onHide={addingFormClose}
+                    openPage={this.openPage}
+                />
+                <EditImageForm 
+                    show={editForm.show}
+                    onHide={editFormClose}
+                    openPage={this.openPage}
                 />
                 <Row>
                     <Col>
-                        <Button 
+                        <Button
                             onClick={addingFormOpen}
                         >
                             Add Image
@@ -81,7 +90,7 @@ export class ControlOfImages extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <ListOfPages 
+                        <ListOfPages
                             count={countOfInfoImages}
                             limit={10}
                             activePage={activePage}
@@ -116,5 +125,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
     addingFormOpen,
-    addingFormClose
+    addingFormClose,
+    editFormOpen,
+    editFormClose
 })(ControlOfImages);

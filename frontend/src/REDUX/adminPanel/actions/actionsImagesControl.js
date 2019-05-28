@@ -33,3 +33,30 @@ export const addingFormFailed = () => {
         payload: {}
     };
 };
+
+export const editFormOpen = (obj) => {
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.OPEN,
+        payload: {
+            ...obj
+        }
+    };
+};
+
+export const editFormClose = () => {
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.CLOSE
+    };
+};
+
+export const editFormSuccess = () => {
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.SUCCESS
+    };
+};
+
+export const editFormFailed = () => {
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.FAILED
+    };
+};

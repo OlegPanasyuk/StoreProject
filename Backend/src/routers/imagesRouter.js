@@ -31,8 +31,9 @@ router.get('/filters', (req, res) => {
     queryObj.where = {};
     queryObj.attributes = ['id_img', 'name', 'type', 'createdAt', 'updatedAt'];
 
-    Object.keys(req.params).forEach(el => {
+    Object.keys(req.query).forEach(el => {
         if (el === 'page') {
+           
             queryObj.limit = 10;
             queryObj.offset = (req.query[el] - 1) * 10;
         }
