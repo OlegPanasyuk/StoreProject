@@ -7,6 +7,9 @@ let InitialState = {
     editForm: {
         show: false
     },
+    deletingForm: {
+        show: false
+    },
     imageInWork: {
         id_img: null,
         name: '',
@@ -14,6 +17,10 @@ let InitialState = {
         url: '',
         createdAt: '',
         updatedAt: ''
+    }, 
+    filters: {
+        name: '',
+        type: ''
     }
 };
 
@@ -22,8 +29,10 @@ export default function (state = InitialState, action) {
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.ADD.OPEN: {
         let addingForm = Object.assign({}, state.addingForm, action.payload);
         let editForm = Object.assign({}, state.editForm, { show: false });
+        let deletingForm = Object.assign({}, state.deletingForm, {show: false});
         return {
             ...state,
+            deletingForm,
             addingForm,
             editForm
         };
@@ -97,6 +106,59 @@ export default function (state = InitialState, action) {
         return {
             ...state,
             imageInWork
+        };
+    }
+    case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.OPEN: {
+        let imageInWork = Object.assign({}, state.imageInWork, action.payload);
+        let deletingForm = Object.assign({}, state.deletingForm, {show: true});
+        return {
+            ...state,
+            deletingForm,
+            imageInWork
+        };
+    }
+    case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.CLOSE: {
+        let imageInWork = Object.assign({}, state.imageInWork,{
+            id_img: null,
+            name: '',
+            type: '',
+            url: '',
+            createdAt: '',
+            updatedAt: ''
+        });
+        let deletingForm = Object.assign({}, state.deletingForm, {show: false});
+        return {
+            ...state,
+            deletingForm,
+            imageInWork
+        };
+    }
+    case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.SUCCESS: {
+        let imageInWork = Object.assign({}, state.imageInWork,{
+            id_img: null,
+            name: '',
+            type: '',
+            url: '',
+            createdAt: '',
+            updatedAt: ''
+        });
+        return {
+            ...state,
+            imageInWork
+        };
+    }
+    case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.FAILED: {
+        let imageInWork = Object.assign({}, state.imageInWork);
+        return {
+            ...state,
+            imageInWork
+        };
+    }
+    case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.FILTERS.SET: {
+        let filters = Object.assign({}, state.filters, action.payload);
+        return {
+            ...state,
+            filters
         };
     }
     default:

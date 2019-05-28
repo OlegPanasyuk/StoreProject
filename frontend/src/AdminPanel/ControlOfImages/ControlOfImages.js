@@ -7,6 +7,8 @@ import ImageItem from './ImageItem';
 import ListOfPages from '../GoodsPanel/ListOfPages';
 import AddingForm from './AddingForm';
 import EditImageForm from './EditImageForm';
+import DeletingForm from './DeletingForm';
+import FiltersOfImages from './FiltersOfImages';
 
 //Redux 
 import { connect } from 'react-redux';
@@ -14,7 +16,10 @@ import {
     addingFormOpen,
     addingFormClose,
     editFormOpen,
-    editFormClose
+    editFormClose,
+    deletingFormOpen,
+    deletingFormClose,
+    filtersSet
 } from '../../REDUX/adminPanel/actions/actionsImagesControl';
 
 
@@ -24,6 +29,8 @@ export class ControlOfImages extends Component {
     constructor(props) {
         super(props);
         this.openPage = this.openPage.bind(this);
+        this.prepareSearchRow = this.prepareSearchRow.bind(this);
+        this.updateState = this.updateState.bind(this);
         this.state = {
             countOfInfoImages: null,
             arrOfInfoImages: [],
@@ -31,7 +38,23 @@ export class ControlOfImages extends Component {
         };
     }
 
+    prepareSearchRow() {
+        let { name, type } = this.props.filters;
+        let searchStr = [];
+
+        if (type !== '') {
+            searchStr.push(`type=${type}`);
+        }
+        if (name !== '') {
+            searchStr.push(`name=${name}`);
+        }
+        return searchStr.join('&');
+    }
+
+
+
     openPage(i) {
+        const searchStr = this.prepareSearchRow();
         if (fetch) {
             let myInit = {
                 method: 'GET',
@@ -42,7 +65,7 @@ export class ControlOfImages extends Component {
                     process.env.REACT_APP_API_HOST
                 }:${
                     process.env.REACT_APP_API_PORT
-                }/images/filters?page=${i}`,
+                }/images/filters?page=${i}&${searchStr}`,
                 myInit
             ).then((res) => {
                 if (res.ok) {
@@ -64,9 +87,37 @@ export class ControlOfImages extends Component {
         this.openPage(1);
     }
 
+    updateState(page = 1, obj) {
+        
+       
+        let a = new Promise((res, rej) => {
+            try {
+                this.props.filtersSet(obj);
+                res(true);
+            } catch (e) {
+                rej(e);
+            }
+        });
+        a.then(() => {
+            
+            this.openPage(page);
+        }, () => {
+
+        });
+    }
+
     render() {
         let { countOfInfoImages, arrOfInfoImages, activePage } = this.state;
-        let { addingForm, addingFormClose, addingFormOpen, editForm, editFormClose } = this.props;
+        let {
+            addingForm,
+            addingFormClose,
+            addingFormOpen,
+            editForm,
+            editFormClose,
+            deletingFormClose,
+            deletingForm,
+            filtersSet
+        } = this.props;
         return (
             <Container>
                 <AddingForm
@@ -74,9 +125,14 @@ export class ControlOfImages extends Component {
                     onHide={addingFormClose}
                     openPage={this.openPage}
                 />
-                <EditImageForm 
+                <EditImageForm
                     show={editForm.show}
                     onHide={editFormClose}
+                    openPage={this.openPage}
+                />
+                <DeletingForm
+                    show={deletingForm.show}
+                    onHide={deletingFormClose}
                     openPage={this.openPage}
                 />
                 <Row>
@@ -86,6 +142,11 @@ export class ControlOfImages extends Component {
                         >
                             Add Image
                         </Button>
+                    </Col>
+                    <Col className='d-flex justify-content-end'>
+                        <FiltersOfImages
+                            updateState={this.updateState}
+                        />
                     </Col>
                 </Row>
                 <Row>
@@ -118,7 +179,9 @@ const mapStateToProps = (state) => {
     return {
         addingForm: state.adminPanel_imagesPanel.addingForm,
         editForm: state.adminPanel_imagesPanel.editForm,
-        imageInWork: state.adminPanel_imagesPanel.imageInWork
+        deletingForm: state.adminPanel_imagesPanel.deletingForm,
+        imageInWork: state.adminPanel_imagesPanel.imageInWork,
+        filters: state.adminPanel_imagesPanel.filters
     };
 };
 
@@ -127,5 +190,8 @@ export default connect(mapStateToProps, {
     addingFormOpen,
     addingFormClose,
     editFormOpen,
-    editFormClose
+    editFormClose,
+    deletingFormOpen,
+    deletingFormClose,
+    filtersSet
 })(ControlOfImages);

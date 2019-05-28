@@ -60,3 +60,39 @@ export const editFormFailed = () => {
         type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.FAILED
     };
 };
+
+export const deletingFormOpen = (obj) => { 
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.OPEN,
+        payload: {
+            ...obj
+        }
+    };
+};
+
+export const deletingFormClose = () => { 
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.CLOSE
+    };
+};
+
+export const deletingFormSuccess = () => { 
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.SUCCESS
+    };
+};
+
+export const deletingFormFailed = () => { 
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.FAILED
+    };
+};
+
+export const filtersSet = (obj) => {
+    return {
+        type: ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.FILTERS.SET,
+        payload: {
+            ...obj
+        }
+    };
+};

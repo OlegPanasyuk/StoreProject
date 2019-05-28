@@ -1,12 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-
 var fs = require('fs');
 const path = require('path');
 
 const { Images, GoodsHasImage } = require('../Models/sequalized');
 
+
+const Sequelize = require('sequelize');
+
+const Op = Sequelize.Op;
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -26,16 +29,23 @@ router.get('/', (req, res) => {
 });
 
 router.get('/filters', (req, res) => {
-    
+
     const queryObj = {};
     queryObj.where = {};
     queryObj.attributes = ['id_img', 'name', 'type', 'createdAt', 'updatedAt'];
 
     Object.keys(req.query).forEach(el => {
         if (el === 'page') {
-           
             queryObj.limit = 10;
             queryObj.offset = (req.query[el] - 1) * 10;
+        }
+        if (el == 'name') {
+            queryObj.where.name = {};
+            queryObj.where.name[Op.regexp] = `${req.query[el]}`;
+        }
+        if (el == 'type') {
+            queryObj.where.type = {};
+            queryObj.where.type[Op.regexp] = `${req.query[el]}`;
         }
     });
 
@@ -44,7 +54,6 @@ router.get('/filters', (req, res) => {
             res.status(200).send(resultObj);
         })
         .catch(e => {
-            console.log('error', e);
             res.status(400).send(e);
         });
 });
@@ -107,43 +116,34 @@ router.post('/', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-    Images.findOne({
-        where: {
-            id_img: req.params.id
-        }
-    }).then((image) => {
-        try {
-
-            image && image.destroy().then(() => {
-                console.log('del');
-            });
-
-        } catch (e) {
-            console.log('error Images');
-
-        }
-        try {
-            GoodsHasImage.findAll({
-                where: {
-                    imgs_id_img: req.params.id
-                }
-            }).then(images => {
-                images.forEach(el => {
-                    el.destroy().then(() => {
-                        res.send('Deleted');
-                    });
-                });
-            }).catch(e => {
-                console.log('error goodshasimage');
-                res.status(400).send(e);
-
-            });
-        } catch (e) {
-            console.log('error Goodshasimage');
-            res.status(400).send(e);
-        }
+    let arr = [
+        Images.findOne({
+            where: {
+                id_img: req.params.id
+            }
+        }).then((image) => {
+            return image && image.destroy();
+        }).then(() => {
+            return 'deleted images from Images';
+        }),
+        GoodsHasImage.findAll({
+            where: {
+                imgs_id_img: req.params.id
+            }
+        }).then(images => {
+            return Promise.all(images.map(el => {
+                return el.destroy();
+            }));
+        }).then(elems => {
+            if (elems) {
+                return 'delete links from Goods_has_imgs';
+            } else {
+                return 'not delete links from Goods_has_imgs';
+            }
+        })];
+    Promise.all(arr).then(a => {
+        res.status(200).send(a.join());
     });
-
 });
 
 router.put('/:id', (req, res) => {
@@ -154,6 +154,7 @@ router.put('/:id', (req, res) => {
     let { img, name, type } = req.body;
 
     let imgs = fs.readFileSync(img.path);
+
     let dataToUpdate = {
         name,
         type,
@@ -168,8 +169,10 @@ router.put('/:id', (req, res) => {
                 res.status(200).send('Updated');
             });
         } catch (e) {
-            res.status(400).send(e);
+            res.status(403).send(e);
         }
+    }).catch(e => {
+        res.status(400).send(e);
     });
 });
 

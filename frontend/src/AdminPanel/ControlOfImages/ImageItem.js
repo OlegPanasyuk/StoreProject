@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
     editFormOpen,
-    editFormClose
+    editFormClose,
+    deletingFormOpen
 } from '../../REDUX/adminPanel/actions/actionsImagesControl';
 
 
@@ -24,9 +25,9 @@ export class ImageItem extends Component {
             };
             fetch(`${
                 process.env.REACT_APP_API_HOST
-            }:${
+                }:${
                 process.env.REACT_APP_API_PORT
-            }/images/${this.props.obj.id_img}`, myInit)
+                }/images/${this.props.obj.id_img}`, myInit)
                 .then(img => {
                     if (img.ok) {
                         return img.json();
@@ -68,7 +69,14 @@ export class ImageItem extends Component {
                                 }}>
                                     <i className="far fa-edit"></i>
                                 </Button>
-                                <Button>
+                                <Button onClick={
+                                    () => {
+                                        this.props.deletingFormOpen({
+                                            ...obj,
+                                            url
+                                        });
+                                    }
+                                }>
                                     <i className="fas fa-trash-alt"></i>
                                 </Button>
                             </ButtonGroup>
@@ -91,10 +99,12 @@ export class ImageItem extends Component {
 
 ImageItem.propTypes = {
     editFormOpen: PropTypes.func,
-    editFormClose: PropTypes.func
+    editFormClose: PropTypes.func,
+    deletingFormOpen: PropTypes.func
 };
 
 export default connect(null, {
     editFormOpen,
-    editFormClose
+    editFormClose,
+    deletingFormOpen
 })(ImageItem);
