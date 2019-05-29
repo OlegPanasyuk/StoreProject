@@ -176,6 +176,7 @@ class App extends Component {
                         onClick={() => {
                             this.props.askLogin();
                         }}
+                        to='/'
                     >
                         Login
                     </NavLink>

@@ -78,8 +78,7 @@ router.get('/:id', (req, res) => {
     })
         .then((image) => {
             try {
-
-                res.send(image);
+                res.contentType('jpeg').end(image.data, 'binary');
             } catch (e) {
                 res.status(400).send(e);
             }

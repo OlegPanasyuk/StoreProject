@@ -32,67 +32,99 @@ export class EditForm extends Component {
                 target: null,
                 message: '',
                 show: false
+            },
+            passwordValid: {
+                valid: false,
+                noValid: false
+            },
+            emailValid: {
+                valid: false,
+                noValid: false
             }
         };
     }
 
+    preValid() {
+        let answ = true;
+        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        if (regEmail.test(this.state.email)) {
+            this.setState({
+                emailValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        } else {
+            answ = false;
+            this.setState({
+                emailValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        return answ;
+    }
+
+
     sendUserToEdit() {
         const storage = window.localStorage;
-        if (fetch) {
+        if (this.preValid()) {
+            if (fetch) {
+                let myHeaders = new Headers();
+                myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
+                myHeaders.append("Content-type", 'application/json');
+                let body = {
+                    username: this.state.username,
+                    password: this.state.password,
+                    email: this.state.email,
+                    role: this.state.role
+                };
 
-            let myHeaders = new Headers();
-            myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let body = {
-                username: this.state.username,
-                password: this.state.password,
-                email: this.state.email,
-                role: this.state.role
-            };
-            
-            let myInit = {
-                method: 'PUT',
-                headers: myHeaders,
-                body: JSON.stringify(body)
-            };
-            fetch(
-                `${
-                    process.env.REACT_APP_API_HOST
-                }:${
-                    process.env.REACT_APP_API_PORT
-                }/users/${
-                    this.props.userToEdit.id
-                }`, 
-                myInit)
-                .then(res => {
-                    return res.text();
-                })
-                .then(data => {
-                    if (data) {
-                        this.setState({
-                            username: '',
-                            password: '',
-                            email: '',
-                            role: ''
-                        });
-                        this.props.onHide();
-                        const d = new Date();
-                        this.props.addErrorToState({
-                            id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
-                            level: 'Success',
-                            message: 'User is updated'
-                        });
-                    }
-                })
-                .catch((e) => {
-                    this.setState((state) => ({
-                        tooltip: {
-                            ...state.tooltip,
-                            message: e,
-                            show: true
+                let myInit = {
+                    method: 'PUT',
+                    headers: myHeaders,
+                    body: JSON.stringify(body)
+                };
+                fetch(
+                    `${
+                        process.env.REACT_APP_API_HOST
+                    }:${
+                        process.env.REACT_APP_API_PORT
+                    }/users/${
+                        this.props.userToEdit.id
+                    }`,
+                    myInit)
+                    .then(res => {
+                        return res.text();
+                    })
+                    .then(data => {
+                        if (data) {
+                            this.setState({
+                                username: '',
+                                password: '',
+                                email: '',
+                                role: ''
+                            });
+                            this.props.onHide();
+                            const d = new Date();
+                            this.props.addErrorToState({
+                                id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
+                                level: 'Success',
+                                message: 'User is updated'
+                            });
                         }
-                    }));
-                });
+                    })
+                    .catch((e) => {
+                        this.setState((state) => ({
+                            tooltip: {
+                                ...state.tooltip,
+                                message: e,
+                                show: true
+                            }
+                        }));
+                    });
+            }
         }
     }
 
@@ -137,6 +169,8 @@ export class EditForm extends Component {
                                 ref={this.emailRef}
                                 type='text'
                                 defaultValue={this.props.userToEdit.email}
+                                isValid={this.state.emailValid.valid}
+                                isInvalid={this.state.emailValid.noValid}
                                 onChange={() => {
                                     this.setState({
                                         email: this.emailRef.current.value
@@ -165,10 +199,8 @@ export class EditForm extends Component {
                                 Role
                             </Form.Label>
                             <Form.Control
-
-                                type='text'
+                                as='select'
                                 defaultValue={this.props.userToEdit.role}
-                                
                                 ref={this.roleRef}
                                 onChange={() => {
                                     this.setState({
@@ -176,7 +208,10 @@ export class EditForm extends Component {
                                     });
                                 }}
                             >
-
+                                <option value='SuperAdmin'>SuperAdmin</option>
+                                <option value='Admin'>Admin</option>
+                                <option value='User'>User</option>
+                                <option value='Customer'>Customer</option>
                             </Form.Control>
                         </Form.Group>
                     </Form>

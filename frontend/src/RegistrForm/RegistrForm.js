@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { 
-    Form, 
-    Col, 
-    Button, 
-    Overlay, 
+import {
+    Form,
+    Col,
+    Button,
+    Overlay,
     Tooltip,
     Modal
 } from 'react-bootstrap';
@@ -35,7 +35,7 @@ class RegisrtForm extends Component {
     handle(e) {
         if (e.keyCode === 13) {
             document.getElementById('buttonToSendRegistration').click();
-        } 
+        }
     }
 
     sendRequestForRegistration() {
@@ -69,14 +69,14 @@ class RegisrtForm extends Component {
     render() {
         let { target, message, show } = this.state;
         return (
-            <Modal 
-                show={true} 
-                size="sm" 
+            <Modal
+                show={true}
+                size="sm"
                 autoFocus={true}
                 onEntering={() => {
                     window.onkeydown = this.handle;
                 }}
-                onHide={()=>{
+                onHide={() => {
                     window.location.href = '/';
                 }}
                 centered
@@ -117,7 +117,7 @@ class RegisrtForm extends Component {
                                     ref={this.passWordInput2}
                                 />
                             </Form.Group>
-                           
+
                         </Form.Row>
                     </Form>
                 </Modal.Body>
@@ -127,7 +127,9 @@ class RegisrtForm extends Component {
                             size="sm"
                             variant="light"
                             className=""
-                            onClick={this.props.onHide}
+                            onClick={() => {
+                                window.location.href = '/';
+                            }}
                         >
                             Close
                         </Button>

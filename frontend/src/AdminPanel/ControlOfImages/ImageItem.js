@@ -25,18 +25,18 @@ export class ImageItem extends Component {
             };
             fetch(`${
                 process.env.REACT_APP_API_HOST
-                }:${
+            }:${
                 process.env.REACT_APP_API_PORT
-                }/images/${this.props.obj.id_img}`, myInit)
+            }/images/${this.props.obj.id_img}`, myInit)
                 .then(img => {
                     if (img.ok) {
-                        return img.json();
+                        return img.blob();
                     }
                 })
                 .then(i => {
-                    const a = new Uint8Array(i.data.data);
-                    const b = new Blob([a], { type: "image/jpeg" });
-                    const objectURL = URL.createObjectURL(b);
+                    // const a = new Uint8Array(i.data.data);
+                    // const b = new Blob([a], { type: "image/jpeg" });
+                    const objectURL = URL.createObjectURL(i);
                     this.setState({
                         url: objectURL.toString()
                     });
@@ -100,7 +100,8 @@ export class ImageItem extends Component {
 ImageItem.propTypes = {
     editFormOpen: PropTypes.func,
     editFormClose: PropTypes.func,
-    deletingFormOpen: PropTypes.func
+    deletingFormOpen: PropTypes.func,
+    obj: PropTypes.object
 };
 
 export default connect(null, {

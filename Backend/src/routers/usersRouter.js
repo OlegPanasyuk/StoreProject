@@ -45,7 +45,7 @@ router.get('/filter', passport.authenticate('jwt', { session: false }), checkSup
             res.status(200).json(results);
         })
         .catch(e => {
-            res.status(500).send(`${e}`);
+            res.status(400).send(`${e}`);
         });
 });
 

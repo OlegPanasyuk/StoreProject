@@ -36,13 +36,13 @@ export class GoodsItem extends Component {
                             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/${el.imgs_id_img}`, myInit)
                                 .then(img => {
                                     if (img.ok) {
-                                        return img.json();
+                                        return img.blob();
                                     }
                                 })
                                 .then(i => {
-                                    const a = new Uint8Array(i.data.data);
-                                    const b = new Blob([a], { type: "image/jpeg" });
-                                    const objectURL = URL.createObjectURL(b);
+                                    // const a = new Uint8Array(i.data.data);
+                                    // const b = new Blob([a], { type: "image/jpeg" });
+                                    const objectURL = URL.createObjectURL(i);
                                     self.setState({
                                         url: objectURL.toString()
                                     });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -26,6 +26,13 @@ export class NavBarAdminPanel extends Component {
                             <NavLink className='p-3' to={`${match.url}/images`}>Images</NavLink>
                         </Nav.Item>
                     </Nav>
+                    <Button
+                        onClick={() => {
+                            window.localStorage.removeItem('Authorization');
+                            window.location.href = `${match.url}`;
+                        }}>
+                        Logout
+                    </Button>
                 </Container>
             </Navbar>
 

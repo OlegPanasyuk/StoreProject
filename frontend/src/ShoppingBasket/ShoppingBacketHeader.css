@@ -7,7 +7,7 @@
 }
 
 .shopping-backet-header_color-grey:hover {
-    color: var(--gray-dark);
+    color: var(--light);
     cursor: pointer;
 }
 

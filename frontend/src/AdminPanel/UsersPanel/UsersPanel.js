@@ -24,7 +24,8 @@ export class UsersPanel extends Component {
         this.prepareSearchRow = this.prepareSearchRow.bind(this);
         this.updateState = this.updateState.bind(this);
         this.state = {
-            showAddingModal: false
+            showAddingModal: false,
+            m: ''
         };
     }
 
@@ -112,7 +113,16 @@ export class UsersPanel extends Component {
 
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/filter?page=1`, myInit)
                 .then((users) => {
-                    return users.json();
+                    if (users.status == 200) {
+                        return users.json();
+                    } else if (users.status == 401) {
+                        self.setState({
+                            m: 'You are not Unauthorized or not have permission to access of Users Control'
+                        });
+                    } else {
+                        window.location.href = '/adminpanel/';
+                    }
+                    
                 })
                 .then((users) => {
                     self.props.showUsers(users);
@@ -152,7 +162,8 @@ export class UsersPanel extends Component {
 
             <Container>
                 {addingModal}
-                {editModal}
+                {editModal} 
+                {this.state.m}
                 <Row className='mb-3'>
                     <Col>
                         <ListOfPages

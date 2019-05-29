@@ -34,61 +34,111 @@ export class AddingUser extends Component {
                 target: null,
                 message: '',
                 show: false
+            },
+            passwordValid: {
+                valid: false,
+                noValid: false
+            },
+            emailValid: {
+                valid: false,
+                noValid: false
             }
         };
     }
 
+    preValid() {
+        let answ = true;
+        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        
+        if (this.state.password !== this.state.password2) {
+            this.setState({
+                passwordValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+            answ = false;
+        } else {
+            this.setState({
+                passwordValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        }
+        if (regEmail.test(this.state.email)) {
+            this.setState({
+                emailValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        } else {
+            answ = false;
+            this.setState({
+                emailValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        return answ; 
+    }
+
     sendUserToAdd() {
         const storage = window.localStorage;
-        if (fetch) {
 
-            let myHeaders = new Headers();
-            myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let body = {
-                name: this.state.name,
-                password1: this.state.password,
-                password2: this.state.password2,
-                email: this.state.email,
-                role: this.state.role
-            };
-            
-            let myInit = {
-                method: 'POST',
-                headers: myHeaders,
-                body: JSON.stringify(body)
-            };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/new`, myInit)
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
-                    if (data) {
-                        this.setState({
-                            name: '',
-                            password: '',
-                            password2: '',
-                            email: '',
-                            role: ''
-                        });
-                        this.props.onHide();
-                        const d = new Date();
-                        this.props.addErrorToState({
-                            id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
-                            level: 'Success',
-                            message: 'User is added'
-                        });
-                    }
-                })
-                .catch((e) => {
-                    this.setState((state) => ({
-                        tooltip: {
-                            ...state.tooltip,
-                            message: e,
-                            show: true
+        if (this.preValid()) {
+            if (fetch) {
+
+                let myHeaders = new Headers();
+                myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
+                myHeaders.append("Content-type", 'application/json');
+                let body = {
+                    name: this.state.name,
+                    password1: this.state.password,
+                    password2: this.state.password2,
+                    email: this.state.email,
+                    role: this.roleRef.current.value
+                };
+
+                let myInit = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: JSON.stringify(body)
+                };
+                fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/new`, myInit)
+                    .then(res => {
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data) {
+                            this.setState({
+                                name: '',
+                                password: '',
+                                password2: '',
+                                email: '',
+                                role: ''
+                            });
+                            this.props.onHide();
+                            const d = new Date();
+                            this.props.addErrorToState({
+                                id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
+                                level: 'Success',
+                                message: 'User is added'
+                            });
                         }
-                    }));
-                });
+                    })
+                    .catch((e) => {
+                        this.setState((state) => ({
+                            tooltip: {
+                                ...state.tooltip,
+                                message: e,
+                                show: true
+                            }
+                        }));
+                    });
+            }
         }
     }
 
@@ -131,8 +181,10 @@ export class AddingUser extends Component {
                             </Form.Label>
                             <Form.Control
                                 ref={this.emailRef}
-                                type='text'
+                                type='email'
                                 value={this.state.email}
+                                isValid={this.state.emailValid.valid}
+                                isInvalid={this.state.emailValid.noValid}
                                 onChange={() => {
                                     this.setState({
                                         email: this.emailRef.current.value
@@ -148,6 +200,8 @@ export class AddingUser extends Component {
                                 ref={this.passwordRef}
                                 type='text'
                                 value={this.state.password}
+                                isValid={this.state.passwordValid.valid}
+                                isInvalid={this.state.passwordValid.noValid}
                                 onChange={() => {
                                     this.setState({
                                         password: this.passwordRef.current.value
@@ -162,7 +216,8 @@ export class AddingUser extends Component {
                             <Form.Control
 
                                 type='text'
-
+                                isValid={this.state.passwordValid.valid}
+                                isInvalid={this.state.passwordValid.noValid}
                                 ref={this.password2Ref}
                                 onChange={() => {
                                     this.setState({
@@ -180,7 +235,7 @@ export class AddingUser extends Component {
                             </Form.Label>
                             <Form.Control
 
-                                type='text'
+                                as='select'
 
                                 ref={this.roleRef}
                                 onChange={() => {
@@ -189,7 +244,10 @@ export class AddingUser extends Component {
                                     });
                                 }}
                             >
-
+                                <option value='SuperAdmin'>SuperAdmin</option>
+                                <option value='Admin'>Admin</option>
+                                <option value='User'>User</option>
+                                <option value='Customer'>Customer</option>
                             </Form.Control>
                         </Form.Group>
                     </Form>
