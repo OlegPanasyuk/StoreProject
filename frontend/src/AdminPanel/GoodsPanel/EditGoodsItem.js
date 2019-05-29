@@ -27,6 +27,7 @@ export class EditGoodsItem extends Component {
         this.descriptionRef = React.createRef();
         this.priceRef = React.createRef();
         this.catalogueRef = React.createRef();
+        this.imgFile = React.createRef();
         this.preValidation = this.preValidation.bind(this);
         this.saveEditData = this.saveEditData.bind(this);
         this.dropToDefaultValue = this.dropToDefaultValue.bind(this);
@@ -221,7 +222,19 @@ export class EditGoodsItem extends Component {
                                 })}
                             </Form.Control>
                         </Form.Group>
+                        <Form.Group>
+                            <Form.Label>
+                                Image
+                            </Form.Label>
+                            <Form.Control
+                                type='file'
 
+                                ref={this.imgFile}
+
+                            >
+
+                            </Form.Control>
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

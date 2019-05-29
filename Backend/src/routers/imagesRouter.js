@@ -69,6 +69,23 @@ router.get('/goods/:id', (req, res) => {
     });
 });
 
+router.post('/goods/:id', (req, res) => {
+    console.log(req.body);
+    let objToCreate = {
+        goods_idgoods: req.params.id,
+        goods_catalogue_id_catalogue: req.body.catalogue,
+        imgs_id_img:  req.body.id_img,
+        title: req.body.title
+    };
+    console.log(objToCreate);
+    GoodsHasImage.create(objToCreate)
+        .then(img => {
+            res.status(201).send(img);
+        }).catch(e => {
+            res.status(400).send(e);
+        });
+});
+
 router.get('/:id', (req, res) => {
 
     Images.findOne({
@@ -103,7 +120,7 @@ router.post('/', (req, res) => {
     }).then(([image, created]) => {
         try {
             if (created) {
-                res.status(201).send('Ok. Image is posted');
+                res.status(201).json({id: image.id_img, message: 'Ok. Image is posted'});
 
             } else {
                 res.status(401).send('Image is already exist');

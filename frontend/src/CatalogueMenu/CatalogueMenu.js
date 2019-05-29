@@ -15,11 +15,14 @@ function CatalogueMenu(props) {
             element = (
                 <ListGroup.Item
                     onClick={
-                        () => handleClick(el)
+                        () => {
+                            handleClick(el);
+                            requestGoods(el);
+                        }
                     }
                     
                     key={el}>
-                    {` ${obj[el].name}`}
+                    {`${obj[el].name}`}
                 </ListGroup.Item>
 
             );
@@ -34,7 +37,7 @@ function CatalogueMenu(props) {
                     }
                     
                     key={el}>
-                    {`${obj[el].id_catalogue}  ${obj[el].name}`}
+                    {`${obj[el].name}`}
                 </ListGroup.Item>
             );
         }

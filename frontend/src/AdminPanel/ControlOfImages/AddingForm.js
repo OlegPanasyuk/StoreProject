@@ -39,7 +39,7 @@ export class AddingFormOfImage extends Component {
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/`, myInit)
                 .then((res) => {
                     if (res.status === 201) {
-                        res.text().then(data => {
+                        res.json().then(data => {
                             this.props.openPage(1);
                             this.props.addingFormClose();
                             this.props.addingFormSuccess({
@@ -51,7 +51,7 @@ export class AddingFormOfImage extends Component {
                             this.props.addErrorToState({
                                 id: md5(`${'Notification from AddingImage'}${d.valueOf()}`),
                                 level: 'Success',
-                                message: data
+                                message: data.message
                             });
                         });
                     }

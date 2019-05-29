@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
 import md5 from 'md5';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 //Redux
 import { connect } from 'react-redux';
@@ -23,6 +23,8 @@ export class AddingGood extends Component {
         this.priceRef = React.createRef();
         this.catalogueRef = React.createRef();
         this.sendGoodsToAdd = this.sendGoodsToAdd.bind(this);
+        this.imgFile = React.createRef();
+        this.id_goods = null;
         this.state = {
             name: '',
             price: 0,
@@ -38,7 +40,7 @@ export class AddingGood extends Component {
     }
 
     UNSAFE_componentWillMount() {
-        const  self = this;
+        const self = this;
         if (fetch) {
             let myInit = {
                 method: 'GET',
@@ -47,7 +49,7 @@ export class AddingGood extends Component {
                 .then(res => {
                     return res.json();
                 })
-                .then(data=>{
+                .then(data => {
                     self.setState({
                         arrOfCatalogue: data
                     });
@@ -67,7 +69,7 @@ export class AddingGood extends Component {
                 catalogue_id_catalogue: this.state.id_catalogue,
                 price: this.state.price
             };
-            
+
             let myInit = {
                 method: 'POST',
                 headers: myHeaders,
@@ -77,8 +79,53 @@ export class AddingGood extends Component {
                 .then(res => {
                     return res.json();
                 })
-                .then(data=>{
+                .then(data => {
                     if (data) {
+                       
+                        this.id_goods = data.idgoods;
+                        const formData = new FormData();
+                        formData.append('name', this.state.name);
+                        formData.append('type', 'j');
+                        formData.append('img', this.imgFile.current.files[0]);
+                        let op = {
+                            method: 'POST',
+                            cache: 'default',
+                            body: formData
+                        };
+                        return fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/`, op);
+
+
+                    }
+                })
+                .then(res => {
+                    if (res.status === 201) {
+                        return res.json();
+                    }
+                })
+                .then(obj => {
+
+                    let objToCreate = {
+                        catalogue: +this.state.id_catalogue,
+                        id_img: obj.id,
+                        title: 1
+                    };
+                    let myHeaders = new Headers();
+                    myHeaders.append("Content-type", 'application/json');
+                    let op2 = {
+                        method: 'POST',
+                        headers: myHeaders,
+                        body: JSON.stringify(objToCreate)
+                    };
+                    console.log(objToCreate);
+                    return fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/goods/${this.id_goods}`, op2);
+                })
+                .then((res) => {
+                    if (res.status === 201) {
+                        return res.json();
+                    }
+                })
+                .then((img) => {
+                    if (img) {
                         this.setState({
                             name: '',
                             price: 0,
@@ -93,12 +140,13 @@ export class AddingGood extends Component {
                             message: 'Goods is added'
                         });
                     }
+                    
                 })
-                .catch((e)=>{
+                .catch((e) => {
                     this.setState((state) => ({
                         tooltip: {
                             ...state.tooltip,
-                            message: e,
+                            message: e.toString(),
                             show: true
                         }
                     }));
@@ -132,7 +180,7 @@ export class AddingGood extends Component {
                                 ref={this.nameRef}
                                 type='text'
                                 value={this.state.name}
-                                onChange={()=>{
+                                onChange={() => {
                                     this.setState({
                                         name: this.nameRef.current.value
                                     });
@@ -148,7 +196,7 @@ export class AddingGood extends Component {
                                 as='textarea'
                                 type='text'
                                 value={this.state.description}
-                                onChange={()=> {
+                                onChange={() => {
                                     this.setState({
                                         description: this.descriptionRef.current.value
                                     });
@@ -163,7 +211,7 @@ export class AddingGood extends Component {
                                 ref={this.priceRef}
                                 type='text'
                                 value={this.state.price}
-                                onChange={()=>{
+                                onChange={() => {
                                     this.setState({
                                         price: this.priceRef.current.value
                                     });
@@ -174,18 +222,18 @@ export class AddingGood extends Component {
                             <Form.Label>
                                 Group
                             </Form.Label>
-                            <Form.Control 
-                                as='select' 
+                            <Form.Control
+                                as='select'
                                 defaultValue='Open this select menu'
                                 ref={this.catalogueRef}
-                                onChange={()=>{
+                                onChange={() => {
                                     this.setState({
                                         id_catalogue: this.catalogueRef.current.value
                                     });
                                 }}
                             >
                                 <option disabled>Open this select menu</option>
-                                {this.state.arrOfCatalogue.map((el,i) => {
+                                {this.state.arrOfCatalogue.map((el, i) => {
                                     return (
                                         <option key={`cat-${i}`} value={el.id_catalogue}>
                                             {`${el.name}`}
@@ -193,12 +241,24 @@ export class AddingGood extends Component {
                                 })}
                             </Form.Control>
                         </Form.Group>
+                        <Form.Group>
+                            <Form.Label>
+                                Image
+                            </Form.Label>
+                            <Form.Control
+                                type='file'
 
+                                ref={this.imgFile}
+
+                            >
+
+                            </Form.Control>
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="light" onClick={()=>this.setState({
+                    <Button variant="light" onClick={() => this.setState({
                         name: '',
                         price: 0,
                         description: '',
@@ -226,7 +286,7 @@ export class AddingGood extends Component {
     }
 }
 
-AddingGood.propTypes  = {
+AddingGood.propTypes = {
     onHide: PropTypes.func,
     addErrorToState: PropTypes.func
 };
