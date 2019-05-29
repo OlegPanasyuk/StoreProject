@@ -24,6 +24,10 @@ export class AddCatalogueItem extends Component {
 
     }
 
+    UNSAFE_componentWillMount() {
+
+    }
+
     sendDataToSave() {
         let self = this;
         let storage = window.localStorage;
@@ -83,7 +87,7 @@ export class AddCatalogueItem extends Component {
 
     render() {
         let { name, description, parent_id } = this.props.addItem;
-
+        let { arrOfCatalogueNotSorted } = this.props;
         return (
             <React.Fragment>
 
@@ -119,10 +123,22 @@ export class AddCatalogueItem extends Component {
                         </Form.Label>
                         <Form.Control
                             ref={this.parentRef}
-                            type='number'
+                            as='select'
                             defaultValue={this.props.addItem.parent_id}
 
                         >
+                            <option  value={'-1'}>
+                                Root
+                            </option>
+                            {
+                                arrOfCatalogueNotSorted && arrOfCatalogueNotSorted.map(el => {
+                                    return (
+                                        <option key={el.id_catalogue} value={el.id_catalogue}>
+                                            {el.name}
+                                        </option>
+                                    );
+                                })
+                            }
                         </Form.Control>
                     </Form.Group>
                     <Button
@@ -155,7 +171,8 @@ AddCatalogueItem.propTypes = {
     addErrorToState: PropTypes.func,
     addCatalogueItem: PropTypes.func,
     addItem: PropTypes.object,
-    cancel: PropTypes.func
+    cancel: PropTypes.func,
+    arrOfCatalogueNotSorted: PropTypes.array
 };
 
 const mapStateToProps = (state) => {

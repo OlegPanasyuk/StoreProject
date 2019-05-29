@@ -49,11 +49,11 @@ export class EditCatalogueItem extends Component {
             };
             fetch(
                 `${
-                process.env.REACT_APP_API_HOST
+                    process.env.REACT_APP_API_HOST
                 }:${
-                process.env.REACT_APP_API_PORT
+                    process.env.REACT_APP_API_PORT
                 }/catalogue/${
-                self.props.editItem.id_catalogue
+                    self.props.editItem.id_catalogue
                 }`,
                 myInit
             )
@@ -96,7 +96,7 @@ export class EditCatalogueItem extends Component {
 
     render() {
         let { name, description, parent_id } = this.props.editItem;
-        let { arrOfCatalogueNotSorted } = this.props;
+        let { arrOfCatalogueNotSorted, editCatalogueItem } = this.props;
         return (
             <React.Fragment>
                 <DeletingForm
@@ -119,7 +119,12 @@ export class EditCatalogueItem extends Component {
                         <Form.Control
                             ref={this.nameRef}
                             type='text'
-                            defaultValue={this.props.editItem.name}
+                            value={this.props.editItem.name}
+                            onChange = {()=> {
+                                editCatalogueItem({
+                                    name: this.nameRef.current.value
+                                });
+                            }}
                         >
 
                         </Form.Control>
@@ -131,8 +136,12 @@ export class EditCatalogueItem extends Component {
                         <Form.Control
                             ref={this.descriptionRef}
                             type='text'
-                            defaultValue={this.props.editItem.description}
-
+                            value={this.props.editItem.description}
+                            onChange = {()=> {
+                                editCatalogueItem({
+                                    description: this.descriptionRef.current.value
+                                });
+                            }}
                         />
 
                     </Form.Group>
@@ -143,7 +152,12 @@ export class EditCatalogueItem extends Component {
                         <Form.Control
                             as='select'
                             ref={this.parentRef}
-                            defaultValue={this.props.editItem.parent_id}
+                            value={this.props.editItem.parent_id}
+                            onChange = {()=> {
+                                editCatalogueItem({
+                                    parent_id: this.parentRef.current.value
+                                });
+                            }}
                         >
                             <option value='-1'>Root</option>
                             {
@@ -196,7 +210,9 @@ EditCatalogueItem.propTypes = {
     getCatalogue: PropTypes.func,
     addErrorToState: PropTypes.func,
     editItem: PropTypes.object,
-    cancel: PropTypes.func
+    cancel: PropTypes.func,
+    editCatalogueItem: PropTypes.func,
+    arrOfCatalogueNotSorted: PropTypes.array
 };
 
 const mapStateToProps = (state) => {

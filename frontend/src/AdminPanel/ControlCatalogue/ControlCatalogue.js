@@ -5,7 +5,7 @@ import {
     Col,
     Button
 } from 'react-bootstrap';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 //Redux
 import { connect } from 'react-redux';
@@ -103,7 +103,7 @@ export class ControlCatalogue extends Component {
         let dataN = this.state.arrOfCatalogueNotSorted;
         return (
             <Container>
-                <Row>
+                <Row className='mb-3'>
                     <Col>
                         <Button
                             onClick={() => {
@@ -123,10 +123,16 @@ export class ControlCatalogue extends Component {
                             data={data}
                             name="data"
                             showEditForm={() => {
-                                this.setState({
+                                this.setState((state) => ({
                                     showEditForm: true,
                                     showAddForm: false
-                                });
+                                }));
+                            }}
+                            closeEditForm={() => {
+                                this.setState((state) => ({
+                                    showEditForm: false
+                                    
+                                }));
                             }}
                             editCatalogueItem={this.props.editCatalogueItem}
                         />
@@ -136,7 +142,11 @@ export class ControlCatalogue extends Component {
                             (this.state.showAddForm) ?
                                 <AddCatalogueItem
                                     getCatalogue={this.getCatalogue}
-                                    cancel={this.props.addCatalogueItemClose}
+                                    cancel={() => {
+                                        this.setState({
+                                            showAddForm: false
+                                        });
+                                    }}
                                     arrOfCatalogueNotSorted={dataN}
                                 /> : ''
 
@@ -153,6 +163,7 @@ export class ControlCatalogue extends Component {
                                     }}
                                     arrOfCatalogueNotSorted={dataN}
                                     getCatalogue={this.getCatalogue}
+                                    editCatalogueItem={this.props.editCatalogueItem}
                                 />
                                 : ''
                         }

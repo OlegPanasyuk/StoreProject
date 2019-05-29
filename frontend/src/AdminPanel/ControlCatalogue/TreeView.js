@@ -8,11 +8,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 
-function handlerClickSpan(e, f, f1, el) {
+function handlerClickSpan(e, f, f1, el, f2) {
 
     if (e.target.tagName !== 'DIV') {
         return false;
     } else {
+        
+        
         f1(el);
         f();
     }
@@ -38,7 +40,8 @@ export class TreeView extends Component {
             level = 1,
             showEditForm,
             editCatalogueItem,
-            editItem
+            editItem,
+            closeEditForm
         } = this.props;
 
         let { isToggled } = this.state;
@@ -63,6 +66,7 @@ export class TreeView extends Component {
                         showEditForm={showEditForm}
                         editCatalogueItem={editCatalogueItem}
                         editItem={editItem}
+                        closeEditForm={closeEditForm}
                     />
                 );
             } else {
@@ -70,7 +74,7 @@ export class TreeView extends Component {
                     <ListGroup.Item
                         active={editItem.id_catalogue === el.id_catalogue}
                         key={`${el.id_catalogue}`}
-                        onClick={(e) => handlerClickSpan(e, showEditForm, editCatalogueItem, el)}
+                        onClick={(e) => {closeEditForm(); handlerClickSpan(e, showEditForm, editCatalogueItem, el);}}
                         style={{
                             paddingLeft: isChildElement ? (17 * (level + 1)) : 4 + 'px',
                             display: isToggled ? 'block' : 'none'
@@ -91,11 +95,12 @@ export class TreeView extends Component {
                     {obj.name ?
                         <ListGroup.Item
                             active={(editItem.id_catalogue === obj.id_catalogue)}
-                            onClick={(e) => handlerClickSpan(e, showEditForm, editCatalogueItem, obj)}
+                            onClick={(e) => {closeEditForm(); handlerClickSpan(e, showEditForm, editCatalogueItem, obj);}}
                             style={{
                                 paddingLeft: isChildElement ? (17 * level) : 4 + 'px',
 
-                            }}>
+                            }}
+                            disabled={(obj.id_catalogue === -1) ? true : false}>
                             {
                                 haveChildren ?
                                     <span
@@ -129,7 +134,8 @@ TreeView.propTypes = {
     level: PropTypes.number,
     showEditForm: PropTypes.func,
     editCatalogueItem: PropTypes.func,
-    editItem: PropTypes.object
+    editItem: PropTypes.object,
+    closeEditForm: PropTypes.func
 };
 
 const mapStateTpProps = (state) => {
