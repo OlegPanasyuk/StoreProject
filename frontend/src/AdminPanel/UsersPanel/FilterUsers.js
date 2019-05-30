@@ -11,7 +11,7 @@ export class FilterUsers extends Component {
         return (
             <Form>
                 <Form.Group>
-                    <Form.Label>Role:</Form.Label>
+                    <Form.Label>Name:</Form.Label>
                     <Form.Control
                         type='text'
                         placeholder='text input for search name'
@@ -28,14 +28,19 @@ export class FilterUsers extends Component {
                 <Form.Group>
                     <Form.Label>Role:</Form.Label>
                     <Form.Control
-                        type='text'
-                        placeholder='User'
+                        as='select'
                         onChange={(e) => {
                             this.props.updateState(null, {
                                 role: e.target.value
                             });
                         }}
-                    />
+                    >
+                        <option value=''>All</option>
+                        <option value='SuperAdmin'>Super Admin</option>
+                        <option value='Admin'>Admin</option>
+                        <option value='Customer'>Customer</option>
+                        <option value='User'>User</option>
+                    </Form.Control>
                 </Form.Group>
 
             </Form>

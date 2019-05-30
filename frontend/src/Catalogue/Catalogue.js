@@ -75,7 +75,7 @@ class Catalogue extends Component {
         const XHR = new XMLHttpRequest();
         var self = this;
         let body = (id) ? `?id=${id}` : '';
-        XHR.open('GET', 'http://localhost:3300/catalogue' + body, true);
+        XHR.open('GET', `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue` + body, true);
 
         XHR.send();
 
@@ -104,7 +104,7 @@ class Catalogue extends Component {
         var self = this;
         let body = (catalogue_id) ? `?id_catalogue=${catalogue_id}` : '';
         body += (idgoods) ? `?id=${idgoods}` : '';
-        XHR.open('GET', 'http://localhost:3300/goods' + body, true);
+        XHR.open('GET', `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods` + body, true);
 
         XHR.send();
 

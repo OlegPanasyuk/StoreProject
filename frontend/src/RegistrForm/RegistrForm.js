@@ -15,7 +15,7 @@ import mime from 'rest/interceptor/mime';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
 
 class RegisrtForm extends Component {
     constructor(props) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Col, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import PropsTypes from 'prop-types';
 import md5 from 'md5';
@@ -17,7 +17,7 @@ import mime from 'rest/interceptor/mime';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: 'http://localhost:3300' });
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
 
 export class LoginForm extends Component {
     constructor(props) {

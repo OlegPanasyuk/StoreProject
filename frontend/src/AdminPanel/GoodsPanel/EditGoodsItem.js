@@ -121,6 +121,7 @@ export class EditGoodsItem extends Component {
                                 
                             });
 
+                            
                     }
 
                 })
@@ -142,7 +143,9 @@ export class EditGoodsItem extends Component {
                         self.props.item.id_img
                     }`, myInitImg)
                         .then((res) => {
-                            
+                            if (res.ok) {
+                                return res.text();
+                            }
                         });
                 })
                 .catch(err => {
@@ -184,6 +187,7 @@ export class EditGoodsItem extends Component {
 
     render() {
         let { target, show, message } = this.state.tooltip;
+        let id = this.props.item.catalogue_id_catalogue;
         return (
             <Modal
                 show={true}
@@ -238,8 +242,14 @@ export class EditGoodsItem extends Component {
                             >
                                 <option disabled>Open this select menu</option>
                                 {this.state.arrOfCatalogue.map((el, i) => {
+                                    let selected;
+                                    if (id === el.id_catalogue) {
+                                        selected = true;
+                                    } else {
+                                        selected = false;
+                                    }
                                     return (
-                                        <option key={`cat-edit-item-${i}`} value={el.id_catalogue}>
+                                        <option key={`cat-edit-item-${i}`} value={el.id_catalogue} selected={selected}>
                                             {`${el.name}`}
                                         </option>);
                                 })}

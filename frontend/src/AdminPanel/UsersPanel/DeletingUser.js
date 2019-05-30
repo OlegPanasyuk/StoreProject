@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import md5 from 'md5';
 import PropTypes from 'prop-types';
 
+//Redux
+import { connect } from 'react-redux';
+import {
+    addErrorToState,
+} from '../../REDUX/actions/actionsErrors';
 export class DeletingUser extends Component {
     constructor(props) {
         super(props);
@@ -20,17 +26,31 @@ export class DeletingUser extends Component {
             };
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/${this.props.id}`, myInit)
                 .then(res => {
-                    return res.text();
+                    if (res.status === 200) {
+                        return res.text();
+                    }
+                    if (res.status === 400) {
+                        res.json().then(e => {
+                            const d = new Date();
+                            this.props.addErrorToState({
+                                id: md5(`${'Notification from Deleting'}${d.valueOf()}`),
+                                level: 'Error',
+                                message: `${e}`
+                            });
+                        });
+                        
+                    }
                 })
                 .then(data => {
                     if (data) {
                         this.props.onHide();
-                        // const d = new Date();
-                        // this.props.addErrorToState({
-                        //     id: md5(`${'Notification from Deleting'}${d.valueOf()}`),
-                        //     level: 'Success',
-                        //     message: 'User is deleted'
-                        // });
+                        const d = new Date();
+                        this.props.openPage(1);
+                        this.props.addErrorToState({
+                            id: md5(`${'Notification from Deleting'}${d.valueOf()}`),
+                            level: 'Success',
+                            message: 'User is deleted'
+                        });
                     }
                 });
                 
@@ -69,7 +89,11 @@ export class DeletingUser extends Component {
 
 DeletingUser.propTypes = {
     id: PropTypes.number,
-    onHide: PropTypes.func
+    onHide: PropTypes.func,
+    addErrorToState: PropTypes.func,
+    openPage: PropTypes.func
 };
 
-export default DeletingUser;
+export default connect(null, {
+    addErrorToState
+})(DeletingUser);

@@ -9,7 +9,7 @@ import UserHistory from './User/UserHistory';
 import UserProfile from './User/UserProfile';
 import MainPage from './MainPage/MainPage';
 import ErrorLayer from './Error/ErrorLayer';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 import Navigation from './Navigation/Navigation';

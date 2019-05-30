@@ -117,7 +117,20 @@ export class AddingUser extends Component {
                 };
                 fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/new`, myInit)
                     .then(res => {
-                        return res.json();
+                        if (res.status === 201) {
+                            return res.json();
+                        } 
+                        if (res.status === 401) {
+                            res.json().then(data => {
+                                const d = new Date();
+                                this.props.addErrorToState({
+                                    id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
+                                    level: 'Error',
+                                    message: data.message
+                                });
+                            });
+                        }
+                        
                     })
                     .then(data => {
                         if (data) {
@@ -134,7 +147,7 @@ export class AddingUser extends Component {
                             this.props.addErrorToState({
                                 id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                                 level: 'Success',
-                                message: 'User is added'
+                                message: data.message
                             });
                         }
                     })

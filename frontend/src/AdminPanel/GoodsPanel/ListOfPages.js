@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 //Components
-import { Nav, Pagination } from 'react-bootstrap';
+import { Pagination } from 'react-bootstrap';
 
 export class ListOfPages extends Component {
     render() {

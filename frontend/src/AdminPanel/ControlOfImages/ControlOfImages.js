@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, CardColumns, Button } from 'react-bootstrap';
 import './ControlOfImages.css';
+import PropTypes from 'prop-types';
 
 //Component
 import ImageItem from './ImageItem';
@@ -88,8 +89,6 @@ export class ControlOfImages extends Component {
     }
 
     updateState(page = 1, obj) {
-        
-       
         let a = new Promise((res, rej) => {
             try {
                 this.props.filtersSet(obj);
@@ -115,8 +114,7 @@ export class ControlOfImages extends Component {
             editForm,
             editFormClose,
             deletingFormClose,
-            deletingForm,
-            filtersSet
+            deletingForm
         } = this.props;
         return (
             <Container>
@@ -174,6 +172,21 @@ export class ControlOfImages extends Component {
         );
     }
 }
+
+ControlOfImages.propTypes = {
+    addingForm: PropTypes.object,
+    editForm: PropTypes.object,
+    deletingForm: PropTypes.object,
+    imageInWork: PropTypes.object,
+    filters: PropTypes.object,
+    addingFormOpen: PropTypes.func,
+    addingFormClose: PropTypes.func,
+    editFormOpen: PropTypes.func,
+    editFormClose: PropTypes.func,
+    deletingFormOpen: PropTypes.func,
+    deletingFormClose: PropTypes.func,
+    filtersSet: PropTypes.func
+};
 
 const mapStateToProps = (state) => {
     return {

@@ -116,8 +116,12 @@ export class AddingGood extends Component {
                         headers: myHeaders,
                         body: JSON.stringify(objToCreate)
                     };
-                    console.log(objToCreate);
-                    return fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/goods/${this.id_goods}`, op2);
+                    
+                    return fetch(`${
+                        process.env.REACT_APP_API_HOST
+                    }:${
+                        process.env.REACT_APP_API_PORT
+                    }/images/goods/${this.id_goods}`, op2);
                 })
                 .then((res) => {
                     if (res.status === 201) {

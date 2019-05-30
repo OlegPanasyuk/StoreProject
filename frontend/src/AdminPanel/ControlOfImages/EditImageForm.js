@@ -68,7 +68,7 @@ export class EditFormImage extends Component {
                         });
                     }
                     if (res.status === 403) {
-                        res.json().then(data => {
+                        res.json().then(() => {
                             this.props.editFormFailed();
                             // console.error(data);
                         });
@@ -88,6 +88,7 @@ export class EditFormImage extends Component {
             >
                 <Modal.Header>
                     <img 
+                        alt={imageInWork.name}
                         src={imageInWork.url}
                         style={{
                             width: '100%'

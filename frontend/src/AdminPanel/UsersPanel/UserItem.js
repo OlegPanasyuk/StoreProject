@@ -29,6 +29,7 @@ export class UserItem extends Component {
                             permissionToDelete: false
                         });
                     }}
+                    openPage={this.props.openPage}
                 />
             );
         }
@@ -62,7 +63,6 @@ export class UserItem extends Component {
                 <Card.Body>
                     <Card.Title>{obj.username}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">{obj.role}</Card.Subtitle>
-
                 </Card.Body>
             </Card>
         );
@@ -71,7 +71,8 @@ export class UserItem extends Component {
 
 UserItem.propTypes = {
     obj: PropTypes.object,
-    editUser: PropTypes.func
+    editUser: PropTypes.func,
+    openPage: PropTypes.func
 };
 
 export default connect(null, {

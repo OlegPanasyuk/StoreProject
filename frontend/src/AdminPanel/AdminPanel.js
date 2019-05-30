@@ -12,7 +12,6 @@ import UsersPanel from './UsersPanel/UsersPanel';
 import ControlCatalogue from './ControlCatalogue/ControlCatalogue';
 import ControlOfImages from './ControlOfImages/ControlOfImages';
 
-//Redux
 //Redux 
 import { connect } from 'react-redux';
 import {
@@ -36,7 +35,7 @@ export class AdminPanel extends Component {
 
     UNSAFE_componentWillMount() {
         let token = window.localStorage.getItem('Authorization');
-        const self = this;
+        
         if (token) {
             client({
                 method: 'POST',
@@ -50,14 +49,7 @@ export class AdminPanel extends Component {
                     storage.setItem('Authorization', data.entity.token);
                     this.props.userAuthorizedSuccess(data.entity);
                 }
-            }).catch(e => {
-                //Needs Error Object to push notifications to UI
-                // const d = new Date();
-                // this.props.addErrorToState({
-                //     id: md5(`${'Notification from App'}${d.valueOf()}`),
-                //     level: 'Info',
-                //     message: e.entity.message
-                // });
+            }).catch(() => {
                 window.localStorage.removeItem('Authorization');
             });
         } 
@@ -79,23 +71,22 @@ export class AdminPanel extends Component {
                             :
                             (
                                 <React.Fragment>
-                                    <Router>
-                                        <NavBarAdminPanel match={match} />
-                                        <Container className='mt-3'>
+                                    <NavBarAdminPanel match={match} />
+                                    <Container className='mt-3'>
+                                        <Switch>
                                             <Route path={`${match.path}/goods`} component={GoodsPanel} />
                                             <Route path={`${match.path}/users`} component={UsersPanel} />
                                             <Route path={`${match.path}/catalogue`} component={ControlCatalogue} />
                                             <Route path={`${match.path}/images`} component={ControlOfImages} />
-                                        </Container>
-                                        <ErrorLayer
-                                            Errors={this.props.errors}
-                                        />
-
-                                    </Router>
+                                            <Route component={GoodsPanel} />
+                                        </Switch>
+                                    </Container>
+                                    <ErrorLayer
+                                        Errors={this.props.errors}
+                                    />
                                 </React.Fragment>
                             ))} />
                 </Switch>
-
             </Router>
         );
     }

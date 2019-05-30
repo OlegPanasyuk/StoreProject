@@ -51,7 +51,7 @@ export class UsersPanel extends Component {
 
         // I don't like it
         let a = new Promise((res, rej) => {
-            const obj = {};
+            
             this.props.filterUsers(obj);
             res(true);
             if (!obj) rej();
@@ -113,9 +113,9 @@ export class UsersPanel extends Component {
 
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/filter?page=1`, myInit)
                 .then((users) => {
-                    if (users.status == 200) {
+                    if (users.status === 200) {
                         return users.json();
-                    } else if (users.status == 401) {
+                    } else if (users.status === 401) {
                         self.setState({
                             m: 'You are not Unauthorized or not have permission to access of Users Control'
                         });
@@ -195,7 +195,7 @@ export class UsersPanel extends Component {
                         <CardColumns>
                             {(this.props.usersToShow) && this.props.usersToShow.map((el, i) => {
                                 return (
-                                    <UserItem key={`el${el.username}-${i}`} obj={el} />
+                                    <UserItem key={`el${el.username}-${i}`} obj={el} openPage={this.openPage} />
                                 );
                             })}
                         </CardColumns>
