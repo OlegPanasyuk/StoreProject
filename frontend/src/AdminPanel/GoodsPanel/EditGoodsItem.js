@@ -80,11 +80,23 @@ export class EditGoodsItem extends Component {
                 price: this.priceRef.current.value
             };
 
+            const formData = new FormData();
+            formData.append('name', this.nameRef.current.value);
+            formData.append('type', 'type');
+            formData.append('img', this.imgFile.current.files[0]);
+
             let myInit = {
                 method: 'PUT',
                 headers: myHeaders,
                 body: JSON.stringify(body)
             };
+
+            let myInitImg = {
+                method: 'PUT',
+                body: formData,
+                cache: 'default'
+            };
+
             fetch(
                 `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods/${this.props.item.idgoods}`,
                 myInit
@@ -121,6 +133,17 @@ export class EditGoodsItem extends Component {
                             show: true
                         }
                     }));
+
+                    fetch(`${
+                        process.env.REACT_APP_API_HOST
+                    }:${
+                        process.env.REACT_APP_API_PORT
+                    }/images/${
+                        self.props.item.id_img
+                    }`, myInitImg)
+                        .then((res) => {
+                            
+                        });
                 })
                 .catch(err => {
                     self.setState((state) => ({

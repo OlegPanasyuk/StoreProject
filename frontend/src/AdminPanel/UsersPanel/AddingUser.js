@@ -122,6 +122,7 @@ export class AddingUser extends Component {
                             });
                             this.props.onHide();
                             const d = new Date();
+                            this.props.openPage(1);
                             this.props.addErrorToState({
                                 id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                                 level: 'Success',
@@ -287,7 +288,8 @@ export class AddingUser extends Component {
 
 AddingUser.propTypes = {
     onHide: PropTypes.func,
-    addErrorToState: PropTypes.func
+    addErrorToState: PropTypes.func,
+    openPage: PropTypes.func
 };
 
 

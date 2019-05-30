@@ -7,8 +7,9 @@ import ShoppingBasketHeader from './ShoppingBasket/ShoppingBasketHeader';
 import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
 import UserHistory from './User/UserHistory';
 import UserProfile from './User/UserProfile';
+import MainPage from './MainPage/MainPage';
 import ErrorLayer from './Error/ErrorLayer';
-import { Col, Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 import Navigation from './Navigation/Navigation';
@@ -235,7 +236,9 @@ class App extends Component {
         }
         return (
 
-            <React.Fragment>
+            <div style={{
+                position: 'relative'
+            }}>
                 <Router>
                     <Navigation match={match}>
                         {authElement}
@@ -249,11 +252,9 @@ class App extends Component {
                     <ErrorLayer
                         Errors={this.props.errors}
                     />
-                    <Route exact path='/' render={() => (
-                        <Container>
-                            <h1>Hello, I am MainPage!</h1>
-                        </Container>
-                    )}></Route>
+
+                    <Route exact path='/' component={MainPage}></Route>
+
                     <Route path={`/about`} render={() => (
                         <Container>
                             <h1>Hello, I am AboutPage!</h1>
@@ -271,7 +272,7 @@ class App extends Component {
                     <Route path='/basket' component={ShoppingBasket}></Route>
 
                 </Router>
-            </React.Fragment>
+            </div>
         );
     }
 }

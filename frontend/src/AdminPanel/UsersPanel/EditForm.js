@@ -108,6 +108,7 @@ export class EditForm extends Component {
                             });
                             this.props.onHide();
                             const d = new Date();
+                            this.props.openPage(1);
                             this.props.addErrorToState({
                                 id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                                 level: 'Success',
@@ -254,7 +255,8 @@ export class EditForm extends Component {
 EditForm.propTypes = {
     userToEdit: PropTypes.object,
     onHide: PropTypes.func,
-    addErrorToState: PropTypes.func
+    addErrorToState: PropTypes.func,
+    openPage: PropTypes.func
 };
 
 const mapStateToProps = (state) => {

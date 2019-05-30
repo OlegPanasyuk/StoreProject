@@ -60,7 +60,7 @@ router.get('/filters', (req, res) => {
 
 
 router.get('/goods/:id', (req, res) => {
-    GoodsHasImage.findAll({ where: { goods_idgoods: req.params.id } }).then((images) => {
+    GoodsHasImage.findOne({ where: { goods_idgoods: req.params.id } }).then((images) => {
         try {
             res.status(200).send(images);
         } catch (e) {
@@ -70,14 +70,14 @@ router.get('/goods/:id', (req, res) => {
 });
 
 router.post('/goods/:id', (req, res) => {
-    console.log(req.body);
+    
     let objToCreate = {
         goods_idgoods: req.params.id,
         goods_catalogue_id_catalogue: req.body.catalogue,
         imgs_id_img:  req.body.id_img,
         title: req.body.title
     };
-    console.log(objToCreate);
+    
     GoodsHasImage.create(objToCreate)
         .then(img => {
             res.status(201).send(img);
@@ -191,5 +191,52 @@ router.put('/:id', (req, res) => {
         res.status(400).send(e);
     });
 });
+
+function checkAdminRight(req, res, next) {
+    checkRight(req, res, next, ['Admin', 'SuperAdmin']);
+}
+
+function checkSuperAdminRight(req, res, next) {
+    checkRight(req, res, next, ['SuperAdmin']);
+}
+
+function checkRight(req, res, next, roles = ['SuperAdmin']) {
+    let token = null;
+    if (req.headers['authorization']) {
+        token = req.headers['authorization'].split(' ')[1];
+    }
+    if (token) {
+        jwt.verify(token, 'Oleg', (err, decode) => {
+            if (err) {
+                return res.status(500).send({ auth: false, message: "Auth failed" });
+            } else {
+                let email = decode.email;
+                if ((decode.role) && (roles.indexOf(decode.role) >= 0)) {
+                    next();
+                } else {
+                    Users.findOne({ where: { email: email } }).then((user) => {
+                        if ((user.role) && (roles.indexOf(user.role) >= 0)) {
+                            next();
+                        } else {
+                            res.status(401).send({
+                                auth: true,
+                                right: false,
+                                message: "You have not permission on operation"
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    } else {
+        res.status(401).send({
+            auth: false,
+            right: false,
+            message: "Access denied"
+        });
+    }
+}
+
+
 
 module.exports = router;

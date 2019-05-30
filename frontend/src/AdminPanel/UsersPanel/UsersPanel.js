@@ -144,6 +144,7 @@ export class UsersPanel extends Component {
                             showAddingModal: false
                         });
                     }}
+                    openPage={this.openPage}
                 />
             );
         }
@@ -154,6 +155,7 @@ export class UsersPanel extends Component {
                     onHide={() => {
                         this.props.editUserClose();
                     }}
+                    openPage={this.openPage}
                 />
             );
         }
