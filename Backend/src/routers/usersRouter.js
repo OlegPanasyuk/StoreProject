@@ -142,7 +142,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), checkSup
             res.status(200).send('User is deleted');
         })
         .catch((e) => {
-            res.status(500).send(`${e}`);
+            res.status(400).send(`${e}`);
         });
 });
 

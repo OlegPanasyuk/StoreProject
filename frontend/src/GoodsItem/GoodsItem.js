@@ -31,22 +31,17 @@ export class GoodsItem extends Component {
                     return res.json();
                 })
                 .then(data => {
+
                     data && data.forEach(el => {
                         if (el.title > 0) {
-                            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/${el.imgs_id_img}`, myInit)
-                                .then(img => {
-                                    if (img.ok) {
-                                        return img.blob();
-                                    }
-                                })
-                                .then(i => {
-                                    // const a = new Uint8Array(i.data.data);
-                                    // const b = new Blob([a], { type: "image/jpeg" });
-                                    const objectURL = URL.createObjectURL(i);
-                                    self.setState({
-                                        url: objectURL.toString()
-                                    });
-                                });
+                            self.setState({
+                                url: `${
+                                    process.env.REACT_APP_API_HOST
+                                }:${
+                                    process.env.REACT_APP_API_PORT
+                                }/images/${el.imgs_id_img}`
+                            });
+                            
                         }
                     });
                     
