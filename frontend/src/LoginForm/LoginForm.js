@@ -26,10 +26,15 @@ export class LoginForm extends Component {
         this.emailInput = React.createRef();
         this.passWordInput = React.createRef();
         this.sendLoginRequest = this.sendLoginRequest.bind(this);
+        this.preValid = this.preValid.bind(this);
         this.state = {
             target: null,
             message: '',
-            show: false
+            show: false,
+            emailValid: {
+                valid: false,
+                noValid: false
+            }
         };
     }
 
@@ -39,49 +44,71 @@ export class LoginForm extends Component {
         }
     }
 
+    preValid() {
+        let answ = true;
+        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        if (regEmail.test(this.emailInput.current.value)) {
+            this.setState({
+                emailValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        } else {
+            answ = false;
+            this.setState({
+                emailValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        return answ;
+    }
+
     sendLoginRequest(e) {
         e.preventDefault();
         const objToRequest = {
             email: this.emailInput.current.value,
             password: this.passWordInput.current.value
         };
-        client({ method: 'POST', path: 'login', entity: objToRequest })
-            .then(data => {
-                //console.log(data);
-                let storage = window.localStorage;
+        if (this.preValid()) {
+            client({ method: 'POST', path: 'login', entity: objToRequest })
+                .then(data => {
+                    //console.log(data);
+                    let storage = window.localStorage;
 
-                if (data.status.code === 200) {
-                    storage.setItem('Authorization', data.entity.token);
-                    this.props.handleSetStateInApp(data.entity);
-                    this.props.onHide();
-                } else if (data.status.code === 401) {
-                    const d = new Date();
-                    this.props.addErrorToState({
-                        id: md5(`${'Notification from LoginForm'}${d.valueOf()}`),
-                        level: 'Warning',
-                        message: data.entity
-                    });
-                }
-
-            }).catch((err) => {
-                throw new Error('error in request', err);
-            });
+                    if (data.status.code === 200) {
+                        storage.setItem('Authorization', data.entity.token);
+                        this.props.handleSetStateInApp(data.entity);
+                        this.props.onHide();
+                    } else if (data.status.code === 401) {
+                        const d = new Date();
+                        this.props.addErrorToState({
+                            id: md5(`${'Notification from LoginForm'}${d.valueOf()}`),
+                            level: 'Warning',
+                            message: data.entity
+                        });
+                    }
+                }).catch((err) => {
+                    throw new Error('error in request', err);
+                });
+        }
     }
 
     render() {
-        //let handleConverStatusUser = this.props.handleConverStatusUser;
         let userState = this.props.userState;
         return (
             <Modal
                 show={true}
-                onHide={()=> {
+                onHide={() => {
                     this.props.onHide();
-                    
+
                 }}
-                onEntering = {() => {
+                onEntering={() => {
                     window.onkeydown = this.handle;
                 }}
-                onExiting={()=>{
+                onExiting={() => {
                     window.onkeydown = null;
                 }}
                 keyboard={true}
@@ -92,45 +119,50 @@ export class LoginForm extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form className='ml-auto'>
-                        <Form.Row className='d-flex align-items-center justify-content-end'>
-                            <Form.Group as={Col} className="col mb-0" controlId="formGridEmail">
-                                <Form.Control
-                                    size="sm"
-                                    type="email"
-                                    placeholder="Enter email"
-                                    ref={this.emailInput}
-                                    onKeyDown={this.handle}
-                                    defaultValue={(userState.email) ? userState.email : ''}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Col} className="col mb-0" controlId="formGridPassword">
-                                <Form.Control
-                                    size="sm"
-                                    type="password"
-                                    placeholder="Password"
-                                    ref={this.passWordInput}
-                                    onKeyDown={this.handle}
-                                />
-                            </Form.Group>
-                            <Col className='d-flex align-items-center'>
-                                <Button
-                                    ref={this.attachRef}
-                                    size="sm"
-                                    variant="secondary"
-                                    onClick={this.sendLoginRequest}
-                                    id='buttonLoginForm'
-                                >
-                                    Login
-                                </Button>
-                                <NavLink
-                                    to='/registration'
-                                    className="d-block p-3"
+                        <Form.Group className=" mb-3" controlId="formGridEmail">
+                            <Form.Control
+                                size="sm"
+                                type="email"
+                                placeholder="Enter email"
+                                ref={this.emailInput}
+                                onKeyDown={this.handle}
+                                defaultValue={(userState.email) ? userState.email : ''}
+                                isValid={this.state.emailValid.valid}
+                                isInvalid={this.state.emailValid.noValid}
 
-                                >
-                                    Registration
-                                </NavLink>
-                            </Col>
-                        </Form.Row>
+                            />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>Incorrect email</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className=" mb-3" controlId="formGridPassword">
+                            <Form.Control
+                                size="sm"
+                                type="password"
+                                placeholder="Password"
+                                ref={this.passWordInput}
+                                onKeyDown={this.handle}
+                            />
+                        </Form.Group>
+                        <div className='d-flex justify-content-end'>
+                            <Button
+                                ref={this.attachRef}
+                                size="sm"
+                                variant="secondary"
+                                onClick={this.sendLoginRequest}
+                                id='buttonLoginForm'
+                            >
+                                Login
+                            </Button>
+                            <NavLink
+                                to='/registration'
+                                className="d-block ml-3 mr-3"
+                                onClick={() => {
+                                    window.location.href = '/registration';
+                                }}
+                            >
+                                Registration
+                            </NavLink>
+                        </div>
                     </Form>
                 </Modal.Body>
             </Modal>

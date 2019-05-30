@@ -58,7 +58,15 @@ export class AddingUser extends Component {
                 }
             });
             answ = false;
-        } else {
+        } else if (this.state.password === '') {
+            this.setState({
+                passwordValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        else {
             this.setState({
                 passwordValid: {
                     valid: true,
@@ -192,6 +200,8 @@ export class AddingUser extends Component {
                                     });
                                 }}
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>Incorrect email</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -209,6 +219,8 @@ export class AddingUser extends Component {
                                     });
                                 }}
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>Password must be not empty or passwords are not equal</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -228,6 +240,7 @@ export class AddingUser extends Component {
                             >
 
                             </Form.Control>
+                            <Form.Control.Feedback type='valid'>Looks good!</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group>

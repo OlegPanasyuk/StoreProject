@@ -5,7 +5,8 @@ import {
     Col,
     Button,
     Tooltip,
-    Overlay
+    Overlay,
+    Alert
 } from 'react-bootstrap';
 import ShoppingBasketItem from './ShoppingBasketItem';
 import PropsTypes from 'prop-types';
@@ -131,8 +132,10 @@ export class ShoppingBasket extends Component {
         let message = '';
         if (this.state.successfulTransaction) {
             message = (
-                <Container>
-                    Transaction is successfully.
+                <Container className='mt-3'>
+                    <Alert variant='success'>
+                        Transaction is success.
+                    </Alert>
                 </Container>
             );
             setTimeout(() => {
@@ -140,7 +143,7 @@ export class ShoppingBasket extends Component {
             }, 3000);
         } else {
             message = (
-                <Container>
+                <Container  className='mt-3'>
                     <Row>
                         <h3>Your Basket:</h3>
                     </Row>

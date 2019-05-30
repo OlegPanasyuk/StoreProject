@@ -60,7 +60,7 @@ router.get('/filters', (req, res) => {
 
 
 router.get('/goods/:id', (req, res) => {
-    GoodsHasImage.findOne({ where: { goods_idgoods: req.params.id } }).then((images) => {
+    GoodsHasImage.findAll({ where: { goods_idgoods: req.params.id } }).then((images) => {
         try {
             res.status(200).send(images);
         } catch (e) {

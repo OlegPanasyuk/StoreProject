@@ -13,9 +13,55 @@ import ControlCatalogue from './ControlCatalogue/ControlCatalogue';
 import ControlOfImages from './ControlOfImages/ControlOfImages';
 
 //Redux
+//Redux 
 import { connect } from 'react-redux';
+import {
+    userAuthorizedSuccess
+} from '../REDUX/adminPanel/actions/actionsLoginForm';
+
+//cors
+import rest from 'rest';
+import pathPrefix from 'rest/interceptor/pathPrefix';
+import errorCode from 'rest/interceptor/errorCode';
+import mime from 'rest/interceptor/mime';
+
+const client = rest.wrap(mime, { mime: 'application/json' })
+    .wrap(errorCode, { code: 500 })
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
+
 
 export class AdminPanel extends Component {
+
+
+
+    UNSAFE_componentWillMount() {
+        let token = window.localStorage.getItem('Authorization');
+        const self = this;
+        if (token) {
+            client({
+                method: 'POST',
+                path: '/logintoken',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(data => {
+                if (data.status.code === 200) {
+                    let storage = window.localStorage;
+                    storage.setItem('Authorization', data.entity.token);
+                    this.props.userAuthorizedSuccess(data.entity);
+                }
+            }).catch(e => {
+                //Needs Error Object to push notifications to UI
+                // const d = new Date();
+                // this.props.addErrorToState({
+                //     id: md5(`${'Notification from App'}${d.valueOf()}`),
+                //     level: 'Info',
+                //     message: e.entity.message
+                // });
+                window.localStorage.removeItem('Authorization');
+            });
+        } 
+    }
 
     render() {
         const { match = { path: '', url: '' } } = this.props;
@@ -58,7 +104,8 @@ export class AdminPanel extends Component {
 AdminPanel.propTypes = {
     match: PropTypes.object,
     errors: PropTypes.array,
-    user: PropTypes.object
+    user: PropTypes.object,
+    userAuthorizedSuccess: PropTypes.func
 };
 
 
@@ -69,5 +116,7 @@ const mapStoreToProps = (state) => {
     });
 };
 
-export default connect(mapStoreToProps)(AdminPanel);
+export default connect(mapStoreToProps, {
+    userAuthorizedSuccess
+})(AdminPanel);
 //

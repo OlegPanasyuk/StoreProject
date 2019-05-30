@@ -33,7 +33,11 @@ export class LoginForm extends Component {
             target: null,
             show: true,
             showTooltip: false,
-            messageToolTip: ''
+            messageToolTip: '',
+            emailValid: {
+                isValid: false,
+                isInValid: false
+            }
         };
     }
 
@@ -52,35 +56,60 @@ export class LoginForm extends Component {
         window.location.pathname = `${p}`;
     }
 
+    preValid() {
+        let answ = true;
+        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        if (!regEmail.test(this.emailRef.current.value)) {
+            answ = false;
+            this.setState({
+                emailValid: {
+                    isValid: false,
+                    isInValid: true
+                }
+            });
+        } else {
+            answ = true;
+            this.setState({
+                emailValid: {
+                    isValid: true,
+                    isInValid: false
+                }
+            });
+        }
+        return answ;
+    }
+
     sendRequestOnAccess() {
-        client({
-            path: '/login',
-            method: 'POST',
-            entity: {
-                email: this.emailRef.current.value,
-                password: this.passRef.current.value
-            },
-            headers: {
-                checkrights: true
-            }
-        })
-            .then(data => {
-                if (data.entity.token) {
-                    window.onkeydown = null;
-                    this.props.userAuthorizedSuccess(data.entity);
-                } else {
-                    this.setState({
-                        showTooltip: true,
-                        message: data.entity
-                    });
+        if (this.preValid()) {
+            client({
+                path: '/login',
+                method: 'POST',
+                entity: {
+                    email: this.emailRef.current.value,
+                    password: this.passRef.current.value
+                },
+                headers: {
+                    checkrights: true
                 }
             })
-            .catch(err => {
-                this.setState({
-                    showTooltip: true,
-                    message: err.toString()
+                .then(data => {
+                    if (data.entity.token) {
+                        window.onkeydown = null;
+                        this.props.userAuthorizedSuccess(data.entity);
+                    } else {
+                        this.setState({
+                            showTooltip: true,
+                            message: data.entity
+                        });
+                    }
+                })
+                .catch(err => {
+                    this.setState({
+                        showTooltip: true,
+                        message: err.toString()
+                    });
                 });
-            });
+        }
     }
 
     render() {
@@ -119,7 +148,11 @@ export class LoginForm extends Component {
                                     type="email"
                                     placeholder="Enter email"
                                     ref={this.emailRef}
+                                    isValid={this.state.emailValid.isValid}
+                                    isInvalid={this.state.emailValid.isInValid}
                                 />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type='invalid'>Incorrect email</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Control
