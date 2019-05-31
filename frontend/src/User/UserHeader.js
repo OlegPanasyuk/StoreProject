@@ -70,7 +70,9 @@ export class UserHeader extends Component {
 
             <Row className='d-flex align-items-center justify-content-end mt-1 ml-auto'>
                 <Col sm='auto' className='d-flex align-items-center'>
-                    <div className='mr-1'>User: {userInfo.username}</div>
+                    <div className='mr-1' style={{
+                        color: 'var(--light)'
+                    }}>User: {userInfo.username}</div>
                     <Button
                         className='mr-1'
                         variant='light'
@@ -104,7 +106,7 @@ export class UserHeader extends Component {
                             setUserInState({
                                 role: 'Guest'
                             });
-                            window.location.href = '/';
+                            
                         }}>
                         Logout
                     </Button>

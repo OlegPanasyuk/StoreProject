@@ -34,6 +34,10 @@ export class LoginForm extends Component {
             emailValid: {
                 valid: false,
                 noValid: false
+            },
+            passwordValid: {
+                valid: false,
+                noValid: false
             }
         };
     }
@@ -58,6 +62,23 @@ export class LoginForm extends Component {
             answ = false;
             this.setState({
                 emailValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        if (this.passWordInput.current.value !== '') {
+            answ = true;
+            this.setState({
+                passwordValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        } else {
+            answ = false;
+            this.setState({
+                passwordValid: {
                     valid: false,
                     noValid: true
                 }
@@ -141,6 +162,8 @@ export class LoginForm extends Component {
                                 placeholder="Password"
                                 ref={this.passWordInput}
                                 onKeyDown={this.handle}
+                                isValid={this.state.passwordValid.valid}
+                                isInvalid={this.state.passwordValid.noValid}
                             />
                         </Form.Group>
                         <div className='d-flex justify-content-end'>

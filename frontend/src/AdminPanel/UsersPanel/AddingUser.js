@@ -59,6 +59,7 @@ export class AddingUser extends Component {
             });
             answ = false;
         } else if (this.state.password === '') {
+            answ = false;
             this.setState({
                 passwordValid: {
                     valid: false,

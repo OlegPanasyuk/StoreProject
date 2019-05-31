@@ -170,15 +170,19 @@ class App extends Component {
 
     render() {
         const { match } = this.props;
+
         let authElement = (
             <React.Fragment>
-                <Col className='d-flex justify-content-end' >
+                <Col className='ml-auto d-flex justify-content-end' style={{
+                    height: '54px'
+                }}>
                     <NavLink
                         className="p-3"
                         onClick={() => {
                             this.props.askLogin();
                         }}
                         to='/'
+                        key='login'
                     >
                         Login
                     </NavLink>
@@ -188,51 +192,50 @@ class App extends Component {
                         onClick={() => {
                             this.props.askReg();
                         }}
+                        key='reg'
                     >
                         Registration
                     </NavLink>
                 </Col>
             </React.Fragment>
         );
-
+        let authElements = authElement;
         if (this.props.userInfo.role === 'Login') {
-            authElement = (
+            authElements = (
                 <React.Fragment>
-                    <Col className='ml-auto d-flex justify-content-end' style={{
-                        height: '54px'
-                    }}>
-                        <LoginForm
-                            handleConverStatusUser={this.props.askReg}
-                            handleSetStateInApp={this.setUserInState}
-                            userState={this.state.user}
-                            onHide={() => {
-                                this.props.setUserInfo({ role: '' });
-                            }}
-                        >
-                            LoginForm
-                        </LoginForm>
-                    </Col>
+
+                    {authElement}
+                    <LoginForm
+                        handleConverStatusUser={this.props.askReg}
+                        handleSetStateInApp={this.setUserInState}
+                        userState={this.state.user}
+                        onHide={() => {
+                            this.props.setUserInfo({ role: '' });
+                        }}
+                    >
+                        LoginForm
+                    </LoginForm>
+
                 </React.Fragment>
             );
         } else if (this.props.userInfo.role === 'Reg') {
-            authElement = (
+            authElements = (
                 <React.Fragment>
-                    <Col className='ml-auto d-flex justify-content-end' style={{
-                        height: '54px'
-                    }}>
-                        <RegForm
-                            setUserInState={this.setUserInState}
-                            show={true}
-                            onHide={() => {
-                                this.props.setUserInfo({ role: '' });
-                            }}
-                        />
-                    </Col>
+
+                    {authElement}
+                    <RegForm
+                        setUserInState={this.setUserInState}
+                        show={true}
+                        onHide={() => {
+                            this.props.setUserInfo({ role: '' });
+                        }}
+                    />
+
                 </React.Fragment>
 
             );
         } else if (this.roles.indexOf(this.state.user.role) >= 0) {
-            authElement = (
+            authElements = (
                 <UserHeader
                     userInfo={this.state.user}
                     setUserInState={this.setUserInState}
@@ -246,7 +249,7 @@ class App extends Component {
             }}>
                 <Router>
                     <Navigation match={match}>
-                        {authElement}
+                        {authElements}
 
                         <ShoppingBasketHeader
                             goods={this.state.goodsInBasket}
@@ -258,30 +261,35 @@ class App extends Component {
                         Errors={this.props.errors}
                     />
 
-                    
+
 
                     <Route path={`/about`} render={() => (
                         <Container>
                             <h1>Hello, I am AboutPage!</h1>
                             <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Totam asperiores maxime minus neque hic culpa minima laudantium, 
-                                labore eos fuga, 
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                                Totam asperiores maxime minus neque hic culpa minima laudantium,
+                                labore eos fuga,
                                 doloremque quae eligendi dolore explicabo magnam voluptas autem atque velit!
                             </p>
                         </Container>
                     )}></Route>
                     <Route path='/catalogue' component={Catalogue}></Route>
                     <Route path='/contacts' render={() => (
-                        <Container>
-                            <h1>Hello, I am ContactPage!</h1>
+                        <Container className='mt-3'>
+                            <h3>Contact Us: </h3>
+                            <ul>
+                                <li>Phone: 555-55-55</li>
+                                <li>Address: st. John 12</li>
+                                <li>Email: email@email.com</li>
+                            </ul>
                         </Container>)}>
                     </Route>
-                    
+
                     <Route path='/user/history' component={UserHistory}></Route>
                     <Route path='/user/profile' component={UserProfile}></Route>
                     <Route path='/basket' component={ShoppingBasket}></Route>
-                    <Route exact path='/'  component={MainPage}></Route>
+                    <Route exact path='/' component={MainPage}></Route>
                 </Router>
             </div>
         );

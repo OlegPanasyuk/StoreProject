@@ -2,15 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import RegForm from './RegistrForm/RegistrForm';
 import AdminPanel from './AdminPanel/AdminPanel';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import 'jquery';
 import 'bootstrap';
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import './asserts/css/bootstrap.min.css';
-//import './css/bootstrap.css';
 import store from './REDUX/store';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -20,7 +17,6 @@ ReactDOM.render(
         <Router>
             <Switch>
                 <Route path='/adminpanel' component={AdminPanel} />
-                
                 <Route path='/' component={App} />
             </Switch>
         </Router>

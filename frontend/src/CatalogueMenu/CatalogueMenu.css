@@ -9,3 +9,7 @@
 .catalogue__list-item {
     cursor: pointer
 }
+
+.catalogue__list-item:hover {
+    background: var(--storesecondary);
+} 

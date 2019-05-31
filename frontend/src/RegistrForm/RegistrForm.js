@@ -24,11 +24,20 @@ class RegisrtForm extends Component {
         this.emailInputR = React.createRef();
         this.passWordInput1 = React.createRef();
         this.passWordInput2 = React.createRef();
+
         this.sendRequestForRegistration = this.sendRequestForRegistration.bind(this);
         this.state = {
             target: null,
             message: '',
-            show: false
+            show: false,
+            emailValid: {
+                valid: false,
+                noValid: false
+            },
+            passwordValid: {
+                valid: false,
+                noValid: false
+            }
         };
     }
 
@@ -36,6 +45,55 @@ class RegisrtForm extends Component {
         if (e.keyCode === 13) {
             document.getElementById('buttonToSendRegistration').click();
         }
+    }
+
+    preValid() {
+        let answ = false;
+        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        if (regEmail.test(this.emailInputR.current.value)) {
+            answ = true;
+            this.setState({
+                emailValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        } else {
+            answ = false;
+            this.setState({
+                emailValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        if (this.passWordInput1.current.value !== this.passWordInput2.current.value) {
+            this.setState({
+                passwordValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+            answ = false;
+        } else if (this.passWordInput1.current.value === '') {
+            answ = false;
+            this.setState({
+                passwordValid: {
+                    valid: false,
+                    noValid: true
+                }
+            });
+        }
+        else {
+            answ = true;
+            this.setState({
+                passwordValid: {
+                    valid: true,
+                    noValid: false
+                }
+            });
+        }
+        return answ;
     }
 
     sendRequestForRegistration() {
@@ -47,28 +105,31 @@ class RegisrtForm extends Component {
 
         //const setUser = this.props.setUserInState;
         let self = this;
-        client({
-            method: 'POST',
-            path: '/reg',
-            entity: objToRequest
-        }).then(res => {
-            self.setState((state) => ({
-                message: res.entity.message,
-                show: (state.show) ? true : true,
-            }));
-            if (res.entity.status) {
-                setTimeout(() =>
-                    window.location.href = '/',
-                2000);
-            }
-        }).catch(err => {
-            alert(err);
-        });
+        if (this.preValid()) {
+            client({
+                method: 'POST',
+                path: '/reg',
+                entity: objToRequest
+            }).then(res => {
+                self.setState((state) => ({
+                    message: res.entity.message,
+                    show: (state.show) ? true : true,
+                }));
+                if (res.entity.status) {
+                    setTimeout(() =>
+                        window.location.href = '/',
+                    2000);
+                }
+            }).catch(err => {
+                alert(err);
+            });
+        }
+        
     }
 
     render() {
         let { target, message, show = true } = this.state;
-        
+
         return (
             <Modal
                 show={true}
@@ -79,7 +140,7 @@ class RegisrtForm extends Component {
                 }}
                 onHide={() => {
                     this.props.onHide();
-                    
+
                 }}
                 centered
             >
@@ -97,6 +158,8 @@ class RegisrtForm extends Component {
                                     type="email"
                                     placeholder="Enter email"
                                     ref={this.emailInputR}
+                                    isValid={this.state.emailValid.valid}
+                                    isInvalid={this.state.emailValid.noValid}
                                 />
                             </Form.Group>
                         </Form.Row>
@@ -107,6 +170,8 @@ class RegisrtForm extends Component {
                                     type="password"
                                     placeholder="Password"
                                     ref={this.passWordInput1}
+                                    isValid={this.state.passwordValid.valid}
+                                    isInvalid={this.state.passwordValid.noValid}
                                 />
                             </Form.Group>
                         </Form.Row>
@@ -117,6 +182,8 @@ class RegisrtForm extends Component {
                                     type="password"
                                     placeholder="Repeat password"
                                     ref={this.passWordInput2}
+                                    isValid={this.state.passwordValid.valid}
+                                    isInvalid={this.state.passwordValid.noValid}
                                 />
                             </Form.Group>
 

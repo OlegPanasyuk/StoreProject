@@ -18,7 +18,9 @@ class Goods extends Component {
             );
         });
         if (itemsGoods.length === 0) {
-            itemsGoods = 'There no any goods in categoty or select another item in menu';
+            itemsGoods = (
+                <div></div>
+            );
         }
         return (
             <CardColumns style={{ columnGap: '1em' }}>
