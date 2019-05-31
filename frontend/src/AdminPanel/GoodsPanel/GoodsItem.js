@@ -55,15 +55,21 @@ export class GoodsItem extends Component {
 
                     <Row>
                         <Col>
-                            <Card.Img variant="top" src={src} style={{
-                                width: '50%'
-                            }} />
-                            <Card.Title>
-                                {obj.name}
-                            </Card.Title>
-                            <Card.Text>
-                                {`${obj.price} $`}
-                            </Card.Text>
+                            <Row>
+                                <Col xs={2}>
+                                    <Card.Img variant="top" src={src} style={{
+                                        width: '100%'
+                                    }} />
+                                </Col>
+                                <Col>
+                                    <Card.Title>
+                                        {obj.name}
+                                    </Card.Title>
+                                    <Card.Text>
+                                        {`${obj.price} $`}
+                                    </Card.Text>
+                                </Col>
+                            </Row>
                         </Col>
                         <ButtonGroup
                             className='mr-3'

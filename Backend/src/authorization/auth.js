@@ -83,7 +83,7 @@ router.post('/login', (req, res) => {
                     if (roles.indexOf(user.role) >= 0) {
                         const opts = {};
                         const role = user.role;
-                        opts.expiresIn = 120;
+                        opts.expiresIn = 1200;
                         const secret = 'Oleg';
                         const token = jwt.sign({ email, role }, secret, opts);
                         return res.status(200).json({
@@ -96,7 +96,7 @@ router.post('/login', (req, res) => {
                     
                 } else {
                     const opts = {};
-                    opts.expiresIn = 120;
+                    opts.expiresIn = 1200;
                     const secret = 'Oleg';
                     const token = jwt.sign({ email }, secret, opts);
                     return res.status(200).json({
@@ -135,7 +135,7 @@ router.post('/logintoken',  function (req, res) {
         let email = decode.email;
         Users.findOne({ where: { email } }).then((user) => {
             const opts = {};
-            opts.expiresIn = 120;
+            opts.expiresIn = 1200;
             const secret = 'Oleg';
             const token = jwt.sign({ email: decode.email }, secret, opts);
             return res.status(200).json({

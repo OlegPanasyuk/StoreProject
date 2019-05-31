@@ -179,6 +179,7 @@ export class GoodsPanel extends Component {
                                 showModal: false
                             });
                         }}
+                        openPage={this.openPage}
                     />
                     :
                     <div></div>

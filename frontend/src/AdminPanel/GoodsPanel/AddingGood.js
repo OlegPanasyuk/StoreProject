@@ -137,6 +137,7 @@ export class AddingGood extends Component {
                             id_catalogue: 0
                         });
                         this.props.onHide();
+                        this.props.openPage(1);
                         const d = new Date();
                         this.props.addErrorToState({
                             id: md5(`${'Notification from AddingGood'}${d.valueOf()}`),
@@ -292,7 +293,8 @@ export class AddingGood extends Component {
 
 AddingGood.propTypes = {
     onHide: PropTypes.func,
-    addErrorToState: PropTypes.func
+    addErrorToState: PropTypes.func,
+    openPage: PropTypes.func
 };
 
 

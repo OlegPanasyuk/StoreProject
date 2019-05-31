@@ -12,39 +12,19 @@ import {
 
 
 export class ImageItem extends Component {
-
-    state = {
-        url: ''
-    }
-
-    UNSAFE_componentWillMount() {
-        if (fetch) {
-            let myInit = {
-                method: 'GET',
-                cache: 'default'
-            };
-            fetch(`${
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: `${
                 process.env.REACT_APP_API_HOST
             }:${
                 process.env.REACT_APP_API_PORT
-            }/images/${this.props.obj.id_img}`, myInit)
-                .then(img => {
-                    if (img.ok) {
-                        return img.blob();
-                    }
-                })
-                .then(i => {
-                    // const a = new Uint8Array(i.data.data);
-                    // const b = new Blob([a], { type: "image/jpeg" });
-                    const objectURL = URL.createObjectURL(i);
-                    this.setState({
-                        url: objectURL.toString()
-                    });
-                });
-        }
+            }/images/${this.props.obj.id_img}`
+        };
     }
 
     render() {
+        
         let { obj } = this.props;
         let { url } = this.state;
         return (
