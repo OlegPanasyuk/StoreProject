@@ -14,6 +14,7 @@ function CatalogueMenu(props) {
         if (obj[el].children && (Object.keys(obj[el].children).length > 0)) {
             element = (
                 <ListGroup.Item
+                    className={`catalogue__list-item`}
                     onClick={
                         () => {
                             handleClick(el);
@@ -29,6 +30,7 @@ function CatalogueMenu(props) {
         } else {
             element = (
                 <ListGroup.Item
+                    className={`catalogue__list-item`}
                     onClick={
                         () => {
                             handleClick(el);

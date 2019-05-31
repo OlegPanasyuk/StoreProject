@@ -67,7 +67,8 @@ class RegisrtForm extends Component {
     }
 
     render() {
-        let { target, message, show } = this.state;
+        let { target, message, show = true } = this.state;
+        
         return (
             <Modal
                 show={true}
@@ -77,7 +78,8 @@ class RegisrtForm extends Component {
                     window.onkeydown = this.handle;
                 }}
                 onHide={() => {
-                    window.location.href = '/';
+                    this.props.onHide();
+                    
                 }}
                 centered
             >

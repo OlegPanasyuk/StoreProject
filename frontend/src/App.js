@@ -36,7 +36,8 @@ import {
 } from './REDUX/actions/actionsErrors';
 import {
     askLogin,
-    setUserInfo
+    setUserInfo,
+    askReg
 } from './REDUX/actions/actionsUser';
 
 
@@ -171,7 +172,7 @@ class App extends Component {
         const { match } = this.props;
         let authElement = (
             <React.Fragment>
-                <Col className='d-flex justify-content-end'>
+                <Col className='d-flex justify-content-end' >
                     <NavLink
                         className="p-3"
                         onClick={() => {
@@ -182,10 +183,10 @@ class App extends Component {
                         Login
                     </NavLink>
                     <NavLink
-                        to='/registration'
+                        to={`/`}
                         className="p-3"
                         onClick={() => {
-                            window.location.href = '/registration';
+                            this.props.askReg();
                         }}
                     >
                         Registration
@@ -197,9 +198,11 @@ class App extends Component {
         if (this.props.userInfo.role === 'Login') {
             authElement = (
                 <React.Fragment>
-                    <Col className='ml-auto d-flex justify-content-end'>
+                    <Col className='ml-auto d-flex justify-content-end' style={{
+                        height: '54px'
+                    }}>
                         <LoginForm
-                            handleConverStatusUser={this.covertLoginFormToRegForm}
+                            handleConverStatusUser={this.props.askReg}
                             handleSetStateInApp={this.setUserInState}
                             userState={this.state.user}
                             onHide={() => {
@@ -211,20 +214,22 @@ class App extends Component {
                     </Col>
                 </React.Fragment>
             );
-        } else if (this.state.user.role === 'GuestUnregistr') {
+        } else if (this.props.userInfo.role === 'Reg') {
             authElement = (
-                <RegForm
-                    setUserInState={this.setUserInState}
-                    show={this.state.showModalReg}
-                    onHide={() => {
-                        this.setState({
-                            showModalReg: false,
-                            user: {
-                                role: 'Guest'
-                            }
-                        });
-                    }}
-                />
+                <React.Fragment>
+                    <Col className='ml-auto d-flex justify-content-end' style={{
+                        height: '54px'
+                    }}>
+                        <RegForm
+                            setUserInState={this.setUserInState}
+                            show={true}
+                            onHide={() => {
+                                this.props.setUserInfo({ role: '' });
+                            }}
+                        />
+                    </Col>
+                </React.Fragment>
+
             );
         } else if (this.roles.indexOf(this.state.user.role) >= 0) {
             authElement = (
@@ -253,11 +258,17 @@ class App extends Component {
                         Errors={this.props.errors}
                     />
 
-                    <Route exact path='/' component={MainPage}></Route>
+                    
 
                     <Route path={`/about`} render={() => (
                         <Container>
                             <h1>Hello, I am AboutPage!</h1>
+                            <p>
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                                Totam asperiores maxime minus neque hic culpa minima laudantium, 
+                                labore eos fuga, 
+                                doloremque quae eligendi dolore explicabo magnam voluptas autem atque velit!
+                            </p>
                         </Container>
                     )}></Route>
                     <Route path='/catalogue' component={Catalogue}></Route>
@@ -266,11 +277,11 @@ class App extends Component {
                             <h1>Hello, I am ContactPage!</h1>
                         </Container>)}>
                     </Route>
-
+                    
                     <Route path='/user/history' component={UserHistory}></Route>
                     <Route path='/user/profile' component={UserProfile}></Route>
                     <Route path='/basket' component={ShoppingBasket}></Route>
-
+                    <Route exact path='/'  component={MainPage}></Route>
                 </Router>
             </div>
         );
@@ -289,7 +300,8 @@ App.propTypes = {
     match: PropTypes.object,
     askLogin: PropTypes.func,
     setUserInfo: PropTypes.func,
-    userInfo: PropTypes.object
+    userInfo: PropTypes.object,
+    askReg: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
@@ -311,5 +323,6 @@ export default connect(mapStateToProps, {
     addErrorToState,
     deleteErrorFromState,
     askLogin,
-    setUserInfo
+    setUserInfo,
+    askReg
 })(App);

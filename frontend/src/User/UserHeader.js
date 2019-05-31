@@ -104,6 +104,7 @@ export class UserHeader extends Component {
                             setUserInState({
                                 role: 'Guest'
                             });
+                            window.location.href = '/';
                         }}>
                         Logout
                     </Button>

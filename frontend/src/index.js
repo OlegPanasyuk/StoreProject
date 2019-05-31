@@ -20,8 +20,7 @@ ReactDOM.render(
         <Router>
             <Switch>
                 <Route path='/adminpanel' component={AdminPanel} />
-                <Route path='/registration' component={RegForm} />
-                <Route path='/login' component={RegForm} />
+                
                 <Route path='/' component={App} />
             </Switch>
         </Router>

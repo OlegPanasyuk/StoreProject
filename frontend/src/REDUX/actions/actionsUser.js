@@ -19,3 +19,14 @@ export const askLogin = () => {
         }
     };
 };
+
+export const askReg = () => {
+    return {
+        type: USER.LOGIN.ASK,
+        payload: {
+            user: {
+                role: 'Reg'
+            }
+        }
+    };
+};

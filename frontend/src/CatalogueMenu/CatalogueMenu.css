@@ -5,3 +5,7 @@
 .bg-storesecondary {
     background: var(--storesecondary);
 }
+
+.catalogue__list-item {
+    cursor: pointer
+}

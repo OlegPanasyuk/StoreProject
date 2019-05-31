@@ -154,10 +154,10 @@ export class LoginForm extends Component {
                                 Login
                             </Button>
                             <NavLink
-                                to='/registration'
+                                to='/'
                                 className="d-block ml-3 mr-3"
                                 onClick={() => {
-                                    window.location.href = '/registration';
+                                    this.props.handleConverStatusUser();
                                 }}
                             >
                                 Registration
