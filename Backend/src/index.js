@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var winston = require('winston');
 var config = require('config');
 var cors = require('cors');
-var fileUpload = require('express-fileupload');
 const formData = require("express-form-data");
 const os = require("os");
 // const auth = require('./authorization');

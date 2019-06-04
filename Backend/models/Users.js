@@ -1,5 +1,5 @@
 module.exports = (sequalize, type) => {
-    return sequalize.define( 'user', {
+    return sequalize.define( 'Users', {
         username : {
             type : type.STRING(16),
         },

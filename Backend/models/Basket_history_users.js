@@ -1,5 +1,5 @@
 module.exports = (sequalize, type) => {
-    return sequalize.define('basket_history_users', {
+    return sequalize.define('Basket_History_Users', {
         id: {
             type: type.INTEGER,
             primaryKey : true,

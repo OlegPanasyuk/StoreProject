@@ -3,7 +3,7 @@ var router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtStratagy = require('../authorization/jwt');
-const { Users } = require('../Models/sequalized');
+const { Users } = require('../../models/index');
 
 passport.use(jwtStratagy);
 

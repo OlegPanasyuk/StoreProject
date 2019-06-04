@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const { Users } = require('../Models/sequalized');
+const { Users } = require('../../models/index');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStratagy = require('../authorization/jwt');
+const jwtStrategy = require('../authorization/jwt');
 
-passport.use(jwtStratagy);
+passport.use(jwtStrategy);
 
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     let token = req.headers['authorization'].split(' ')[1];

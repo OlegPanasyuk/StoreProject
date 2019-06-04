@@ -2,9 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var fs = require('fs');
-const path = require('path');
 
-const { Images, GoodsHasImage } = require('../Models/sequalized');
+const { Images, GoodsImage } = require('../../models/index');
 
 
 const Sequelize = require('sequelize');
@@ -60,7 +59,7 @@ router.get('/filters', (req, res) => {
 
 
 router.get('/goods/:id', (req, res) => {
-    GoodsHasImage.findAll({ where: { goods_idgoods: req.params.id } }).then((images) => {
+    GoodsImage.findAll({ where: { goods_idgoods: req.params.id } }).then((images) => {
         try {
             res.status(200).send(images);
         } catch (e) {
@@ -78,7 +77,7 @@ router.post('/goods/:id', (req, res) => {
         title: req.body.title
     };
     
-    GoodsHasImage.create(objToCreate)
+    GoodsImage.create(objToCreate)
         .then(img => {
             res.status(201).send(img);
         }).catch(e => {
@@ -142,7 +141,7 @@ router.delete('/:id', (req, res) => {
         }).then(() => {
             return 'deleted images from Images';
         }),
-        GoodsHasImage.findAll({
+        GoodsImage.findAll({
             where: {
                 imgs_id_img: req.params.id
             }

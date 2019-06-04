@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const { Basket_History_Users, Users } = require('../Models/sequalized');
+const { Basket_History_Users, Users } = require('../../models/index');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStratagy = require('../authorization/jwt');
+const jwtStrategy = require('../authorization/jwt');
 
-passport.use(jwtStratagy);
+passport.use(jwtStrategy);
 
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     let { cont, user_id } = req.body;
