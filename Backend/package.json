@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "express-fileupload": "^1.1.4",
     "express-form-data": "^2.0.8",
+    "sequelize-cli": "^5.4.0",
     "winston": "^3.2.1"
   }
 }

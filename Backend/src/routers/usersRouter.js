@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
-const { Users } = require('../Models/sequalized');
+const { Users } = require('../../models/index');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStratagy = require('../authorization/jwt');
+const jwtStrategy = require('../authorization/jwt');
 
 const Sequelize = require('sequelize');
 
 const Op = Sequelize.Op;
 
-passport.use(jwtStratagy);
+passport.use(jwtStrategy);
 
 router.get('/', passport.authenticate('jwt', { session: false }), checkSuperAdminRight, (req, res) => {
     Users.findAndCountAll()

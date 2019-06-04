@@ -1,7 +1,7 @@
 
 
 module.exports = (sequalize, type) => {
-    return sequalize.define( 'catalogue', {
+    return sequalize.define( 'Catalogue', {
         id_catalogue : {
             type : type.INTEGER,
             primaryKey : true,

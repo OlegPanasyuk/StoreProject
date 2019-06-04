@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-var { Goods, Users } = require('../Models/sequalized');
+var { Goods, Users } = require('../../models/index');
 
 const Sequelize = require('sequelize');
 

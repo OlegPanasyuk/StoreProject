@@ -1,16 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const { Catalogue } = require('../Models/sequalized');
+const { Catalogue, Users } = require('../../models/index');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStratagy = require('../authorization/jwt');
+const jwtStrategy = require('../authorization/jwt');
 
-const Sequelize = require('sequelize');
-
-const Op = Sequelize.Op;
-
-passport.use(jwtStratagy);
+passport.use(jwtStrategy);
 
 router.get('/', function (req, res) {
     let id = (req.query.id) ? req.query.id : null;

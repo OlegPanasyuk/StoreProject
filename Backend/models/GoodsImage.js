@@ -1,5 +1,5 @@
 module.exports = (sequalize, type) => {
-    return sequalize.define( 'Images', {
+    return sequalize.define( 'GoodsImage', {
         goods_idgoods : {
             type : type.INTEGER
         },

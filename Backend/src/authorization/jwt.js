@@ -1,6 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const { Users } = require('../Models/sequalized'); 
+const { Users } = require('../../models/index'); 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'Oleg'; //normally store this in process.env.secret
