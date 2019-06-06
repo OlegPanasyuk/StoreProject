@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
+import {
+    Modal, Button, Form, Overlay, Tooltip
+} from 'react-bootstrap';
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
-    addErrorToState,
+    addErrorToState
 } from '../../REDUX/actions/actionsErrors';
 
 export class AddingGood extends Component {
     constructor(props) {
         super(props);
-        this.attachRef = target => this.setState((state) => ({
+        this.attachRef = target => this.setState(state => ({
             tooltip: {
                 ...state.tooltip,
                 target
@@ -42,14 +44,12 @@ export class AddingGood extends Component {
     UNSAFE_componentWillMount() {
         const self = this;
         if (fetch) {
-            let myInit = {
-                method: 'GET',
+            const myInit = {
+                method: 'GET'
             };
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue`, myInit)
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
+                .then(res => res.json())
+                .then((data) => {
                     self.setState({
                         arrOfCatalogue: data
                     });
@@ -59,64 +59,64 @@ export class AddingGood extends Component {
 
     sendGoodsToAdd() {
         const storage = window.localStorage;
+        const {
+            name, description, id_catalogue, price
+        } = this.state;
+        const { onHide, openPage, addErrorToState } = this.props;
         if (fetch) {
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let body = {
-                name: this.state.name,
-                description: this.state.description,
-                catalogue_id_catalogue: this.state.id_catalogue,
-                price: this.state.price
+            myHeaders.append('Content-type', 'application/json');
+            const body = {
+                name,
+                description,
+                catalogue_id_catalogue: id_catalogue,
+                price
             };
 
-            let myInit = {
+            const myInit = {
                 method: 'POST',
                 headers: myHeaders,
                 body: JSON.stringify(body)
             };
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods`, myInit)
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
+                .then(res => res.json())
+                .then((data) => {
                     if (data) {
-                       
                         this.id_goods = data.idgoods;
                         const formData = new FormData();
-                        formData.append('name', this.state.name);
+                        formData.append('name', name);
                         formData.append('type', 'j');
                         formData.append('img', this.imgFile.current.files[0]);
-                        let op = {
+                        const op = {
                             method: 'POST',
                             cache: 'default',
                             body: formData
                         };
                         return fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/`, op);
-
-
                     }
+                    return null;
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.status === 201) {
                         return res.json();
                     }
+                    return null;
                 })
-                .then(obj => {
-
-                    let objToCreate = {
-                        catalogue: +this.state.id_catalogue,
+                .then((obj) => {
+                    const objToCreate = {
+                        catalogue: +id_catalogue,
                         id_img: obj.id,
                         title: 1
                     };
-                    let myHeaders = new Headers();
-                    myHeaders.append("Content-type", 'application/json');
-                    let op2 = {
+                    const myHeaders = new Headers();
+                    myHeaders.append('Content-type', 'application/json');
+                    const op2 = {
                         method: 'POST',
                         headers: myHeaders,
                         body: JSON.stringify(objToCreate)
                     };
-                    
+
                     return fetch(`${
                         process.env.REACT_APP_API_HOST
                     }:${
@@ -127,6 +127,7 @@ export class AddingGood extends Component {
                     if (res.status === 201) {
                         return res.json();
                     }
+                    return null;
                 })
                 .then((img) => {
                     if (img) {
@@ -136,19 +137,18 @@ export class AddingGood extends Component {
                             description: '',
                             id_catalogue: 0
                         });
-                        this.props.onHide();
-                        this.props.openPage(1);
+                        onHide();
+                        openPage(1);
                         const d = new Date();
-                        this.props.addErrorToState({
+                        addErrorToState({
                             id: md5(`${'Notification from AddingGood'}${d.valueOf()}`),
                             level: 'Success',
                             message: 'Goods is added'
                         });
                     }
-                    
                 })
                 .catch((e) => {
-                    this.setState((state) => ({
+                    this.setState(state => ({
                         tooltip: {
                             ...state.tooltip,
                             message: e.toString(),
@@ -160,15 +160,15 @@ export class AddingGood extends Component {
     }
 
     render() {
-        let { target, show, message } = this.state.tooltip;
+        const {
+            tooltip, name, description, price, arrOfCatalogue
+        } = this.state;
+        const { target, show, message } = tooltip;
+        const { onHide } = this.props;
         return (
             <Modal
-                show={
-                    true
-                }
-                onHide={
-                    this.props.onHide
-                }
+                show
+                onHide={onHide}
                 centered
             >
                 <Modal.Header closeButton>
@@ -184,7 +184,7 @@ export class AddingGood extends Component {
                             <Form.Control
                                 ref={this.nameRef}
                                 type='text'
-                                value={this.state.name}
+                                value={name}
                                 onChange={() => {
                                     this.setState({
                                         name: this.nameRef.current.value
@@ -200,7 +200,7 @@ export class AddingGood extends Component {
                                 ref={this.descriptionRef}
                                 as='textarea'
                                 type='text'
-                                value={this.state.description}
+                                value={description}
                                 onChange={() => {
                                     this.setState({
                                         description: this.descriptionRef.current.value
@@ -215,7 +215,7 @@ export class AddingGood extends Component {
                             <Form.Control
                                 ref={this.priceRef}
                                 type='text'
-                                value={this.state.price}
+                                value={price}
                                 onChange={() => {
                                     this.setState({
                                         price: this.priceRef.current.value
@@ -238,12 +238,11 @@ export class AddingGood extends Component {
                                 }}
                             >
                                 <option disabled>Open this select menu</option>
-                                {this.state.arrOfCatalogue.map((el, i) => {
-                                    return (
-                                        <option key={`cat-${i}`} value={el.id_catalogue}>
-                                            {`${el.name}`}
-                                        </option>);
-                                })}
+                                {arrOfCatalogue.map(el => (
+                                    <option key={`cat-${el.id_catalogue}`} value={el.id_catalogue}>
+                                        {`${el.name}`}
+                                    </option>
+                                ))}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
@@ -263,24 +262,26 @@ export class AddingGood extends Component {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="light" onClick={() => this.setState({
-                        name: '',
-                        price: 0,
-                        description: '',
-                        id_catalogue: 0
-                    })}
+                    <Button
+                        variant='light' onClick={() => this.setState({
+                            name: '',
+                            price: 0,
+                            description: '',
+                            id_catalogue: 0
+                        })}
                     >
                         Clear
                     </Button>
-                    <Button variant="primary"
+                    <Button
+                        variant='primary'
                         onClick={this.sendGoodsToAdd}
                         ref={this.attachRef}
                     >
                         Save changes
                     </Button>
-                    <Overlay target={target} show={show} placement="right">
+                    <Overlay target={target} show={show} placement='right'>
                         {props => (
-                            <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                            <Tooltip id='overlay-example' {...props} show={show.toString()}>
                                 {message}
                             </Tooltip>
                         )}
@@ -297,6 +298,11 @@ AddingGood.propTypes = {
     openPage: PropTypes.func
 };
 
+AddingGood.defaultProps = {
+    onHide: () => {},
+    addErrorToState: () => {},
+    openPage: () => {}
+};
 
 export default connect(null, {
     addErrorToState

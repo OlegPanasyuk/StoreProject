@@ -7,7 +7,8 @@ import {
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Components
+// Components
+import { connect } from 'react-redux';
 import GoodsItem from './GoodsItem';
 import ListOfPages from './ListOfPages';
 import FilterGoodsPanel from './FilterGoodsPanel';
@@ -15,15 +16,13 @@ import AddingGood from './AddingGood';
 import EditGoodsItem from './EditGoodsItem';
 import DeleteForm from './DeleteForm';
 
-//Redux 
-import { connect } from 'react-redux';
+// Redux
 import {
     goodsGetSuccess,
     goodsFilter,
     closeEditGoodsItem,
     permissionToDeleteClose
 } from '../../REDUX/adminPanel/actions/actionsGoodsPanel';
-
 
 
 export class GoodsPanel extends Component {
@@ -37,14 +36,41 @@ export class GoodsPanel extends Component {
             limit: 10,
             count: 0,
             activePage: 1,
-            showModal: false,
-            permissionToDelete: false
+            showModal: false
         };
     }
 
+    componentDidMount() {
+        if (fetch) {
+            this.openPage(1);
+        }
+    }
+
+    UNSAFE_componentWillMount() {
+        const self = this;
+        if (fetch) {
+            const myInit = {
+                method: 'GET',
+                cache: 'default'
+            };
+            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods?count`, myInit)
+                .then((res) => {
+                    res.text().then((data) => {
+                        self.setState({
+                            count: +data
+                        });
+                    });
+                });
+        }
+    }
+
+
     prepareSearchRow() {
-        let { priceMore, priceLess, nameSearch, orderPrice, id_catalogue } = this.props.filters;
-        let searchStr = [];
+        const { filters } = this.props;
+        const {
+            priceMore, priceLess, nameSearch, orderPrice, id_catalogue
+        } = filters;
+        const searchStr = [];
 
         if (id_catalogue !== -1) {
             searchStr.push(`id_catalogue=${id_catalogue}`);
@@ -65,39 +91,15 @@ export class GoodsPanel extends Component {
     }
 
 
-    UNSAFE_componentWillMount() {
-        let self = this;
-        if (fetch) {
-            let myInit = {
-                method: 'GET',
-                cache: 'default'
-            };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods?count`, myInit)
-                .then((res) => {
-                    res.text().then(function (data) {
-                        self.setState({
-                            count: +data
-                        });
-                    });
-                });
-        }
-    }
-
-    componentDidMount() {
-        if (fetch) {
-            this.openPage(1);
-        }
-    }
-
     updateState(e, obj, page = 1) {
         if (e) {
             e.preventDefault();
         }
-
+        const { goodsFilter } = this.props;
         // I don't like it
-        let a = new Promise((res, rej) => {
+        const a = new Promise((res, rej) => {
             try {
-                this.props.goodsFilter(obj);
+                goodsFilter(obj);
                 res(true);
             } catch (e) {
                 rej(e);
@@ -112,10 +114,10 @@ export class GoodsPanel extends Component {
     }
 
     countFiltered() {
-        let str = this.prepareSearchRow();
-        let self = this;
+        const str = this.prepareSearchRow();
+        const self = this;
         if (fetch) {
-            let myInit = {
+            const myInit = {
                 method: 'GET',
                 cache: 'default'
             };
@@ -127,7 +129,7 @@ export class GoodsPanel extends Component {
                 str
             }`, myInit)
                 .then((res) => {
-                    res.text().then(function (data) {
+                    res.text().then((data) => {
                         self.setState({
                             count: +data
                         });
@@ -137,10 +139,10 @@ export class GoodsPanel extends Component {
     }
 
     openPage(i) {
-        let self = this;
+        const self = this;
         if (fetch) {
-            let searchStr = this.prepareSearchRow();
-            let myInit = {
+            const searchStr = this.prepareSearchRow();
+            const myInit = {
                 method: 'GET',
                 cache: 'default'
             };
@@ -160,7 +162,7 @@ export class GoodsPanel extends Component {
                     self.setState({
                         activePage: i
                     });
-                    res.json().then(function (data) {
+                    res.json().then((data) => {
                         self.props.goodsGetSuccess(data);
                     });
                 });
@@ -168,65 +170,82 @@ export class GoodsPanel extends Component {
     }
 
     render() {
-
+        const {
+            showModal, activePage, count, limit
+        } = this.state;
+        const {
+            editItem, closeEditGoodsItem, deleteItem, permissionToDeleteClose, goodsToShow
+        } = this.props;
         return (
             <React.Fragment>
-                {(this.state.showModal) ?
-                    <AddingGood
-                        show={this.state.showModal}
-                        onHide={() => {
-                            this.setState({
-                                showModal: false
-                            });
-                        }}
-                        openPage={this.openPage}
-                    />
-                    :
-                    <div></div>
-                }
-                {
-                    (this.props.editItem.show)
-                        ?
-                        <EditGoodsItem
-                            onHide={(e) => {
-
-                                this.props.closeEditGoodsItem();
-                                this.updateState(e, {}, this.state.activePage);
+                {(showModal)
+                    ? (
+                        <AddingGood
+                            show={showModal}
+                            onHide={() => {
+                                this.setState({
+                                    showModal: false
+                                });
                             }}
-                        ></EditGoodsItem>
-                        :
-                        (<div></div>)
+                            openPage={this.openPage}
+                        />
+                    )
+                    : <div />
+                }
+                {
+                    (editItem.show)
+                        ? (
+                            <EditGoodsItem
+                                onHide={(e) => {
+                                    closeEditGoodsItem();
+                                    this.updateState(e, {}, activePage);
+                                }}
+                            />
+                        )
+                        : (<div />)
                 }
 
                 {
-                    (this.props.deleteItem.show)
-                        ?
-                        <DeleteForm onHide={(e) => {
-                            this.props.permissionToDeleteClose();
-                            this.updateState(e, {});
-                        }}
-                        />
-                        :
-                        <div></div>
+                    (deleteItem.show)
+                        ? (
+                            <DeleteForm onHide={(e) => {
+                                permissionToDeleteClose();
+                                this.updateState(e, {});
+                            }}
+                            />
+                        )
+                        : <div />
                 }
                 <Container>
 
                     <Row>
                         <Col xs={12} className='text-center'>
                             <ListOfPages
-                                count={this.state.count}
-                                limit={this.state.limit}
-                                activePage={this.state.activePage}
+                                count={count}
+                                limit={limit}
+                                activePage={activePage}
                                 openPage={this.openPage}
                             />
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={12} className='text-center d-flex justify-content-center mb-3'>
-                        
+
                             Price:
-                            <a href='#up' className='ml-3' onClick={(e) => { this.updateState(e, { orderPrice: 'up' }); }}>Up</a>
-                            <a href='#down' className='ml-3' onClick={(e) => { this.updateState(e, { orderPrice: 'down' }); }}>Down</a>
+                            <a
+                                href='#up'
+                                className='ml-3'
+                                onClick={(e) => { this.updateState(e, { orderPrice: 'up' }); }}
+                            >
+                                Up
+                            </a>
+                            <a
+                                href='#down'
+                                className='ml-3'
+                                onClick={(e) => { this.updateState(e, { orderPrice: 'down' }); }}
+                            >
+                                Down
+                            </a>
                         </Col>
                     </Row>
                     <Row>
@@ -235,15 +254,16 @@ export class GoodsPanel extends Component {
                                 this.setState({
                                     showModal: true
                                 });
-                            }}>Add goods</Button>
+                            }}
+                            >
+                                Add goods
+                            </Button>
                         </Col>
                         <Col xs={8} className='d-flex flex-column justify-content-between'>
                             {
-                                this.props.goodsToShow && this.props.goodsToShow.map((el) => {
-                                    return (
-                                        <GoodsItem key={`GoodsInAdminPanel ${el.idgoods}`} obj={el} />
-                                    );
-                                })
+                                goodsToShow && goodsToShow.map(el => (
+                                    <GoodsItem key={`GoodsInAdminPanel ${el.idgoods}`} obj={el} />
+                                ))
                             }
 
 
@@ -260,9 +280,9 @@ export class GoodsPanel extends Component {
                     <Row>
                         <Col xs={12} className='text-center'>
                             <ListOfPages
-                                count={this.state.count}
-                                limit={this.state.limit}
-                                activePage={this.state.activePage}
+                                count={count}
+                                limit={limit}
+                                activePage={activePage}
                                 openPage={this.openPage}
                             />
                         </Col>
@@ -278,20 +298,28 @@ GoodsPanel.propTypes = {
     goodsFilter: PropTypes.func,
     closeEditGoodsItem: PropTypes.func,
     deleteItem: PropTypes.object,
-    permissionToDelete: PropTypes.func,
     permissionToDeleteClose: PropTypes.func,
     editItem: PropTypes.object,
     goodsToShow: PropTypes.array
 };
 
-const mapsStateToProps = function (state) {
-    return {
-        goodsToShow: state.adminPanel_goodsPanel.goodsShown,
-        filters: state.adminPanel_goodsPanel.filters,
-        editItem: state.adminPanel_goodsPanel.editItem,
-        deleteItem: state.adminPanel_goodsPanel.deleteItem
-    };
+GoodsPanel.defaultProps = {
+    filters: {},
+    goodsFilter: () => null,
+    closeEditGoodsItem: () => null,
+    deleteItem: {},
+    permissionToDeleteClose: () => null,
+    editItem: {},
+    goodsToShow: []
 };
+
+
+const mapsStateToProps = state => ({
+    goodsToShow: state.adminPanel_goodsPanel.goodsShown,
+    filters: state.adminPanel_goodsPanel.filters,
+    editItem: state.adminPanel_goodsPanel.editItem,
+    deleteItem: state.adminPanel_goodsPanel.deleteItem
+});
 
 export default connect(mapsStateToProps, {
     goodsGetSuccess,

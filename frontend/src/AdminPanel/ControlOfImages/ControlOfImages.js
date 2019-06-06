@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, CardColumns, Button } from 'react-bootstrap';
+import {
+    Container, Row, Col, CardColumns, Button
+} from 'react-bootstrap';
 import './ControlOfImages.css';
 import PropTypes from 'prop-types';
 
-//Component
-import ImageItem from './ImageItem';
-import ListOfPages from '../GoodsPanel/ListOfPages';
+// Component
+import { connect } from 'react-redux';
+import ImageItemComponent from './ImageItem';
+import ListOfPagesComponent from '../GoodsPanel/ListOfPages';
 import AddingForm from './AddingForm';
 import EditImageForm from './EditImageForm';
 import DeletingForm from './DeletingForm';
 import FiltersOfImages from './FiltersOfImages';
 
-//Redux 
-import { connect } from 'react-redux';
+// Redux
 import {
     addingFormOpen,
     addingFormClose,
@@ -24,9 +26,7 @@ import {
 } from '../../REDUX/adminPanel/actions/actionsImagesControl';
 
 
-
 export class ControlOfImages extends Component {
-
     constructor(props) {
         super(props);
         this.openPage = this.openPage.bind(this);
@@ -40,8 +40,9 @@ export class ControlOfImages extends Component {
     }
 
     prepareSearchRow() {
-        let { name, type } = this.props.filters;
-        let searchStr = [];
+        const { filters } = this.props;
+        const { name, type } = filters;
+        const searchStr = [];
 
         if (type !== '') {
             searchStr.push(`type=${type}`);
@@ -53,11 +54,10 @@ export class ControlOfImages extends Component {
     }
 
 
-
     openPage(i) {
         const searchStr = this.prepareSearchRow();
         if (fetch) {
-            let myInit = {
+            const myInit = {
                 method: 'GET',
                 cache: 'default'
             };
@@ -72,9 +72,9 @@ export class ControlOfImages extends Component {
                 if (res.ok) {
                     return res.json();
                 }
-
-            }).then(images => {
-                let { count, rows } = images;
+                return null;
+            }).then((images) => {
+                const { count, rows } = images;
                 this.setState({
                     countOfInfoImages: count,
                     arrOfInfoImages: rows,
@@ -89,16 +89,16 @@ export class ControlOfImages extends Component {
     }
 
     updateState(page = 1, obj) {
-        let a = new Promise((res, rej) => {
+        const { filtersSet } = this.props;
+        const a = new Promise((res, rej) => {
             try {
-                this.props.filtersSet(obj);
+                filtersSet(obj);
                 res(true);
             } catch (e) {
                 rej(e);
             }
         });
         a.then(() => {
-            
             this.openPage(page);
         }, () => {
 
@@ -106,8 +106,8 @@ export class ControlOfImages extends Component {
     }
 
     render() {
-        let { countOfInfoImages, arrOfInfoImages, activePage } = this.state;
-        let {
+        const { countOfInfoImages, arrOfInfoImages, activePage } = this.state;
+        const {
             addingForm,
             addingFormClose,
             addingFormOpen,
@@ -149,7 +149,7 @@ export class ControlOfImages extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <ListOfPages
+                        <ListOfPagesComponent
                             count={countOfInfoImages}
                             limit={10}
                             activePage={activePage}
@@ -159,11 +159,9 @@ export class ControlOfImages extends Component {
                 </Row>
                 <Row>
                     <CardColumns className='card-columns1'>
-                        {arrOfInfoImages.map(el => {
-                            return (
-                                <ImageItem key={el.id_img} obj={el} />
-                            );
-                        })}
+                        {arrOfInfoImages.map(el => (
+                            <ImageItemComponent key={el.id_img} obj={el} />
+                        ))}
                     </CardColumns>
                 </Row>
 
@@ -188,15 +186,28 @@ ControlOfImages.propTypes = {
     filtersSet: PropTypes.func
 };
 
-const mapStateToProps = (state) => {
-    return {
-        addingForm: state.adminPanel_imagesPanel.addingForm,
-        editForm: state.adminPanel_imagesPanel.editForm,
-        deletingForm: state.adminPanel_imagesPanel.deletingForm,
-        imageInWork: state.adminPanel_imagesPanel.imageInWork,
-        filters: state.adminPanel_imagesPanel.filters
-    };
+ControlOfImages.defaultProps = {
+    addingForm: {},
+    editForm: {},
+    deletingForm: {},
+    imageInWork: {},
+    filters: {},
+    addingFormOpen: () => null,
+    addingFormClose: () => null,
+    editFormOpen: () => null,
+    editFormClose: () => null,
+    deletingFormOpen: () => null,
+    deletingFormClose: () => null,
+    filtersSet: () => null
 };
+
+const mapStateToProps = state => ({
+    addingForm: state.adminPanel_imagesPanel.addingForm,
+    editForm: state.adminPanel_imagesPanel.editForm,
+    deletingForm: state.adminPanel_imagesPanel.deletingForm,
+    imageInWork: state.adminPanel_imagesPanel.imageInWork,
+    filters: state.adminPanel_imagesPanel.filters
+});
 
 
 export default connect(mapStateToProps, {

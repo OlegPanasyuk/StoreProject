@@ -4,25 +4,26 @@ import PropTypes from 'prop-types';
 import './CatalogueMenu.css';
 
 
-function CatalogueMenu(props) {
-    const obj = props.obj;
-    const handleClick = props.handleClick;
-    const requestGoods = props.requestGoods;
-
-    let arrItems = Object.keys(obj).map((el) => {
+function CatalogueMenu({
+    obj,
+    handleClick,
+    requestGoods
+}) {
+    const arrItems = Object.keys(obj).map((el) => {
         let element;
         if (obj[el].children && (Object.keys(obj[el].children).length > 0)) {
             element = (
                 <ListGroup.Item
-                    className={`catalogue__list-item`}
+                    className='catalogue__list-item'
                     onClick={
                         () => {
                             handleClick(el);
                             requestGoods(el);
                         }
                     }
-                    
-                    key={el}>
+
+                    key={el}
+                >
                     {`${obj[el].name}`}
                 </ListGroup.Item>
 
@@ -30,15 +31,16 @@ function CatalogueMenu(props) {
         } else {
             element = (
                 <ListGroup.Item
-                    className={`catalogue__list-item`}
+                    className='catalogue__list-item'
                     onClick={
                         () => {
                             handleClick(el);
                             requestGoods(el);
                         }
                     }
-                    
-                    key={el}>
+
+                    key={el}
+                >
                     {`${obj[el].name}`}
                 </ListGroup.Item>
             );
@@ -59,6 +61,12 @@ CatalogueMenu.propTypes = {
     obj: PropTypes.object,
     handleClick: PropTypes.func,
     requestGoods: PropTypes.func
+};
+
+CatalogueMenu.defaultProps = {
+    obj: {},
+    handleClick: () => {},
+    requestGoods: () => {}
 };
 
 export default CatalogueMenu;

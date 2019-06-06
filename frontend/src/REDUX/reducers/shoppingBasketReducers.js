@@ -1,10 +1,9 @@
-import { 
-    ADD_GOODS_TO_BASKET, 
-    SHOW_GOODS, 
-    DEL_GOODS_FROM_BASKET, 
-    INIT_BASKET 
+import {
+    ADD_GOODS_TO_BASKET,
+    SHOW_GOODS,
+    DEL_GOODS_FROM_BASKET,
+    INIT_BASKET
 } from '../actions/actionsTypes';
-
 
 
 const initialState = {
@@ -15,17 +14,17 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
     case INIT_BASKET: {
-        let goodsInBasket = new Set(action.payload.goodsInBasket);
+        const goodsInBasket = new Set(action.payload.goodsInBasket);
         return {
             ...state,
             goodsInBasket
         };
-    }    
+    }
     case ADD_GOODS_TO_BASKET: {
         const { id } = action.payload;
-        let goodsInBasket = new Set(state.goodsInBasket);
+        const goodsInBasket = new Set(state.goodsInBasket);
         goodsInBasket.add(id);
-        let storage = window.localStorage;
+        const storage = window.localStorage;
         storage.setItem('ShoppingBasket', JSON.stringify([...goodsInBasket]));
         return {
             ...state,
@@ -34,7 +33,7 @@ export default function (state = initialState, action) {
     }
     case SHOW_GOODS.SUCCESS: {
         const { data } = action.payload;
-        let goodsInBasketData = [...data];
+        const goodsInBasketData = [...data];
         return {
             ...state,
             goodsInBasketData
@@ -42,16 +41,13 @@ export default function (state = initialState, action) {
     }
     case DEL_GOODS_FROM_BASKET: {
         const { id } = action.payload;
-        let goodsInBasket = new Set(state.goodsInBasket);
+        const goodsInBasket = new Set(state.goodsInBasket);
         goodsInBasket.delete(id);
-        let storage = window.localStorage;
+        const storage = window.localStorage;
         storage.removeItem('ShoppingBasket');
-        storage.setItem('ShoppingBasket',JSON.stringify([...goodsInBasket]));
-        
+        storage.setItem('ShoppingBasket', JSON.stringify([...goodsInBasket]));
         let goodsInBasketData = [...state.goodsInBasketData];
-        goodsInBasketData = goodsInBasketData.filter((el) => {
-            return el.idgoods !== id;
-        });
+        goodsInBasketData = goodsInBasketData.filter(el => el.idgoods !== id);
         return {
             ...state,
             goodsInBasket,

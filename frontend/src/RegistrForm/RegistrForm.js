@@ -17,6 +17,12 @@ const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
 
+function handle(e) {
+    if (e.keyCode === 13) {
+        document.getElementById('buttonToSendRegistration').click();
+    }
+}
+
 class RegisrtForm extends Component {
     constructor(props) {
         super(props);
@@ -41,15 +47,10 @@ class RegisrtForm extends Component {
         };
     }
 
-    handle(e) {
-        if (e.keyCode === 13) {
-            document.getElementById('buttonToSendRegistration').click();
-        }
-    }
-
     preValid() {
         let answ = false;
-        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        // It's too long. It's needed to separate `regEmail`
+        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
         if (regEmail.test(this.emailInputR.current.value)) {
             answ = true;
             this.setState({
@@ -83,8 +84,7 @@ class RegisrtForm extends Component {
                     noValid: true
                 }
             });
-        }
-        else {
+        } else {
             answ = true;
             this.setState({
                 passwordValid: {
@@ -102,49 +102,52 @@ class RegisrtForm extends Component {
             password1: this.passWordInput1.current.value,
             password2: this.passWordInput2.current.value
         };
-
-        //const setUser = this.props.setUserInState;
-        let self = this;
+        const self = this;
         if (this.preValid()) {
             client({
                 method: 'POST',
                 path: '/reg',
                 entity: objToRequest
-            }).then(res => {
-                self.setState((state) => ({
+            }).then((res) => {
+                self.setState(() => ({
                     message: res.entity.message,
-                    show: (state.show) ? true : true,
+                    show: true
                 }));
                 if (res.entity.status) {
-                    setTimeout(() =>
-                        window.location.href = '/',
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    },
                     2000);
                 }
-            }).catch(err => {
+            }).catch((err) => {
                 alert(err);
             });
         }
-        
     }
 
     render() {
-        let { target, message, show = true } = this.state;
-
+        const {
+            target,
+            message,
+            show = true,
+            emailValid,
+            passwordValid
+        } = this.state;
+        const { onHide } = this.props;
         return (
             <Modal
-                show={true}
-                size="sm"
-                autoFocus={true}
+                show
+                size='sm'
+                autoFocus
                 onEntering={() => {
-                    window.onkeydown = this.handle;
+                    window.onkeydown = handle;
                 }}
                 onHide={() => {
-                    this.props.onHide();
-
+                    onHide();
                 }}
                 centered
             >
-                <Modal.Header closeButton >
+                <Modal.Header closeButton>
                     <h4>
                         Registration
                     </h4>
@@ -152,38 +155,38 @@ class RegisrtForm extends Component {
                 <Modal.Body>
                     <Form>
                         <Form.Row>
-                            <Form.Group as={Col} className="" controlId="formGridEmail">
+                            <Form.Group as={Col} className='' controlId='formGridEmail'>
                                 <Form.Control
-                                    size="sm"
-                                    type="email"
-                                    placeholder="Enter email"
+                                    size='sm'
+                                    type='email'
+                                    placeholder='Enter email'
                                     ref={this.emailInputR}
-                                    isValid={this.state.emailValid.valid}
-                                    isInvalid={this.state.emailValid.noValid}
+                                    isValid={emailValid.valid}
+                                    isInvalid={emailValid.noValid}
                                 />
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>
-                            <Form.Group as={Col} className="" controlId="formGridPassword">
+                            <Form.Group as={Col} className='' controlId='formGridPassword'>
                                 <Form.Control
-                                    size="sm"
-                                    type="password"
-                                    placeholder="Password"
+                                    size='sm'
+                                    type='password'
+                                    placeholder='Password'
                                     ref={this.passWordInput1}
-                                    isValid={this.state.passwordValid.valid}
-                                    isInvalid={this.state.passwordValid.noValid}
+                                    isValid={passwordValid.valid}
+                                    isInvalid={passwordValid.noValid}
                                 />
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>
-                            <Form.Group as={Col} className="" controlId="formGridRepeatPassword">
+                            <Form.Group as={Col} className='' controlId='formGridRepeatPassword'>
                                 <Form.Control
-                                    size="sm"
-                                    type="password"
-                                    placeholder="Repeat password"
+                                    size='sm'
+                                    type='password'
+                                    placeholder='Repeat password'
                                     ref={this.passWordInput2}
-                                    isValid={this.state.passwordValid.valid}
-                                    isInvalid={this.state.passwordValid.noValid}
+                                    isValid={passwordValid.valid}
+                                    isInvalid={passwordValid.noValid}
                                 />
                             </Form.Group>
 
@@ -193,9 +196,9 @@ class RegisrtForm extends Component {
                 <Modal.Footer>
                     <Col className='col-12 d-flex justify-content-end align-items-end'>
                         <Button
-                            size="sm"
-                            variant="light"
-                            className=""
+                            size='sm'
+                            variant='light'
+                            className=''
                             onClick={() => {
                                 window.location.href = '/';
                             }}
@@ -204,18 +207,18 @@ class RegisrtForm extends Component {
                         </Button>
                         <Button
                             ref={this.attachRef}
-                            size="sm"
-                            variant="secondary"
-                            className="ml-3"
+                            size='sm'
+                            variant='secondary'
+                            className='ml-3'
                             id='buttonToSendRegistration'
                             onClick={this.sendRequestForRegistration}
                         >
                             Registration
                         </Button>
                     </Col>
-                    <Overlay target={target} show={show} placement="right">
+                    <Overlay target={target} show={show} placement='right'>
                         {props => (
-                            <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                            <Tooltip id='overlay-example' {...props} show={show.toString()}>
                                 {message}
                             </Tooltip>
                         )}
@@ -223,7 +226,6 @@ class RegisrtForm extends Component {
                 </Modal.Footer>
             </Modal>
         );
-
     }
 }
 
@@ -231,6 +233,12 @@ RegisrtForm.propTypes = {
     setUserInState: PropTypes.func,
     show: PropTypes.bool,
     onHide: PropTypes.func
+};
+
+RegisrtForm.defaultProps = {
+    setUserInState: () => {},
+    show: true,
+    onHide: () => {}
 };
 
 export default RegisrtForm;

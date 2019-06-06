@@ -18,6 +18,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
             Users.findOne({ where: { 
                 email: decode.email 
             } }).then(user => {
+                //It needs to use Sequelize attributes. It resolve problem of unused variable
                 const { password, ...userP} = user.dataValues;
                 const { id,  ...userId} = userP;
                 res.status(200).json(JSON.stringify(userId));
@@ -38,9 +39,9 @@ router.delete('/', passport.authenticate('jwt', { session: false }), checkSuperA
         });
 });
 
-function checkAdminRight(req, res, next) {
-    checkRight(req, res, next, ['Admin', 'SuperAdmin']);
-}
+// function checkAdminRight(req, res, next) {
+//     checkRight(req, res, next, ['Admin', 'SuperAdmin']);
+// }
 
 function checkSuperAdminRight(req, res, next) {
     checkRight(req, res, next, ['SuperAdmin']);
@@ -55,7 +56,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
     if (token) {
         jwt.verify(token, 'Oleg', (err, decode) => {
             if (err) {
-                return res.status(500).send({auth: false, message: "Auth failed"});
+                return res.status(500).send({auth: false, message: 'Auth failed'});
             } else {
                 let email = decode.email;
                 if ((decode.role) && (roles.indexOf(decode.role) >= 0)) {
@@ -68,7 +69,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
                             res.status(401).send({
                                 auth: true,
                                 right: false, 
-                                message: "You have not permission on operation"
+                                message: 'You have not permission on operation'
                             });
                         }
                     });
@@ -79,7 +80,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
         res.status(401).send({
             auth: false,
             right: false, 
-            message: "Access denied"
+            message: 'Access denied'
         });
     }
 }

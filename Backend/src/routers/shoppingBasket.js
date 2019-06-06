@@ -59,7 +59,7 @@ router.get('/:basketID', (req, res) => {
         });
 
     } else {
-        res.status(401).send(`Incorrect params of query`);
+        res.status(401).send('Incorrect params of query');
     }
 
 });

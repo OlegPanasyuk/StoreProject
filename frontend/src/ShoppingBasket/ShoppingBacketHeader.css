@@ -1,17 +1,17 @@
-.shopping-backet-header_size-l {
+.shopping-basket-header_size-l {
     font-size: 2em;
 }
 
-.shopping-backet-header_color-grey {
+.shopping-basket-header_color-grey {
     color: var(--gray);
 }
 
-.shopping-backet-header_color-grey:hover {
+.shopping-basket-header_color-grey:hover {
     color: var(--light);
     cursor: pointer;
 }
 
-.shopping-backet-header__notification-number {
+.shopping-basket-header__notification-number {
     position: relative;
     box-sizing: border-box;
     bottom: -15px;
@@ -25,6 +25,6 @@
     color: var(--white);
 }
 
-.shopping-backet-header__notification-number_hidden {
+.shopping-basket-header__notification-number_hidden {
     visibility: hidden;
 }

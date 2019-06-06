@@ -1,44 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//redux
+// Redux
 import { connect } from 'react-redux';
 
-//Simple Components
+// Simple Components
 import Order from '../Order/Order';
 
-export class UserHistory extends Component {
-    render() {
-        return (
-            <Container>
-
-                <h3>
-                    Order History:
-                </h3>
-                {
-                    this.props.history.map((el) => {
-                        return (
-                            <Order
-                                key={el.id}
-                                obj={el}
-                            />
-                        );
-                    })
-                }
-            </Container>
-        );
-    }
+function UserHistory({
+    history = []
+}) {
+    return (
+        <Container>
+            <h3>
+                Order History:
+            </h3>
+            {
+                history.map(el => (
+                    <Order
+                        key={el.id}
+                        obj={el}
+                    />
+                ))
+            }
+        </Container>
+    );
 }
 
 UserHistory.propTypes = {
-    history: PropTypes.array
+    history: PropTypes.array.isRequired
 };
 
-const mapStateToProps = (state) => {
-    return {
-        history: state.userHeaderReducers.historyBasket
-    };
-};
+const mapStateToProps = state => ({
+    history: state.userHeaderReducers.historyBasket
+});
 
 export default connect(mapStateToProps)(UserHistory);

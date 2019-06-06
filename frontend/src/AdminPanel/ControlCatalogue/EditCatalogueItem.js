@@ -3,17 +3,17 @@ import { Form, Button } from 'react-bootstrap';
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Components
-import DeletingForm from './DeletingForm';
-
-//Redux
+// Components
 import { connect } from 'react-redux';
+import DeletingFormComponent from './DeletingForm';
+
+// Redux
 import {
     editCatalogueItem
 } from '../../REDUX/adminPanel/actions/actionsCatalogueControl';
 import {
     addErrorToState
-} from '../../REDUX/actions/actionsErrors.js';
+} from '../../REDUX/actions/actionsErrors';
 
 
 export class EditCatalogueItem extends Component {
@@ -30,19 +30,20 @@ export class EditCatalogueItem extends Component {
 
 
     sendDataToSave() {
-        let self = this;
-        let storage = window.localStorage;
+        const self = this;
+        const storage = window.localStorage;
+        const { getCatalogue, addErrorToState } = this.props;
         if (fetch) {
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let body = {
+            myHeaders.append('Content-type', 'application/json');
+            const body = {
                 name: self.nameRef.current.value,
                 description: self.descriptionRef.current.value,
                 parent_id: self.parentRef.current.value
             };
 
-            let myInit = {
+            const myInit = {
                 method: 'PUT',
                 headers: myHeaders,
                 body: JSON.stringify(body)
@@ -57,22 +58,19 @@ export class EditCatalogueItem extends Component {
                 }`,
                 myInit
             )
-                .then(res => {
-                    return res.text();
-                })
-                .then(data => {
+                .then(res => res.text())
+                .then((data) => {
                     if (data) {
-                        let d = new Date();
+                        const d = new Date();
                         if (data === 'Data is updated') {
-                            this.props.getCatalogue();
-                            this.props.addErrorToState({
+                            getCatalogue();
+                            addErrorToState({
                                 id: md5(`${'Notification from EditCatalogueItem'}${d.valueOf()}`),
                                 level: 'Success',
                                 message: data
                             });
                         } else {
-
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from EditCatalogueItem'}${d.valueOf()}`),
                                 level: 'Error',
                                 message: data
@@ -81,35 +79,38 @@ export class EditCatalogueItem extends Component {
                     }
                 })
                 .catch((e) => {
-                    let d = new Date();
-                    this.props.addErrorToState({
+                    const d = new Date();
+                    addErrorToState({
                         id: md5(`${'Notification from EditCatalogueItem'}${d.valueOf()}`),
                         level: 'Error',
                         message: e
                     });
                 });
         }
-
     }
 
 
-
     render() {
-        let { name, description, parent_id } = this.props.editItem;
-        let { arrOfCatalogueNotSorted, editCatalogueItem } = this.props;
+        const {
+            arrOfCatalogueNotSorted,
+            editCatalogueItem,
+            editItem,
+            getCatalogue,
+            cancel
+        } = this.props;
+        const { name, description, parent_id } = editItem;
+        const { showModalDeleting } = this.state;
         return (
             <React.Fragment>
-                <DeletingForm
-                    show={this.state.showModalDeleting}
+                <DeletingFormComponent
+                    show={showModalDeleting}
                     onHide={() => {
                         this.setState({
                             showModalDeleting: false
                         });
                     }}
-                    getCatalogue={this.props.getCatalogue}
-                >
-
-                </DeletingForm>
+                    getCatalogue={getCatalogue}
+                />
                 <Form>
                     <h4>Edit Item</h4>
                     <Form.Group>
@@ -119,8 +120,8 @@ export class EditCatalogueItem extends Component {
                         <Form.Control
                             ref={this.nameRef}
                             type='text'
-                            value={this.props.editItem.name}
-                            onChange = {()=> {
+                            value={name}
+                            onChange={() => {
                                 editCatalogueItem({
                                     name: this.nameRef.current.value
                                 });
@@ -136,8 +137,8 @@ export class EditCatalogueItem extends Component {
                         <Form.Control
                             ref={this.descriptionRef}
                             type='text'
-                            value={this.props.editItem.description}
-                            onChange = {()=> {
+                            value={description}
+                            onChange={() => {
                                 editCatalogueItem({
                                     description: this.descriptionRef.current.value
                                 });
@@ -152,8 +153,8 @@ export class EditCatalogueItem extends Component {
                         <Form.Control
                             as='select'
                             ref={this.parentRef}
-                            value={this.props.editItem.parent_id}
-                            onChange = {()=> {
+                            value={parent_id}
+                            onChange={() => {
                                 editCatalogueItem({
                                     parent_id: this.parentRef.current.value
                                 });
@@ -161,13 +162,11 @@ export class EditCatalogueItem extends Component {
                         >
                             <option value='-1'>Root</option>
                             {
-                                (arrOfCatalogueNotSorted.length > 0) && arrOfCatalogueNotSorted.map(el => {
-                                    return (
-                                        <option key={el.id_catalogue} value={el.id_catalogue}>
-                                            {el.name}
-                                        </option>
-                                    );
-                                })
+                                (arrOfCatalogueNotSorted.length > 0) && arrOfCatalogueNotSorted.map(el => (
+                                    <option key={el.id_catalogue} value={el.id_catalogue}>
+                                        {el.name}
+                                    </option>
+                                ))
                             }
                         </Form.Control>
                     </Form.Group>
@@ -184,7 +183,7 @@ export class EditCatalogueItem extends Component {
                             this.nameRef.current.value = name;
                             this.descriptionRef.current.value = description;
                             this.parentRef.current.value = parent_id;
-                            this.props.cancel();
+                            cancel();
                         }}
                     >
                         Cancel
@@ -215,11 +214,22 @@ EditCatalogueItem.propTypes = {
     arrOfCatalogueNotSorted: PropTypes.array
 };
 
-const mapStateToProps = (state) => {
-    return {
-        editItem: state.adminPanel_catalogue.editItem
-    };
+EditCatalogueItem.defaultProps = {
+    getCatalogue: () => null,
+    addErrorToState: () => null,
+    editItem: {
+        name: '',
+        description: '',
+        parent_id: -1
+    },
+    cancel: () => null,
+    editCatalogueItem: () => null,
+    arrOfCatalogueNotSorted: []
 };
+
+const mapStateToProps = state => ({
+    editItem: state.adminPanel_catalogue.editItem
+});
 
 export default connect(mapStateToProps, {
     editCatalogueItem,

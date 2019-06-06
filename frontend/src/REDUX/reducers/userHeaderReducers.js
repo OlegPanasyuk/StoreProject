@@ -9,21 +9,21 @@ export default function (state = initialState, action) {
     switch (action.type) {
     case SHOW_HISTORY_BASKET.SUCCESS: {
         const { arr } = action.payload;
-        let newArr = [...arr];
+        const newArr = [...arr];
         return {
             ...state,
             historyBasket: newArr
         };
     }
     case USER.SET_INFO.SUCCESS: {
-        let userInfo = Object.assign({}, action.payload.user);
+        const userInfo = Object.assign({}, action.payload.user);
         return {
             ...state,
             userInfo
         };
     }
     case USER.LOGIN.ASK: {
-        let userInfo = Object.assign({}, action.payload.user);
+        const userInfo = Object.assign({}, action.payload.user);
         return {
             ...state,
             userInfo

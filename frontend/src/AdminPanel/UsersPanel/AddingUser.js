@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
-import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
+import {
+    Modal,
+    Button,
+    Form,
+    Overlay,
+    Tooltip
+} from 'react-bootstrap';
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
-    addErrorToState,
+    addErrorToState
 } from '../../REDUX/actions/actionsErrors';
 
 export class AddingUser extends Component {
     constructor(props) {
         super(props);
-        this.attachRef = target => this.setState((state) => ({
+        this.attachRef = target => this.setState(state => ({
             tooltip: {
                 ...state.tooltip,
                 target
@@ -29,7 +35,6 @@ export class AddingUser extends Component {
             password: '',
             password2: '',
             email: '',
-            role: '',
             tooltip: {
                 target: null,
                 message: '',
@@ -48,9 +53,9 @@ export class AddingUser extends Component {
 
     preValid() {
         let answ = true;
-        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        
-        if (this.state.password !== this.state.password2) {
+        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        const { password, password2, email } = this.state;
+        if (password !== password2) {
             this.setState({
                 passwordValid: {
                     valid: false,
@@ -58,7 +63,7 @@ export class AddingUser extends Component {
                 }
             });
             answ = false;
-        } else if (this.state.password === '') {
+        } else if (password === '') {
             answ = false;
             this.setState({
                 passwordValid: {
@@ -66,8 +71,7 @@ export class AddingUser extends Component {
                     noValid: true
                 }
             });
-        }
-        else {
+        } else {
             this.setState({
                 passwordValid: {
                     valid: true,
@@ -75,7 +79,7 @@ export class AddingUser extends Component {
                 }
             });
         }
-        if (regEmail.test(this.state.email)) {
+        if (regEmail.test(email)) {
             this.setState({
                 emailValid: {
                     valid: true,
@@ -91,61 +95,65 @@ export class AddingUser extends Component {
                 }
             });
         }
-        return answ; 
+        return answ;
     }
 
     sendUserToAdd() {
         const storage = window.localStorage;
-
+        const {
+            name,
+            password,
+            password2,
+            email
+        } = this.state;
+        const { addErrorToState, onHide, openPage } = this.props;
         if (this.preValid()) {
             if (fetch) {
-
-                let myHeaders = new Headers();
+                const myHeaders = new Headers();
                 myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-                myHeaders.append("Content-type", 'application/json');
-                let body = {
-                    name: this.state.name,
-                    password1: this.state.password,
-                    password2: this.state.password2,
-                    email: this.state.email,
+                myHeaders.append('Content-type', 'application/json');
+                const body = {
+                    name,
+                    password1: password,
+                    password2,
+                    email,
                     role: this.roleRef.current.value
                 };
 
-                let myInit = {
+                const myInit = {
                     method: 'POST',
                     headers: myHeaders,
                     body: JSON.stringify(body)
                 };
                 fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/new`, myInit)
-                    .then(res => {
+                    .then((res) => {
                         if (res.status === 201) {
                             return res.json();
-                        } 
+                        }
                         if (res.status === 401) {
-                            res.json().then(data => {
+                            res.json().then((data) => {
                                 const d = new Date();
-                                this.props.addErrorToState({
+                                addErrorToState({
                                     id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                                     level: 'Error',
                                     message: data.message
                                 });
                             });
                         }
-                        
+                        return null;
                     })
-                    .then(data => {
+                    .then((data) => {
                         if (data) {
                             this.setState({
                                 name: '',
                                 password: '',
                                 password2: '',
-                                email: '',
-                                role: ''
+                                email: ''
                             });
-                            this.props.onHide();
+                            onHide();
                             const d = new Date();
-                            this.props.openPage(1);
-                            this.props.addErrorToState({
+                            openPage(1);
+                            addErrorToState({
                                 id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                                 level: 'Success',
                                 message: data.message
@@ -153,7 +161,7 @@ export class AddingUser extends Component {
                         }
                     })
                     .catch((e) => {
-                        this.setState((state) => ({
+                        this.setState(state => ({
                             tooltip: {
                                 ...state.tooltip,
                                 message: e,
@@ -166,15 +174,20 @@ export class AddingUser extends Component {
     }
 
     render() {
-        let { target, show, message } = this.state.tooltip;
+        const {
+            tooltip,
+            name,
+            email,
+            emailValid,
+            password,
+            passwordValid
+        } = this.state;
+        const { target, show, message } = tooltip;
+        const { onHide } = this.props;
         return (
             <Modal
-                show={
-                    true
-                }
-                onHide={
-                    this.props.onHide
-                }
+                show
+                onHide={onHide}
                 centered
             >
                 <Modal.Header closeButton>
@@ -190,7 +203,7 @@ export class AddingUser extends Component {
                             <Form.Control
                                 ref={this.nameRef}
                                 type='text'
-                                value={this.state.name}
+                                value={name}
                                 onChange={() => {
                                     this.setState({
                                         name: this.nameRef.current.value
@@ -205,9 +218,9 @@ export class AddingUser extends Component {
                             <Form.Control
                                 ref={this.emailRef}
                                 type='email'
-                                value={this.state.email}
-                                isValid={this.state.emailValid.valid}
-                                isInvalid={this.state.emailValid.noValid}
+                                value={email}
+                                isValid={emailValid.valid}
+                                isInvalid={emailValid.noValid}
                                 onChange={() => {
                                     this.setState({
                                         email: this.emailRef.current.value
@@ -224,9 +237,9 @@ export class AddingUser extends Component {
                             <Form.Control
                                 ref={this.passwordRef}
                                 type='text'
-                                value={this.state.password}
-                                isValid={this.state.passwordValid.valid}
-                                isInvalid={this.state.passwordValid.noValid}
+                                value={password}
+                                isValid={passwordValid.valid}
+                                isInvalid={passwordValid.noValid}
                                 onChange={() => {
                                     this.setState({
                                         password: this.passwordRef.current.value
@@ -243,8 +256,8 @@ export class AddingUser extends Component {
                             <Form.Control
 
                                 type='text'
-                                isValid={this.state.passwordValid.valid}
-                                isInvalid={this.state.passwordValid.noValid}
+                                isValid={passwordValid.valid}
+                                isInvalid={passwordValid.noValid}
                                 ref={this.password2Ref}
                                 onChange={() => {
                                     this.setState({
@@ -266,11 +279,7 @@ export class AddingUser extends Component {
                                 as='select'
 
                                 ref={this.roleRef}
-                                onChange={() => {
-                                    this.setState({
-                                        role: this.roleRef.current.value
-                                    });
-                                }}
+                                onChange={() => {}}
                             >
                                 <option value='SuperAdmin'>SuperAdmin</option>
                                 <option value='Admin'>Admin</option>
@@ -282,17 +291,19 @@ export class AddingUser extends Component {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="light" onClick={() => this.setState({
-                        name: '',
-                        password: '',
-                        password2: '',
-                        email: '',
-                        role: ''
-                    })}
+                    <Button
+                        variant='light'
+                        onClick={() => this.setState({
+                            name: '',
+                            password: '',
+                            password2: '',
+                            email: ''
+                        })}
                     >
                         Clear
                     </Button>
-                    <Button variant="primary"
+                    <Button
+                        variant='primary'
                         onClick={() => {
                             this.sendUserToAdd();
                         }}
@@ -300,9 +311,9 @@ export class AddingUser extends Component {
                     >
                         Save changes
                     </Button>
-                    <Overlay target={target} show={show} placement="right">
+                    <Overlay target={target} show={show} placement='right'>
                         {props => (
-                            <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                            <Tooltip id='overlay-example' {...props} show={show.toString()}>
                                 {message}
                             </Tooltip>
                         )}
@@ -319,6 +330,11 @@ AddingUser.propTypes = {
     openPage: PropTypes.func
 };
 
+AddingUser.defaultProps = {
+    onHide: () => {},
+    addErrorToState: () => {},
+    openPage: () => {}
+};
 
 export default connect(null, {
     addErrorToState

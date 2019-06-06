@@ -267,10 +267,10 @@ class App extends Component {
                         <Container>
                             <h1>Hello, I am AboutPage!</h1>
                             <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                                Totam asperiores maxime minus neque hic culpa minima laudantium,
-                                labore eos fuga,
-                                doloremque quae eligendi dolore explicabo magnam voluptas autem atque velit!
+                                {'Lorem ipsum dolor sit, amet consectetur adipisicing elit. \
+                                Totam asperiores maxime minus neque hic culpa minima laudantium, \
+                                labore eos fuga, \
+                                doloremque quae eligendi dolore explicabo magnam voluptas autem atque velit!'}
                             </p>
                         </Container>
                     )}></Route>

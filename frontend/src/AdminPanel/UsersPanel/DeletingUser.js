@@ -3,11 +3,12 @@ import { Modal, Button } from 'react-bootstrap';
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
-    addErrorToState,
+    addErrorToState
 } from '../../REDUX/actions/actionsErrors';
+
 export class DeletingUser extends Component {
     constructor(props) {
         super(props);
@@ -15,69 +16,75 @@ export class DeletingUser extends Component {
     }
 
     sendUserToDelete() {
-        let storage = window.localStorage;
+        const storage = window.localStorage;
+        const {
+            addErrorToState,
+            onHide,
+            openPage,
+            id
+        } = this.props;
         if (fetch) {
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let myInit = {
+            myHeaders.append('Content-type', 'application/json');
+            const myInit = {
                 method: 'DELETE',
-                headers: myHeaders,
+                headers: myHeaders
             };
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/${this.props.id}`, myInit)
-                .then(res => {
+            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/users/${id}`, myInit)
+                .then((res) => {
                     if (res.status === 200) {
                         return res.text();
                     }
                     if (res.status === 400) {
-                        res.json().then(e => {
+                        res.json().then((e) => {
                             const d = new Date();
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from Deleting'}${d.valueOf()}`),
                                 level: 'Error',
                                 message: `${e}`
                             });
                         });
-                        
                     }
+                    return null;
                 })
-                .then(data => {
+                .then((data) => {
                     if (data) {
-                        this.props.onHide();
+                        onHide();
                         const d = new Date();
-                        this.props.openPage(1);
-                        this.props.addErrorToState({
+                        openPage(1);
+                        addErrorToState({
                             id: md5(`${'Notification from Deleting'}${d.valueOf()}`),
                             level: 'Success',
                             message: 'User is deleted'
                         });
                     }
                 });
-                
         }
     }
 
     render() {
+        const { onHide } = this.props;
         return (
             <Modal
-                show={true}
-                onHide={this.props.onHide}
+                show
+                onHide={onHide}
                 centered
             >
                 <Modal.Header>
                     Delete this User?
                 </Modal.Header>
                 <Modal.Body className='d-flex justify-content-end'>
-                    <Button 
+                    <Button
                         className='ml-3'
                         onClick={this.sendUserToDelete}
                     >
                         Yes
                     </Button>
-                    <Button 
+                    <Button
                         variant='light'
                         className='ml-3'
-                        onClick={this.props.onHide}
+                        onClick={onHide}
                     >
                         No
                     </Button>
@@ -92,6 +99,13 @@ DeletingUser.propTypes = {
     onHide: PropTypes.func,
     addErrorToState: PropTypes.func,
     openPage: PropTypes.func
+};
+
+DeletingUser.defaultProps = {
+    id: 0,
+    onHide: () => {},
+    addErrorToState: () => {},
+    openPage: () => {}
 };
 
 export default connect(null, {

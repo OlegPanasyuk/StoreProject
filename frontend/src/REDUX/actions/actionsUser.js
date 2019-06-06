@@ -1,32 +1,26 @@
 import { USER } from './actionsTypes';
 
-export const setUserInfo = (user) => {
-    return {
-        type: USER.SET_INFO.SUCCESS,
-        payload: {
-            user
-        }
-    };
-};
+export const setUserInfo = user => ({
+    type: USER.SET_INFO.SUCCESS,
+    payload: {
+        user
+    }
+});
 
-export const askLogin = () => {
-    return {
-        type: USER.LOGIN.ASK,
-        payload: {
-            user: {
-                role: 'Login'
-            }
+export const askLogin = () => ({
+    type: USER.LOGIN.ASK,
+    payload: {
+        user: {
+            role: 'Login'
         }
-    };
-};
+    }
+});
 
-export const askReg = () => {
-    return {
-        type: USER.LOGIN.ASK,
-        payload: {
-            user: {
-                role: 'Reg'
-            }
+export const askReg = () => ({
+    type: USER.LOGIN.ASK,
+    payload: {
+        user: {
+            role: 'Reg'
         }
-    };
-};
+    }
+});

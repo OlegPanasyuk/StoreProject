@@ -1,38 +1,41 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { CardColumns } from 'react-bootstrap';
-import GoodsItem from '../GoodsItem/GoodsItem';
 import PropTypes from 'prop-types';
+import GoodsItemComponent from '../GoodsItem/GoodsItem';
 
-class Goods extends Component {
-    render() {
-        let { obj } = this.props;
-
-        let itemsGoods = Object.keys(obj).map((el, i) => {
-            return (
-                <GoodsItem 
-                    key={`Goods-${obj[el].idgoods}-${i}`} 
-                    obj={obj[el]}
-                    id={obj[el].idgoods}  
-                    addItemToBacket={this.props.addItemToBacket}
-                />
-            );
-        });
-        if (itemsGoods.length === 0) {
-            itemsGoods = (
-                <div></div>
-            );
-        }
-        return (
-            <CardColumns style={{ columnGap: '1em' }}>
-                {itemsGoods}
-            </CardColumns>
+function Goods({
+    obj,
+    addItemToBacket
+}) {
+    let itemsGoods = Object.keys(obj).map(el => (
+        <GoodsItemComponent
+            key={`Goods-${obj[el].idgoods}`}
+            obj={obj[el]}
+            id={obj[el].idgoods}
+            addItemToBacket={addItemToBacket}
+        />
+    ));
+    if (itemsGoods.length === 0) {
+        itemsGoods = (
+            <div />
         );
     }
+    return (
+        <CardColumns style={{ columnGap: '1em' }}>
+            {itemsGoods}
+        </CardColumns>
+    );
 }
+
 
 Goods.propTypes = {
     obj: PropTypes.array,
     addItemToBacket: PropTypes.func
+};
+
+Goods.defaultProps = {
+    obj: [],
+    addItemToBacket: () => {}
 };
 
 export default Goods;

@@ -7,31 +7,31 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
     case SHOW_MAIN_CONTENT.SHOPPING_BASKET: {
-        let { target } = action.payload;
+        const { target } = action.payload;
         return {
             ...state,
-            target 
+            target
         };
     }
     case SHOW_MAIN_CONTENT.USER_HISTORY: {
-        let { target } = action.payload;
+        const { target } = action.payload;
         return {
             ...state,
-            target 
+            target
         };
     }
     case SHOW_MAIN_CONTENT.CATALOGUE: {
-        let { target } = action.payload;
+        const { target } = action.payload;
         return {
             ...state,
-            target 
+            target
         };
     }
     case SHOW_MAIN_CONTENT.USER_PROFILE: {
-        let { target } = action.payload;
+        const { target } = action.payload;
         return {
             ...state,
-            target 
+            target
         };
     }
     default:

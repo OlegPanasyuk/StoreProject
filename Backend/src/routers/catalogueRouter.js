@@ -102,9 +102,9 @@ function checkAdminRight(req, res, next) {
     checkRight(req, res, next, ['Admin', 'SuperAdmin']);
 }
 
-function checkSuperAdminRight(req, res, next) {
-    checkRight(req, res, next, ['SuperAdmin']);
-}
+// function checkSuperAdminRight(req, res, next) {
+//     checkRight(req, res, next, ['SuperAdmin']);
+// }
 
 function checkRight(req, res, next, roles = ['SuperAdmin']) {
     let token = null;
@@ -114,7 +114,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
     if (token) {
         jwt.verify(token, 'Oleg', (err, decode) => {
             if (err) {
-                return res.status(500).send({ auth: false, message: "Auth failed" });
+                return res.status(500).send({ auth: false, message: 'Auth failed' });
             } else {
                 let email = decode.email;
                 if ((decode.role) && (roles.indexOf(decode.role) >= 0)) {
@@ -127,7 +127,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
                             res.status(401).send({
                                 auth: true,
                                 right: false,
-                                message: "You have not permission on operation"
+                                message: 'You have not permission on operation'
                             });
                         }
                     });
@@ -138,7 +138,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
         res.status(401).send({
             auth: false,
             right: false,
-            message: "Access denied"
+            message: 'Access denied'
         });
     }
 }

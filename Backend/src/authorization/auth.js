@@ -2,21 +2,21 @@ var express = require('express');
 var router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStratagy = require('../authorization/jwt');
+const jwtStrategy = require('../authorization/jwt');
 const { Users } = require('../../models/index');
 
-passport.use(jwtStratagy);
+passport.use(jwtStrategy);
 
-function checkAdmin(req, res, next) {
-    if (req.body.user && req.body.user.p === 'admin') {
-        next();
-    } else {
-        res.status(401).send('You are not admin');
-    }
-}
+// function checkAdmin(req, res, next) {
+//     if (req.body.user && req.body.user.p === 'admin') {
+//         next();
+//     } else {
+//         res.status(401).send('You are not admin');
+//     }
+// }
 
 
-router.post('/reg', (req, res, next) => {
+router.post('/reg', (req, res) => {
     let { email, password1, password2 } = req.body;
     const regExEmail = /[\w_.-]+@\w+.\w+/gmi;
     let arr = regExEmail.exec(email);
@@ -92,8 +92,8 @@ router.post('/login', (req, res) => {
                             role: user.role,
                             username: user.username
                         });
-                    } 
-                    
+                    }
+
                 } else {
                     const opts = {};
                     opts.expiresIn = 1200;
@@ -106,12 +106,12 @@ router.post('/login', (req, res) => {
                         username: user.username
                     });
                 }
-                
+
             } else {
-                res.status(401).send(`Password or email is incorrect`);
+                res.status(401).send('Password or email is incorrect');
             }
         } else {
-            res.status(401).send(`Password or email is incorrect`);
+            res.status(401).send('Password or email is incorrect');
         }
         res.status(401).send(`${email} ${password} Auth failed`);
     });
@@ -126,7 +126,7 @@ router.post('/login', (req, res) => {
 
 //passport.authenticate('jwt', { session: false}),
 
-router.post('/logintoken',  function (req, res) {
+router.post('/logintoken', function (req, res) {
     let token = req.headers['authorization'].split(' ')[1];
     jwt.verify(token, 'Oleg', (err, decode) => {
         if (err) {

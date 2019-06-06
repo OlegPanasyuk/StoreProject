@@ -1,24 +1,32 @@
 import React, { Component } from 'react';
-import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
+import {
+    Modal, Button, Form, Overlay, Tooltip
+} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-//Redux 
+// Redux
 import { connect } from 'react-redux';
-import {
-    userAuthorizedSuccess
-} from '../../REDUX/adminPanel/actions/actionsLoginForm';
 
-//for Rest requests
+// for Rest requests
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
+import {
+    userAuthorizedSuccess
+} from '../../REDUX/adminPanel/actions/actionsLoginForm';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
 
+
+function handle(e) {
+    if (e.keyCode === 13) {
+        document.getElementById('buttonToLogin').click();
+    }
+}
 
 export class LoginForm extends Component {
     constructor(props) {
@@ -33,7 +41,6 @@ export class LoginForm extends Component {
             target: null,
             show: true,
             showTooltip: false,
-            messageToolTip: '',
             emailValid: {
                 isValid: false,
                 isInValid: false
@@ -41,24 +48,19 @@ export class LoginForm extends Component {
         };
     }
 
-    handle(e) {
-        if (e.keyCode === 13) {
-            document.getElementById('buttonToLogin').click();
-        }
-    }
-
     hide() {
-        this.setState((state) => ({
+        this.setState(state => ({
             show: !state.show
         }));
-        let path = this.props.match.path;
-        let p = path.slice(0, path.indexOf('/login'));
+        const { match } = this.props;
+        const { path } = match;
+        const p = path.slice(0, path.indexOf('/login'));
         window.location.pathname = `${p}`;
     }
 
     preValid() {
         let answ = true;
-        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
         if (!regEmail.test(this.emailRef.current.value)) {
             answ = false;
             this.setState({
@@ -80,6 +82,7 @@ export class LoginForm extends Component {
     }
 
     sendRequestOnAccess() {
+        const { userAuthorizedSuccess } = this.props;
         if (this.preValid()) {
             client({
                 path: '/login',
@@ -92,10 +95,10 @@ export class LoginForm extends Component {
                     checkrights: true
                 }
             })
-                .then(data => {
+                .then((data) => {
                     if (data.entity.token) {
                         window.onkeydown = null;
-                        this.props.userAuthorizedSuccess(data.entity);
+                        userAuthorizedSuccess(data.entity);
                     } else {
                         this.setState({
                             showTooltip: true,
@@ -103,7 +106,7 @@ export class LoginForm extends Component {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.setState({
                         showTooltip: true,
                         message: err.toString()
@@ -113,29 +116,30 @@ export class LoginForm extends Component {
     }
 
     render() {
+        const { user, match, show } = this.props;
+        const { emailValid } = this.state;
         let loginCont = '';
-        if (this.props.user.token) {
-            let path = this.props.match.path;
-            let p = path.slice(0, path.indexOf('/login'));
+        if (user.token) {
+            const { path } = match;
+            const p = path.slice(0, path.indexOf('/login'));
             loginCont = (
                 <Redirect to={p} />
             );
         }
-        let { target, showTooltip, message } = this.state;
+        const { target, showTooltip, message } = this.state;
         return (
             <React.Fragment>
                 <Modal
-                    show={this.state.show}
-                    size="sm"
+                    show={show}
+                    size='sm'
                     onHide={this.hide}
                     onEntering={() => {
-                        window.onkeydown = this.handle;
+                        window.onkeydown = handle;
                     }}
                     onExit={() => {
-
                         window.onkeydown = null;
                     }}
-                    keyboard={true}
+                    keyboard
                     centered
                 >
                     <Modal.Header>
@@ -145,19 +149,19 @@ export class LoginForm extends Component {
                         <Modal.Body>
                             <Form.Group>
                                 <Form.Control
-                                    type="email"
-                                    placeholder="Enter email"
+                                    type='email'
+                                    placeholder='Enter email'
                                     ref={this.emailRef}
-                                    isValid={this.state.emailValid.isValid}
-                                    isInvalid={this.state.emailValid.isInValid}
+                                    isValid={emailValid.isValid}
+                                    isInvalid={emailValid.isInValid}
                                 />
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type='invalid'>Incorrect email</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Control
-                                    type="password"
-                                    placeholder="Password"
+                                    type='password'
+                                    placeholder='Password'
                                     ref={this.passRef}
                                 />
                             </Form.Group>
@@ -181,9 +185,9 @@ export class LoginForm extends Component {
                     </Form>
                 </Modal>
                 {loginCont}
-                <Overlay target={target} show={showTooltip} placement="left">
+                <Overlay target={target} show={showTooltip} placement='left'>
                     {props => (
-                        <Tooltip id="overlay-example" {...props} show={showTooltip.toString()}>
+                        <Tooltip id='overlay-example' {...props} show={showTooltip.toString()}>
                             {message}
                         </Tooltip>
                     )}
@@ -196,14 +200,20 @@ export class LoginForm extends Component {
 LoginForm.propTypes = {
     match: PropTypes.object,
     user: PropTypes.object,
-    userAuthorizedSuccess: PropTypes.func
+    userAuthorizedSuccess: PropTypes.func,
+    show: PropTypes.bool
 };
 
-const mapStoreToProps = (state) => {
-    return ({
-        user: state.adminPanel_User
-    });
+LoginForm.defaultProps = {
+    match: { url: '', path: '' },
+    user: {},
+    userAuthorizedSuccess: () => {},
+    show: true
 };
+
+const mapStoreToProps = state => ({
+    user: state.adminPanel_User
+});
 
 
 export default connect(mapStoreToProps, {
