@@ -36,4 +36,15 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.sequelize.sync({ forse: false }).then(() => {
+    db.Users.create({
+        username: 'Admin',
+        email: 'admin@admin.com',
+        password: 'user',
+        role: 'SuperAdmin'
+    });
+});
+
+
+
 module.exports = db;

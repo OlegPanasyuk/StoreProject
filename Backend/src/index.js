@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -9,7 +10,6 @@ const os = require('os');
 const passport = require('passport');
 const jwtStrategy = require('./authorization/jwt');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
 const registrationUser = require('./authorization/auth');
 const basketShopping = require('./routers/shoppingBasket');
 const userRouter = require('./routers/userRouters');
