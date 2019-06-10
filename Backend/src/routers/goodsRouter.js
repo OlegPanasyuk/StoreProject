@@ -153,9 +153,9 @@ function checkRight(req, res, next) {
         token = req.headers['authorization'].split(' ')[1];
     }
     if (token) {
-        jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+        jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
             if (err) {
-                return res.status(500).json({ auth: false, message: 'Auth failed' });
+                return res.status(400).json({ auth: false, message: 'Auth failed' });
             } else {
                 let email = payload.email;
                 if ((payload.role) && (roles.indexOf(payload.role) >= 0)) {

@@ -70,7 +70,7 @@ router.post('/login', (req, res) => {
                         const opts = {};
                         const role = user.role;
                         opts.expiresIn = 1200;
-                        const secret = `${process.env.SECRET_KEY_AUTH}`;
+                        const secret = process.env.SECRET_KEY_AUTH;
                         const token = jwt.sign({ email, role }, secret, opts);
                         return res.status(200).json({
                             message: 'Auth Passed',
@@ -82,7 +82,7 @@ router.post('/login', (req, res) => {
                 } else {
                     const opts = {};
                     opts.expiresIn = 1200;
-                    const secret = `${process.env.SECRET_KEY_AUTH}`;
+                    const secret = process.env.SECRET_KEY_AUTH;
                     const token = jwt.sign({ email }, secret, opts);
                     return res.status(200).json({
                         message: 'Auth Passed',
@@ -104,15 +104,15 @@ router.post('/login', (req, res) => {
 
 router.post('/logintoken', function (req, res) {
     let token = req.headers['authorization'].split(' ')[1];
-    jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+    jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
         if (err) {
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+            return res.status(400).send({ auth: false, message: 'Failed to authenticate token.' });
         }
         let email = payload.email;
         Users.findOne({ where: { email } }).then((user) => {
             const opts = {};
             opts.expiresIn = 1200;
-            const secret = `${process.env.SECRET_KEY_AUTH}`;
+            const secret = process.env.SECRET_KEY_AUTH;
             const token = jwt.sign({ email: payload.email }, secret, opts);
             return res.status(200).json({
                 message: 'Auth Passed',

@@ -10,7 +10,7 @@ passport.use(jwtStrategy);
 
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     let token = req.headers['authorization'].split(' ')[1];
-    jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+    jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
         if (err) {
             res.status(401).send(err);
         }
@@ -48,9 +48,9 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
         token = req.headers['authorization'].split(' ')[1];    
     }
     if (token) {
-        jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+        jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
             if (err) {
-                return res.status(500).send({auth: false, message: 'Auth failed'});
+                return res.status(400).send({auth: false, message: 'Auth failed'});
             } else {
                 let email = payload.email;
                 if ((payload.role) && (roles.indexOf(payload.role) >= 0)) {

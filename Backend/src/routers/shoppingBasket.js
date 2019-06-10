@@ -20,7 +20,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 
     } else if (!user_id) {
         let token = req.headers['authorization'].split(' ')[1];
-        jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+        jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
             if (err) {
                 res.status(401).send(err);
             }
@@ -67,7 +67,7 @@ router.get('/:basketID', (req, res) => {
 
 router.get('/users/history', passport.authenticate('jwt', { session: false }), (req, res) => {
     let token = req.headers['authorization'].split(' ')[1];
-    jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+    jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
         if (err) {
             res.status(401).send(err);
         }

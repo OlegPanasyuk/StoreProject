@@ -1,25 +1,14 @@
 import React, { Component } from 'react';
-import Catalogue from './Catalogue/Catalogue';
-import LoginForm from './LoginForm/LoginForm';
-import RegForm from './RegistrForm/RegistrForm';
-import UserHeader from './User/UserHeader';
-import ShoppingBasketHeader from './ShoppingBasket/ShoppingBasketHeader';
-import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
-import UserHistory from './User/UserHistory';
-import UserProfile from './User/UserProfile';
-import MainPage from './MainPage/MainPage';
-import ErrorLayer from './Error/ErrorLayer';
 import { Col, Container } from 'react-bootstrap';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
-import Navigation from './Navigation/Navigation';
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
-// import UserProfile from './User/UserProfile';
+import rest from 'rest';
+import pathPrefix from 'rest/interceptor/pathPrefix';
+import errorCode from 'rest/interceptor/errorCode';
+import mime from 'rest/interceptor/mime';
 
-//images
-import './asserts/css/App.css';
 
-//Redux
 import { connect } from 'react-redux';
 import {
     showCatalogue,
@@ -40,11 +29,20 @@ import {
     askReg
 } from './REDUX/actions/actionsUser';
 
+import Catalogue from './Catalogue/Catalogue';
+import LoginForm from './LoginForm/LoginForm';
+import RegForm from './RegistrForm/RegistrForm';
+import UserHeader from './User/UserHeader';
+import ShoppingBasketHeader from './ShoppingBasket/ShoppingBasketHeader';
+import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
+import UserHistory from './User/UserHistory';
+import UserProfile from './User/UserProfile';
+import MainPage from './MainPage/MainPage';
+import ErrorLayer from './Error/ErrorLayer';
+import Navigation from './Navigation/Navigation';
 
-import rest from 'rest';
-import pathPrefix from 'rest/interceptor/pathPrefix';
-import errorCode from 'rest/interceptor/errorCode';
-import mime from 'rest/interceptor/mime';
+
+import './asserts/css/App.css';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
@@ -52,19 +50,18 @@ const client = rest.wrap(mime, { mime: 'application/json' })
 
 
 function takeGoodsFromLocalStorage() {
-    let storage = window.localStorage;
+    const storage = window.localStorage;
     let arr = storage.getItem('ShoppingBasket');
     arr = (arr) ? JSON.parse(arr) : arr;
-    let goodsInBasket = (arr) ?
-        new Set([...arr]) :
-        new Set();
+    const goodsInBasket = (arr)
+        ? new Set([...arr])
+        : new Set();
     return goodsInBasket;
 }
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.addError = this.addError.bind(this);
         this.covertLoginFormToRegForm = this.covertLoginFormToRegForm.bind(this);
         this.setUserInState = this.setUserInState.bind(this);
         this.addItemToBasket = this.addItemToBasket.bind(this);
@@ -75,14 +72,14 @@ class App extends Component {
             user: {
                 role: 'Guest'
             },
-            goodsInBasket: new Set(),
-            showModalReg: false
+            goodsInBasket: new Set()
         };
     }
 
     componentDidMount() {
-        this.props.initBasketFromLocalStorage(takeGoodsFromLocalStorage());
-        let token = window.localStorage.getItem('Authorization');
+        const { initBasketFromLocalStorage, addErrorToState } = this.props;
+        initBasketFromLocalStorage(takeGoodsFromLocalStorage());
+        const token = window.localStorage.getItem('Authorization');
         const self = this;
         if (token) {
             client({
@@ -91,16 +88,15 @@ class App extends Component {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then(data => {
+            }).then((data) => {
                 if (data.status.code === 200) {
-                    let storage = window.localStorage;
+                    const storage = window.localStorage;
                     storage.setItem('Authorization', data.entity.token);
                     self.setUserInState(data.entity);
                 }
-            }).catch(e => {
-                //Needs Error Object to push notifications to UI
+            }).catch((e) => {
                 const d = new Date();
-                this.props.addErrorToState({
+                addErrorToState({
                     id: md5(`${'Notification from App'}${d.valueOf()}`),
                     level: 'Info',
                     message: e.entity.message
@@ -126,7 +122,8 @@ class App extends Component {
     }
 
     addItemToBasket(id) {
-        let setOfGoodsItemsInBasket = this.state.goodsInBasket;
+        const { goodsInBasket } = this.state;
+        const setOfGoodsItemsInBasket = goodsInBasket;
         setOfGoodsItemsInBasket.add(id);
         this.setState({
             goodsInBasket: setOfGoodsItemsInBasket
@@ -134,7 +131,8 @@ class App extends Component {
     }
 
     removeItemFromBasket(id) {
-        let setOfGoodsItemsInBasket = this.state.goodsInBasket;
+        const { goodsInBasket } = this.state;
+        const setOfGoodsItemsInBasket = goodsInBasket;
         setOfGoodsItemsInBasket.delete(id);
         this.setState({
             goodsInBasket: setOfGoodsItemsInBasket
@@ -146,40 +144,35 @@ class App extends Component {
         this.setState({
             user: {
                 role: 'GuestUnregistr'
-            },
-            showModalReg: true
+            }
         });
     }
 
     showCompleteBasket() {
-        if (this.props.mainContent.target === 'ShoppingBasket') {
-            this.props.showCatalogue();
+        const { mainContent, showCatalogue, showShoppingBasket } = this.props;
+        if (mainContent.target === 'ShoppingBasket') {
+            showCatalogue();
         } else {
-            this.props.showShoppingBasket();
+            showShoppingBasket();
         }
     }
 
-    addError() {
-        const d = new Date();
-        this.props.addErrorToState({
-            id: md5(`${'Lorem ipsum'}${d.valueOf()}`),
-            level: 'Error',
-            message: 'Lorem Ipsum'
-        });
-    }
-
     render() {
-        const { match } = this.props;
-
-        let authElement = (
+        const {
+            match, askLogin, askReg, userInfo, setUserInfo, errors
+        } = this.props;
+        const { user, goodsInBasket } = this.state;
+        const authElement = (
             <React.Fragment>
-                <Col className='ml-auto d-flex justify-content-end' style={{
-                    height: '54px'
-                }}>
+                <Col
+                    className='ml-auto d-flex justify-content-end' style={{
+                        height: '54px'
+                    }}
+                >
                     <NavLink
-                        className="p-3"
+                        className='p-3'
                         onClick={() => {
-                            this.props.askLogin();
+                            askLogin();
                         }}
                         to='/'
                         key='login'
@@ -187,10 +180,10 @@ class App extends Component {
                         Login
                     </NavLink>
                     <NavLink
-                        to={`/`}
-                        className="p-3"
+                        to='/'
+                        className='p-3'
                         onClick={() => {
-                            this.props.askReg();
+                            askReg();
                         }}
                         key='reg'
                     >
@@ -200,17 +193,17 @@ class App extends Component {
             </React.Fragment>
         );
         let authElements = authElement;
-        if (this.props.userInfo.role === 'Login') {
+        if (userInfo.role === 'Login') {
             authElements = (
                 <React.Fragment>
 
                     {authElement}
                     <LoginForm
-                        handleConverStatusUser={this.props.askReg}
+                        handleConverStatusUser={askReg}
                         handleSetStateInApp={this.setUserInState}
-                        userState={this.state.user}
+                        userState={user}
                         onHide={() => {
-                            this.props.setUserInfo({ role: '' });
+                            setUserInfo({ role: '' });
                         }}
                     >
                         LoginForm
@@ -218,26 +211,26 @@ class App extends Component {
 
                 </React.Fragment>
             );
-        } else if (this.props.userInfo.role === 'Reg') {
+        } else if (userInfo.role === 'Reg') {
             authElements = (
                 <React.Fragment>
 
                     {authElement}
                     <RegForm
                         setUserInState={this.setUserInState}
-                        show={true}
+                        show
                         onHide={() => {
-                            this.props.setUserInfo({ role: '' });
+                            setUserInfo({ role: '' });
                         }}
                     />
 
                 </React.Fragment>
 
             );
-        } else if (this.roles.indexOf(this.state.user.role) >= 0) {
+        } else if (this.roles.indexOf(user.role) >= 0) {
             authElements = (
                 <UserHeader
-                    userInfo={this.state.user}
+                    userInfo={user}
                     setUserInState={this.setUserInState}
                 />
             );
@@ -246,50 +239,51 @@ class App extends Component {
 
             <div style={{
                 position: 'relative'
-            }}>
+            }}
+            >
                 <Router>
                     <Navigation match={match}>
                         {authElements}
 
                         <ShoppingBasketHeader
-                            goods={this.state.goodsInBasket}
+                            goods={goodsInBasket}
                             showCompleteBasket={this.showCompleteBasket}
-
                         />
                     </Navigation>
                     <ErrorLayer
-                        Errors={this.props.errors}
+                        Errors={errors}
                     />
-
-
-
-                    <Route path={`/about`} render={() => (
-                        <Container>
-                            <h1>Hello, I am AboutPage!</h1>
-                            <p>
-                                {'Lorem ipsum dolor sit, amet consectetur adipisicing elit. \
+                    <Route
+                        path='/about' render={() => (
+                            <Container>
+                                <h1>Hello, I am AboutPage!</h1>
+                                <p>
+                                    {'Lorem ipsum dolor sit, amet consectetur adipisicing elit. \
                                 Totam asperiores maxime minus neque hic culpa minima laudantium, \
                                 labore eos fuga, \
                                 doloremque quae eligendi dolore explicabo magnam voluptas autem atque velit!'}
-                            </p>
-                        </Container>
-                    )}></Route>
-                    <Route path='/catalogue' component={Catalogue}></Route>
-                    <Route path='/contacts' render={() => (
-                        <Container className='mt-3'>
-                            <h3>Contact Us: </h3>
-                            <ul>
-                                <li>Phone: 555-55-55</li>
-                                <li>Address: st. John 12</li>
-                                <li>Email: email@email.com</li>
-                            </ul>
-                        </Container>)}>
-                    </Route>
+                                </p>
+                            </Container>
+                        )}
+                    />
+                    <Route path='/catalogue' component={Catalogue} />
+                    <Route
+                        path='/contacts' render={() => (
+                            <Container className='mt-3'>
+                                <h3>Contact Us: </h3>
+                                <ul>
+                                    <li>Phone: 555-55-55</li>
+                                    <li>Address: st. John 12</li>
+                                    <li>Email: email@email.com</li>
+                                </ul>
+                            </Container>
+                        )}
+                    />
 
-                    <Route path='/user/history' component={UserHistory}></Route>
-                    <Route path='/user/profile' component={UserProfile}></Route>
-                    <Route path='/basket' component={ShoppingBasket}></Route>
-                    <Route exact path='/' component={MainPage}></Route>
+                    <Route path='/user/history' component={UserHistory} />
+                    <Route path='/user/profile' component={UserProfile} />
+                    <Route path='/basket' component={ShoppingBasket} />
+                    <Route exact path='/' component={MainPage} />
                 </Router>
             </div>
         );
@@ -297,29 +291,27 @@ class App extends Component {
 }
 
 App.propTypes = {
-    mainContent: PropTypes.object,
-    errors: PropTypes.array,
-    showCatalogue: PropTypes.func,
-    showUserHistory: PropTypes.func,
-    showShoppingBasket: PropTypes.func,
-    initBasketFromLocalStorage: PropTypes.func,
-    addErrorToState: PropTypes.func,
-    deleteErrorFromState: PropTypes.func,
-    match: PropTypes.object,
-    askLogin: PropTypes.func,
-    setUserInfo: PropTypes.func,
-    userInfo: PropTypes.object,
-    askReg: PropTypes.func
+    mainContent: PropTypes.object.isRequired,
+    errors: PropTypes.array.isRequired,
+    showCatalogue: PropTypes.func.isRequired,
+    showUserHistory: PropTypes.func.isRequired,
+    showShoppingBasket: PropTypes.func.isRequired,
+    initBasketFromLocalStorage: PropTypes.func.isRequired,
+    addErrorToState: PropTypes.func.isRequired,
+    deleteErrorFromState: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired,
+    askLogin: PropTypes.func.isRequired,
+    setUserInfo: PropTypes.func.isRequired,
+    userInfo: PropTypes.object.isRequired,
+    askReg: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
-    return {
-        historyBasket: state.userHeaderReducers.historyBasket,
-        mainContent: state.mainContent,
-        errors: state.errorReducers.Errors,
-        userInfo: state.userHeaderReducers.userInfo
-    };
-};
+const mapStateToProps = state => ({
+    historyBasket: state.userHeaderReducers.historyBasket,
+    mainContent: state.mainContent,
+    errors: state.errorReducers.Errors,
+    userInfo: state.userHeaderReducers.userInfo
+});
 
 
 export default connect(mapStateToProps, {

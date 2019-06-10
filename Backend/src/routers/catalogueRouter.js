@@ -38,7 +38,7 @@ router.post('/',
                     } : {}
                 });
             }).catch(e=>{
-                res.status(500).send(e);
+                res.status(400).send(e);
             });
         
     });
@@ -68,7 +68,7 @@ router.put(
                         res.status(400).send(`${e}`);
                     });
             }).catch((e) => {
-                res.status(500).send(`${e}`);
+                res.status(400).send(`${e}`);
             });
 
     });
@@ -89,11 +89,11 @@ router.delete(
                         res.status(200).send('Item is deleted');
                     })
                     .catch((e) => {
-                        res.status(500).send(`${e}`);
+                        res.status(400).send(`${e}`);
                     });
             })
             .catch((e) => {
-                res.status(500).send(`${e}`);
+                res.status(400).send(`${e}`);
             });
     });
 
@@ -108,9 +108,9 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
         token = req.headers['authorization'].split(' ')[1];
     }
     if (token) {
-        jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
+        jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
             if (err) {
-                return res.status(500).json({ auth: false, message: 'Auth failed' });
+                return res.status(400).json({ auth: false, message: 'Auth failed' });
             } else {
                 let email = payload.email;
                 if ((payload.role) && (roles.indexOf(payload.role) >= 0)) {
