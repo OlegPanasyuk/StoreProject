@@ -1,3 +1,5 @@
 # dependencies
 /backend/node_modules
 /Model_DB/*
+/backend/*.env
+/frontend/*.env
