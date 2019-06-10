@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Card, Button, ButtonGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Redux 
+// Redux
 import { connect } from 'react-redux';
 import { editUser } from '../../REDUX/adminPanel/actions/actionsUsersPanel';
 
-//Component
-import DeletingUser from './DeletingUser';
+// Component
+import DeletingUserComponent from './DeletingUser';
 
 export class UserItem extends Component {
     constructor(props) {
@@ -18,18 +18,19 @@ export class UserItem extends Component {
     }
 
     render() {
-        let { obj } = this.props;
+        const { obj, editUser } = this.props;
+        const { permissionToDelete, openPage } = this.state;
         let deleteUser = null;
-        if (this.state.permissionToDelete) {
+        if (permissionToDelete) {
             deleteUser = (
-                <DeletingUser
+                <DeletingUserComponent
                     id={obj.id}
                     onHide={() => {
                         this.setState({
                             permissionToDelete: false
                         });
                     }}
-                    openPage={this.props.openPage}
+                    openPage={openPage}
                 />
             );
         }
@@ -43,10 +44,10 @@ export class UserItem extends Component {
                         <Button
                             variant='light'
                             onClick={() => {
-                                this.props.editUser(obj);
+                                editUser(obj);
                             }}
                         >
-                            <i className="far fa-edit"></i>
+                            <i className='far fa-edit' />
                         </Button>
                         <Button
                             variant='light'
@@ -56,13 +57,13 @@ export class UserItem extends Component {
                                 });
                             }}
                         >
-                            <i className="fas fa-trash-alt"></i>
+                            <i className='fas fa-trash-alt' />
                         </Button>
                     </ButtonGroup>
                 </Card.Header>
                 <Card.Body>
                     <Card.Title>{obj.username}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{obj.role}</Card.Subtitle>
+                    <Card.Subtitle className='mb-2 text-muted'>{obj.role}</Card.Subtitle>
                 </Card.Body>
             </Card>
         );
@@ -71,9 +72,14 @@ export class UserItem extends Component {
 
 UserItem.propTypes = {
     obj: PropTypes.object,
-    editUser: PropTypes.func,
-    openPage: PropTypes.func
+    editUser: PropTypes.func
 };
+
+UserItem.defaultProps = {
+    obj: {},
+    editUser: () => null
+};
+
 
 export default connect(null, {
     editUser

@@ -3,15 +3,14 @@ import { Form, Button } from 'react-bootstrap';
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
-    editCatalogueItem,
-    addCatalogueItem
+    editCatalogueItem
 } from '../../REDUX/adminPanel/actions/actionsCatalogueControl';
 import {
     addErrorToState
-} from '../../REDUX/actions/actionsErrors.js';
+} from '../../REDUX/actions/actionsErrors';
 
 
 export class AddCatalogueItem extends Component {
@@ -21,27 +20,23 @@ export class AddCatalogueItem extends Component {
         this.descriptionRef = React.createRef();
         this.parentRef = React.createRef();
         this.sendDataToSave = this.sendDataToSave.bind(this);
-
-    }
-
-    UNSAFE_componentWillMount() {
-
     }
 
     sendDataToSave() {
-        let self = this;
-        let storage = window.localStorage;
+        const self = this;
+        const storage = window.localStorage;
+        const { getCatalogue, addErrorToState, cancel } = this.props;
         if (fetch) {
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let body = {
+            myHeaders.append('Content-type', 'application/json');
+            const body = {
                 name: self.nameRef.current.value,
                 description: self.descriptionRef.current.value,
                 parent_id: self.parentRef.current.value
             };
 
-            let myInit = {
+            const myInit = {
                 method: 'POST',
                 headers: myHeaders,
                 body: JSON.stringify(body)
@@ -50,21 +45,19 @@ export class AddCatalogueItem extends Component {
                 `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue`,
                 myInit
             )
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
-                    let d = new Date();
-                    this.props.getCatalogue();
+                .then(res => res.json())
+                .then((data) => {
+                    const d = new Date();
+                    getCatalogue();
                     if (data.status) {
-                        this.props.addErrorToState({
+                        addErrorToState({
                             id: md5(`${'Notification from AddCatalogueItem'}${d.valueOf()}`),
                             level: 'Success',
                             message: data.message
                         });
-                        this.props.cancel();
+                        cancel();
                     } else {
-                        this.props.addErrorToState({
+                        addErrorToState({
                             id: md5(`${'Notification from AddCatalogueItem'}${d.valueOf()}`),
                             level: 'Error',
                             message: data.message
@@ -72,22 +65,20 @@ export class AddCatalogueItem extends Component {
                     }
                 })
                 .catch((e) => {
-                    let d = new Date();
-                    this.props.addErrorToState({
+                    const d = new Date();
+                    addErrorToState({
                         id: md5(`${'Notification from AddCatalogueItem'}${d.valueOf()}`),
                         level: 'Error',
                         message: e.toString()
                     });
                 });
         }
-
     }
 
 
-
     render() {
-        let { name, description, parent_id } = this.props.addItem;
-        let { arrOfCatalogueNotSorted } = this.props;
+        const { arrOfCatalogueNotSorted, addItem, cancel } = this.props;
+        const { name, description, parent_id } = addItem;
         return (
             <React.Fragment>
 
@@ -100,7 +91,7 @@ export class AddCatalogueItem extends Component {
                         <Form.Control
                             ref={this.nameRef}
                             type='text'
-                            defaultValue={this.props.addItem.name}
+                            defaultValue={addItem.name}
                         >
 
                         </Form.Control>
@@ -112,7 +103,7 @@ export class AddCatalogueItem extends Component {
                         <Form.Control
                             ref={this.descriptionRef}
                             type='text'
-                            defaultValue={this.props.addItem.description}
+                            defaultValue={addItem.description}
 
                         />
 
@@ -124,20 +115,18 @@ export class AddCatalogueItem extends Component {
                         <Form.Control
                             ref={this.parentRef}
                             as='select'
-                            defaultValue={this.props.addItem.parent_id}
+                            defaultValue={addItem.parent_id}
 
                         >
-                            <option  value={'-1'}>
+                            <option value='-1'>
                                 Root
                             </option>
                             {
-                                arrOfCatalogueNotSorted && arrOfCatalogueNotSorted.map(el => {
-                                    return (
-                                        <option key={el.id_catalogue} value={el.id_catalogue}>
-                                            {el.name}
-                                        </option>
-                                    );
-                                })
+                                arrOfCatalogueNotSorted && arrOfCatalogueNotSorted.map(el => (
+                                    <option key={el.id_catalogue} value={el.id_catalogue}>
+                                        {el.name}
+                                    </option>
+                                ))
                             }
                         </Form.Control>
                     </Form.Group>
@@ -154,7 +143,7 @@ export class AddCatalogueItem extends Component {
                             this.nameRef.current.value = name;
                             this.descriptionRef.current.value = description;
                             this.parentRef.current.value = parent_id;
-                            this.props.cancel();
+                            cancel();
                         }}
                     >
                         Cancel
@@ -169,20 +158,24 @@ export class AddCatalogueItem extends Component {
 AddCatalogueItem.propTypes = {
     getCatalogue: PropTypes.func,
     addErrorToState: PropTypes.func,
-    addCatalogueItem: PropTypes.func,
     addItem: PropTypes.object,
     cancel: PropTypes.func,
     arrOfCatalogueNotSorted: PropTypes.array
 };
 
-const mapStateToProps = (state) => {
-    return {
-        addItem: state.adminPanel_catalogue.addItem
-    };
+AddCatalogueItem.defaultProps = {
+    getCatalogue: () => null,
+    addErrorToState: () => null,
+    addItem: {},
+    cancel: () => null,
+    arrOfCatalogueNotSorted: []
 };
+
+const mapStateToProps = state => ({
+    addItem: state.adminPanel_catalogue.addItem
+});
 
 export default connect(mapStateToProps, {
     editCatalogueItem,
-    addErrorToState,
-    addCatalogueItem
+    addErrorToState
 })(AddCatalogueItem);

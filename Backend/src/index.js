@@ -4,15 +4,12 @@ var bodyParser = require('body-parser');
 var winston = require('winston');
 var config = require('config');
 var cors = require('cors');
-const formData = require("express-form-data");
-const os = require("os");
-// const auth = require('./authorization');
+const formData = require('express-form-data');
+const os = require('os');
 const passport = require('passport');
-//const jwt = require('jsonwebtoken');
 const jwtStrategy = require('./authorization/jwt');
 const cookieParser = require('cookie-parser');
-
-//routers
+require('dotenv').config();
 const registrationUser = require('./authorization/auth');
 const basketShopping = require('./routers/shoppingBasket');
 const userRouter = require('./routers/userRouters');
@@ -40,15 +37,9 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//app.use(fileUpload());
 app.use(cookieParser());
-// parse data with connect-multiparty. 
 app.use(formData.parse(options));
-// clear from the request and delete all empty files (size == 0)
 app.use(formData.format());
-// // change file objects to stream.Readable 
-// app.use(formData.stream());
-// union body and files
 app.use(formData.union());
 
 

@@ -3,7 +3,7 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import md5 from 'md5';
 
-//Redux 
+// Redux
 import { connect } from 'react-redux';
 import {
     addingFormClose,
@@ -11,7 +11,7 @@ import {
     addingFormFailed
 } from '../../REDUX/adminPanel/actions/actionsImagesControl';
 import {
-    addErrorToState,
+    addErrorToState
 } from '../../REDUX/actions/actionsErrors';
 
 
@@ -25,12 +25,19 @@ export class AddingFormOfImage extends Component {
     }
 
     sendDataToServer() {
+        const {
+            openPage,
+            addingFormClose,
+            addingFormSuccess,
+            addErrorToState,
+            addingFormFailed
+        } = this.props;
         const formData = new FormData();
         formData.append('name', this.nameRef.current.value);
         formData.append('type', this.typeRef.current.value);
         formData.append('img', this.imgRef.current.files[0]);
         if (fetch) {
-            let myInit = {
+            const myInit = {
                 method: 'POST',
                 body: formData,
                 cache: 'default'
@@ -39,16 +46,16 @@ export class AddingFormOfImage extends Component {
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/`, myInit)
                 .then((res) => {
                     if (res.status === 201) {
-                        res.json().then(data => {
-                            this.props.openPage(1);
-                            this.props.addingFormClose();
-                            this.props.addingFormSuccess({
+                        res.json().then((data) => {
+                            openPage(1);
+                            addingFormClose();
+                            addingFormSuccess({
                                 name: '',
                                 type: '',
                                 url: ''
                             });
                             const d = new Date();
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from AddingImage'}${d.valueOf()}`),
                                 level: 'Success',
                                 message: data.message
@@ -56,10 +63,10 @@ export class AddingFormOfImage extends Component {
                         });
                     }
                     if (res.status === 401) {
-                        res.text().then(data => {
-                            this.props.addingFormFailed();
+                        res.text().then((data) => {
+                            addingFormFailed();
                             const d = new Date();
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from AddingImage'}${d.valueOf()}`),
                                 level: 'Error',
                                 message: data
@@ -67,9 +74,14 @@ export class AddingFormOfImage extends Component {
                         });
                     }
                     if (res.status === 400) {
-                        res.json().then(data => {
-                            this.props.addingFormFailed();
-                            console.error(data);
+                        res.json().then((data) => {
+                            addingFormFailed();
+                            const d = new Date();
+                            addErrorToState({
+                                id: md5(`${'Notification from AddingImage'}${d.valueOf()}`),
+                                level: 'Error',
+                                message: JSON.stringify(data)
+                            });
                         });
                     }
                 });
@@ -77,10 +89,11 @@ export class AddingFormOfImage extends Component {
     }
 
     render() {
+        const { show, onHide } = this.props;
         return (
             <Modal
-                show={this.props.show}
-                onHide={this.props.onHide}
+                show={show}
+                onHide={onHide}
                 centered
             >
                 <Modal.Header closeButton>
@@ -90,9 +103,7 @@ export class AddingFormOfImage extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form id='adding-image'>
-                        <Form.Group
-
-                        >
+                        <Form.Group>
                             <Form.Label
                                 htmlFor='adding-image-name'
                             >
@@ -103,9 +114,7 @@ export class AddingFormOfImage extends Component {
                                 id='adding-image-name'
                             />
                         </Form.Group>
-                        <Form.Group
-
-                        >
+                        <Form.Group>
                             <Form.Label
                                 htmlFor='adding-image-type'
                             >
@@ -116,9 +125,7 @@ export class AddingFormOfImage extends Component {
                                 id='adding-image-type'
                             />
                         </Form.Group>
-                        <Form.Group
-
-                        >
+                        <Form.Group>
                             <Form.Label
                                 htmlFor='adding-image-file'
                             >
@@ -143,7 +150,7 @@ export class AddingFormOfImage extends Component {
                     <Button
                         variant='light'
                         className='ml-3'
-                        onClick={this.props.onHide}
+                        onClick={onHide}
                     >
                         Close
                     </Button>
@@ -153,13 +160,26 @@ export class AddingFormOfImage extends Component {
     }
 }
 
-AddingFormOfImage.propTypes= {
+AddingFormOfImage.propTypes = {
     addingFormClose: PropTypes.func,
     addingFormSuccess: PropTypes.func,
     addingFormFailed: PropTypes.func,
     addErrorToState: PropTypes.func,
-    openPage: PropTypes.func
+    openPage: PropTypes.func,
+    show: PropTypes.bool,
+    onHide: PropTypes.func
 };
+
+AddingFormOfImage.defaultProps = {
+    addingFormClose: () => null,
+    addingFormSuccess: () => null,
+    addingFormFailed: () => null,
+    addErrorToState: () => null,
+    openPage: () => null,
+    show: true,
+    onHide: () => null
+};
+
 
 export default connect(null, {
     addingFormClose,

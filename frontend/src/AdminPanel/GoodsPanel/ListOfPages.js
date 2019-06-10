@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-//Components
+// Components
 import { Pagination } from 'react-bootstrap';
 
-export class ListOfPages extends Component {
+export class ListOfPages extends PureComponent {
     render() {
-        let { 
-            count, 
-            limit, 
-            activePage, 
+        const {
+            count,
+            limit,
+            activePage,
             openPage
         } = this.props;
         const numberOfPages = Math.ceil(count / limit);
-        let listOfPages = [];
+        const listOfPages = [];
         for (let i = 1; i <= numberOfPages; i++) {
             listOfPages.push((
                 <Pagination.Item
-                   
-                    key={`nav-page-list-${i}`} 
-                    active={i === activePage} 
+
+                    key={`nav-page-list-${i}`}
+                    active={i === activePage}
                     onClick={() => openPage(i)}
                 >
                     {i}
@@ -27,7 +27,7 @@ export class ListOfPages extends Component {
             ));
         }
         return (
-            <Pagination as={Pagination} size='sm' className='d-flex justify-content-center' >
+            <Pagination as={Pagination} size='sm' className='d-flex justify-content-center'>
                 {listOfPages}
             </Pagination>
         );
@@ -39,6 +39,13 @@ ListOfPages.propTypes = {
     limit: PropTypes.number,
     activePage: PropTypes.number,
     openPage: PropTypes.func
+};
+
+ListOfPages.defaultProps = {
+    count: 0,
+    limit: 10,
+    activePage: 1,
+    openPage: () => null
 };
 
 export default ListOfPages;

@@ -13,49 +13,48 @@ export class GoodsItem extends Component {
         };
     }
 
+    handleAddToBasket = () => {
+        const { addGoodsToBasket, id } = this.props;
+        addGoodsToBasket(id);
+    };
+
+    // eslint-disable-next-line camelcase
     UNSAFE_componentWillMount() {
-        let self = this;
-        let { obj } = this.props;
+        const self = this;
+        const { obj } = this.props;
         if (fetch) {
-            let myInit = {
-                method: 'GET',
+            const myInit = {
+                method: 'GET'
             };
-           
+
 
             fetch(`${
                 process.env.REACT_APP_API_HOST
             }:${
                 process.env.REACT_APP_API_PORT
             }/images/goods/${obj.idgoods}`, myInit)
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
-
-                    data && data.forEach(el => {
-                        if (el.title > 0) {
-                            self.setState({
-                                url: `${
-                                    process.env.REACT_APP_API_HOST
-                                }:${
-                                    process.env.REACT_APP_API_PORT
-                                }/images/${el.imgs_id_img}`
-                            });
-                            
-                        }
-                    });
-                    
+                .then(res => res.json())
+                .then((data) => {
+                    if (data) {
+                        data.forEach((el) => {
+                            if (el.title > 0) {
+                                self.setState({
+                                    url: `${
+                                        process.env.REACT_APP_API_HOST
+                                    }:${
+                                        process.env.REACT_APP_API_PORT
+                                    }/images/${el.imgs_id_img}`
+                                });
+                            }
+                        });
+                    }
                 });
         }
     }
 
-    handleAddToBasket = () => {
-        this.props.addGoodsToBasket(this.props.id);
-
-    };
 
     render() {
-        let { obj } = this.props;
+        const { obj } = this.props;
         let { url } = this.state;
         if (url.length === 0) {
             url = imgDef;
@@ -64,14 +63,18 @@ export class GoodsItem extends Component {
             <Card>
                 <div style={{
                     position: 'relative'
-                }}>
+                }}
+                >
                     <Card.Img variant='top' src={url}>
 
                     </Card.Img>
-                    <div className='card-img-overlay d-flex flex-column justify-content-end' style={{
-                        color: 'var(--white)',
-                        background: 'linear-gradient(to top, var(--dark) 5%, transparent 60%)'
-                    }}>
+                    <div
+                        className='card-img-overlay d-flex flex-column justify-content-end'
+                        style={{
+                            color: 'var(--white)',
+                            background: 'linear-gradient(to top, var(--dark) 5%, transparent 60%)'
+                        }}
+                    >
                         <Card.Title>
                             {obj.name}
                         </Card.Title>
@@ -101,5 +104,10 @@ GoodsItem.propTypes = {
     addGoodsToBasket: PropTypes.func
 };
 
+GoodsItem.defaultProps = {
+    obj: {},
+    id: 0,
+    addGoodsToBasket: () => {}
+};
 
 export default connect(null, { addGoodsToBasket })(GoodsItem);

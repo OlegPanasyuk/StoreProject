@@ -3,7 +3,7 @@ import $ from 'jquery';
 import 'bootstrap/js/dist/toast';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
     deleteErrorFromState
@@ -18,28 +18,29 @@ export class ErrorNotification extends Component {
     }
 
     componentDidMount() {
-        let { obj } = this.props;
-        this.setState(()=> ({
+        const { obj } = this.props;
+        const { id } = this.state;
+        this.setState({
             id: obj.id
-        }));
-        let el = $(`#${this.state.id}`);
+        });
+        const el = $(`#${id}`);
         el.toast({ delay: 4500 });
         el.toast('show');
-        el.on('hidden.bs.toast', function () {
-            // do something…
+        el.on('hidden.bs.toast', () => {
             el.remove();
         });
     }
 
     render() {
-        let { obj } = this.props;
+        const { obj } = this.props;
+        const { id } = this.state;
         return (
             <div
-                className="toast mt-3 "
-                id={`${this.state.id}`}
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
+                className='toast mt-3 '
+                id={`${id}`}
+                role='alert'
+                aria-live='assertive'
+                aria-atomic='true'
                 style={{
                     background: 'grey',
                     position: 'relative',
@@ -47,23 +48,34 @@ export class ErrorNotification extends Component {
                     zIndex: 1060
                 }}
             >
-                <div className="toast-header">
-                    <strong className="mr-auto">{obj.level}</strong>
-                    <button type="button" className="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                <div className='toast-header'>
+                    <strong className='mr-auto'>{obj.level}</strong>
+                    <button
+                        type='button'
+                        className='ml-2 mb-1 close'
+                        data-dismiss='toast' aria-label='Close'
+                    >
+                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>
-                <div className="toast-body">
+                <div className='toast-body'>
                     {obj.message}
                 </div>
             </div>
         );
-
     }
 }
 
 ErrorNotification.propTypes = {
     obj: PropTypes.object
+};
+
+ErrorNotification.defaultProps = {
+    obj: {
+        level: 'Notification',
+        message: 'Empty',
+        id: 'EmptyMessageNotification'
+    }
 };
 
 export default connect(null, {

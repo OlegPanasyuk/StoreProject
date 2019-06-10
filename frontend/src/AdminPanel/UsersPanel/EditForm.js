@@ -1,41 +1,43 @@
 import React, { Component } from 'react';
-import { Modal, Button, Form, Overlay, Tooltip } from 'react-bootstrap';
+import {
+    Modal, Button, Form, Overlay, Tooltip
+} from 'react-bootstrap';
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
-    addErrorToState,
+    addErrorToState
 } from '../../REDUX/actions/actionsErrors';
 
 export class EditForm extends Component {
     constructor(props) {
         super(props);
-        this.attachRef = target => this.setState((state) => ({
+        this.attachRef = target => this.setState(state => ({
             tooltip: {
                 ...state.tooltip,
                 target
             }
         }));
+        const { userToEdit } = this.props;
+        const {
+            username, password, email, role
+        } = userToEdit;
         this.nameRef = React.createRef();
         this.emailRef = React.createRef();
         this.passwordRef = React.createRef();
         this.roleRef = React.createRef();
         this.sendUserToEdit = this.sendUserToEdit.bind(this);
         this.state = {
-            username: this.props.userToEdit.username,
-            password: this.props.userToEdit.password,
-            email: this.props.userToEdit.email,
-            role: this.props.userToEdit.role,
+            username,
+            password,
+            email,
+            role,
             tooltip: {
                 target: null,
                 message: '',
                 show: false
-            },
-            passwordValid: {
-                valid: false,
-                noValid: false
             },
             emailValid: {
                 valid: false,
@@ -46,8 +48,9 @@ export class EditForm extends Component {
 
     preValid() {
         let answ = true;
-        let regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        if (regEmail.test(this.state.email)) {
+        const { email } = this.state;
+        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
+        if (regEmail.test(email)) {
             this.setState({
                 emailValid: {
                     valid: true,
@@ -69,19 +72,28 @@ export class EditForm extends Component {
 
     sendUserToEdit() {
         const storage = window.localStorage;
+        const {
+            username,
+            password,
+            email,
+            role
+        } = this.state;
+        const {
+            userToEdit, onHide, openPage, addErrorToState
+        } = this.props;
         if (this.preValid()) {
             if (fetch) {
-                let myHeaders = new Headers();
+                const myHeaders = new Headers();
                 myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-                myHeaders.append("Content-type", 'application/json');
-                let body = {
-                    username: this.state.username,
-                    password: this.state.password,
-                    email: this.state.email,
-                    role: this.state.role
+                myHeaders.append('Content-type', 'application/json');
+                const body = {
+                    username,
+                    password,
+                    email,
+                    role
                 };
 
-                let myInit = {
+                const myInit = {
                     method: 'PUT',
                     headers: myHeaders,
                     body: JSON.stringify(body)
@@ -92,13 +104,12 @@ export class EditForm extends Component {
                     }:${
                         process.env.REACT_APP_API_PORT
                     }/users/${
-                        this.props.userToEdit.id
+                        userToEdit.id
                     }`,
-                    myInit)
-                    .then(res => {
-                        return res.text();
-                    })
-                    .then(data => {
+                    myInit
+                )
+                    .then(res => res.text())
+                    .then((data) => {
                         if (data) {
                             this.setState({
                                 username: '',
@@ -106,10 +117,10 @@ export class EditForm extends Component {
                                 email: '',
                                 role: ''
                             });
-                            this.props.onHide();
+                            onHide();
                             const d = new Date();
-                            this.props.openPage(1);
-                            this.props.addErrorToState({
+                            openPage(1);
+                            addErrorToState({
                                 id: md5(`${'Notification from AddingUser'}${d.valueOf()}`),
                                 level: 'Success',
                                 message: 'User is updated'
@@ -117,7 +128,7 @@ export class EditForm extends Component {
                         }
                     })
                     .catch((e) => {
-                        this.setState((state) => ({
+                        this.setState(state => ({
                             tooltip: {
                                 ...state.tooltip,
                                 message: e,
@@ -130,15 +141,13 @@ export class EditForm extends Component {
     }
 
     render() {
-        let { target, show, message } = this.state.tooltip;
+        const { tooltip, emailValid } = this.state;
+        const { target, show, message } = tooltip;
+        const { onHide, userToEdit } = this.props;
         return (
             <Modal
-                show={
-                    true
-                }
-                onHide={
-                    this.props.onHide
-                }
+                show
+                onHide={onHide}
                 centered
             >
                 <Modal.Header closeButton>
@@ -154,7 +163,7 @@ export class EditForm extends Component {
                             <Form.Control
                                 ref={this.nameRef}
                                 type='text'
-                                defaultValue={this.props.userToEdit.username}
+                                defaultValue={userToEdit.username}
                                 onChange={() => {
                                     this.setState({
                                         username: this.nameRef.current.value
@@ -169,9 +178,9 @@ export class EditForm extends Component {
                             <Form.Control
                                 ref={this.emailRef}
                                 type='text'
-                                defaultValue={this.props.userToEdit.email}
-                                isValid={this.state.emailValid.valid}
-                                isInvalid={this.state.emailValid.noValid}
+                                defaultValue={userToEdit.email}
+                                isValid={emailValid.valid}
+                                isInvalid={emailValid.noValid}
                                 onChange={() => {
                                     this.setState({
                                         email: this.emailRef.current.value
@@ -186,7 +195,7 @@ export class EditForm extends Component {
                             <Form.Control
                                 ref={this.passwordRef}
                                 type='text'
-                                defaultValue={this.props.userToEdit.password}
+                                defaultValue={userToEdit.password}
                                 onChange={() => {
                                     this.setState({
                                         password: this.passwordRef.current.value
@@ -201,7 +210,7 @@ export class EditForm extends Component {
                             </Form.Label>
                             <Form.Control
                                 as='select'
-                                defaultValue={this.props.userToEdit.role}
+                                defaultValue={userToEdit.role}
                                 ref={this.roleRef}
                                 onChange={() => {
                                     this.setState({
@@ -219,19 +228,20 @@ export class EditForm extends Component {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="light" onClick={() => {
-                        this.setState({
-                            username: this.props.userToEdit.username,
-                            password: this.props.userToEdit.password,
-                            email: this.props.userToEdit.email,
-                            role: this.props.userToEdit.role
-                        });
-
-                    }}
+                    <Button
+                        variant='light' onClick={() => {
+                            this.setState({
+                                username: userToEdit.username,
+                                password: userToEdit.password,
+                                email: userToEdit.email,
+                                role: userToEdit.role
+                            });
+                        }}
                     >
                         Default
                     </Button>
-                    <Button variant="primary"
+                    <Button
+                        variant='primary'
                         onClick={() => {
                             this.sendUserToEdit();
                         }}
@@ -239,9 +249,9 @@ export class EditForm extends Component {
                     >
                         Save changes
                     </Button>
-                    <Overlay target={target} show={show} placement="right">
+                    <Overlay target={target} show={show} placement='right'>
                         {props => (
-                            <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                            <Tooltip id='overlay-example' {...props} show={show.toString()}>
                                 {message}
                             </Tooltip>
                         )}
@@ -259,11 +269,16 @@ EditForm.propTypes = {
     openPage: PropTypes.func
 };
 
-const mapStateToProps = (state) => {
-    return {
-        userToEdit: state.adminPanel_usersPanel.userToEdit
-    };
+EditForm.defaultProps = {
+    userToEdit: {},
+    onHide: () => null,
+    addErrorToState: () => null,
+    openPage: () => null
 };
+
+const mapStateToProps = state => ({
+    userToEdit: state.adminPanel_usersPanel.userToEdit
+});
 
 export default connect(mapStateToProps, {
     addErrorToState

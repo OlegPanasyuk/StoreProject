@@ -1,54 +1,57 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './ShoppingBacketHeader.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-
-class ShoppingBasketHeader extends Component {
-
-
+class ShoppingBasketHeader extends PureComponent {
     render() {
-        let { goods, showCompleteBasket } = this.props;
+        const { goods, showCompleteBasket } = this.props;
         let notItem = null;
         if (goods.size !== 0) {
             notItem = (
-                <span 
+                <span
                     className=' d-flex
                                 align-items-center
-                                justify-content-center 
-                                shopping-backet-header__notification-number'
+                                justify-content-center
+                                shopping-basket-header__notification-number'
                 >
                     {goods.size}
                 </span>
             );
         } else {
-            notItem = ( 
-                <span 
+            notItem = (
+                <span
                     className=' d-flex
                                 align-items-center
-                                justify-content-center 
-                                shopping-backet-header__notification-number
-                                shopping-backet-header__notification-number_hidden'
+                                justify-content-center
+                                shopping-basket-header__notification-number
+                                shopping-basket-header__notification-number_hidden'
                 >
                     {goods.size}
-                </span>);
+                </span>
+            );
         }
         return (
             <React.Fragment>
-                <Link to='/basket' className='ml-1'>
-                    <i 
-                        className = 'fas \
+                <Link
+                    to='/basket'
+                    className='ml-1'
+                    onClick={() => showCompleteBasket()}
+                    role='link'
+                    tabIndex={0}
+                    onKeyPress={() => {}}
+                >
+                    <i
+                        className='fas \
                                     fa-shopping-basket \
-                                    shopping-backet-header_size-l \
-                                    shopping-backet-header_color-grey'
-                        onClick = {()=>showCompleteBasket()}
+                                    shopping-basket-header_size-l \
+                                    shopping-basket-header_color-grey'
                     />
-                    
                 </Link>
                 {notItem}
             </React.Fragment>
-        ); 
+        );
     }
 }
 
@@ -57,11 +60,13 @@ ShoppingBasketHeader.propTypes = {
     showCompleteBasket: PropTypes.func
 };
 
-const mapStateToProps = function(state) {
-    
-    return {
-        goods: state.shoppingBasketReducers.goodsInBasket
-    };
+ShoppingBasketHeader.defaultProps = {
+    goods: {},
+    showCompleteBasket: () => {}
 };
+
+const mapStateToProps = state => ({
+    goods: state.shoppingBasketReducers.goodsInBasket
+});
 
 export default connect(mapStateToProps)(ShoppingBasketHeader);

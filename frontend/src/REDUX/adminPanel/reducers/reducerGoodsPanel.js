@@ -29,56 +29,56 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
     case ADMIN_PANEL_GOODS_PANEL.GOODS.GET.SUCCESS: {
-        let goodsShown = [...action.payload];
+        const goodsShown = [...action.payload];
         return {
             ...state,
             goodsShown
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.GET.FAILED: {
-        let goodsShown = [...action.payload];
+        const goodsShown = [...action.payload];
         return {
             ...state,
             goodsShown
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.FILTER.SUCCESS: {
-        let filters = Object.assign({}, state.filters, action.payload);
+        const filters = Object.assign({}, state.filters, action.payload);
         return {
             ...state,
             filters
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.OPEN: {
-        let editItem = Object.assign({}, state.editItem, action.payload);
+        const editItem = Object.assign({}, state.editItem, action.payload);
         return {
             ...state,
             editItem
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.SUCCESS: {
-        let editItem = Object.assign({}, state.editItem, action.payload);
+        const editItem = Object.assign({}, state.editItem, action.payload);
         return {
             ...state,
             editItem
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.EDIT.CLOSE: {
-        let editItem = Object.assign({}, {
+        const editItem = Object.assign({}, {
             show: false,
             idgoods: null,
             name: null,
             description: null,
             price: 0,
             catalogue_id_catalogue: null
-        } );
+        });
         return {
             ...state,
             editItem
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.DELETE.PERMISSION: {
-        let deleteItem = Object.assign({}, {
+        const deleteItem = Object.assign({}, {
             show: true,
             id: action.payload.id
         });
@@ -88,7 +88,7 @@ export default (state = initialState, action) => {
         };
     }
     case ADMIN_PANEL_GOODS_PANEL.GOODS.DELETE.CLOSE: {
-        let deleteItem = Object.assign({}, {
+        const deleteItem = Object.assign({}, {
             show: false,
             id: null
         });

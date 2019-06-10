@@ -22,21 +22,21 @@ const initState = {
 export default function (state = initState, action) {
     switch (action.type) {
     case ADMIN_PANEL_USERS_PANEL.USERS.GET.SUCCESS: {
-        let usersToShow = Object.assign({}, state.usersToShow, action.payload);
+        const usersToShow = Object.assign({}, state.usersToShow, action.payload);
         return {
             ...state,
             usersToShow
         };
     }
     case ADMIN_PANEL_USERS_PANEL.USERS.EDIT.OPEN: {
-        let userToEdit = Object.assign({}, state.usersToEdit, {show: true},action.payload);
+        const userToEdit = Object.assign({}, state.usersToEdit, {show: true},action.payload);
         return {
             ...state,
             userToEdit
         };
     }
     case ADMIN_PANEL_USERS_PANEL.USERS.EDIT.CLOSE: {
-        let userToEdit = Object.assign({}, {
+        const userToEdit = Object.assign({}, {
             show: false,
             id: null,
             username: '',
@@ -50,7 +50,7 @@ export default function (state = initState, action) {
         };
     }
     case ADMIN_PANEL_USERS_PANEL.USERS.FILTER.SUCCESS: {
-        let filters = Object.assign({}, state.filters, action.payload);
+        const filters = Object.assign({}, state.filters, action.payload);
         return {
             ...state,
             filters

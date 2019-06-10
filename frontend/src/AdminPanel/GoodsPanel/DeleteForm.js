@@ -2,53 +2,50 @@ import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 
 export class DeleteForm extends Component {
-
     constructor(props) {
         super(props);
         this.deleteObject = this.deleteObject.bind(this);
     }
 
     deleteObject() {
-        
         const storage = window.localStorage;
+        const { onHide, item } = this.props;
         if (fetch) {
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-          
-            let myInit = {
+            myHeaders.append('Content-type', 'application/json');
+
+            const myInit = {
                 method: 'DELETE',
-                headers: myHeaders,
+                headers: myHeaders
             };
             fetch(
-                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods?id=${this.props.item.id}`,
+                `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/goods?id=${item.id}`,
                 myInit
             )
-                .then(res => {
-                    return res.text();
-                })
+                .then(res => res.text())
                 .then(() => {
-                    this.props.onHide();
+                    onHide();
                 });
         }
     }
 
     render() {
-
+        const { onHide } = this.props;
         return (
             <Modal
-                show={true}
-                onHide={this.props.onHide}
+                show
+                onHide={onHide}
             >
                 <Modal.Header>
                     <Modal.Title>Delete this object?</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className='d-flex justify-content-end' >
-                    <Button 
+                <Modal.Body className='d-flex justify-content-end'>
+                    <Button
                         variant='primary'
                         onClick={this.deleteObject}
                     >
@@ -57,7 +54,7 @@ export class DeleteForm extends Component {
                     <Button
                         className='ml-3'
                         variant='light'
-                        onClick={this.props.onHide}
+                        onClick={onHide}
                     >
                         Cancel
                     </Button>
@@ -72,10 +69,13 @@ DeleteForm.propTypes = {
     onHide: PropTypes.func
 };
 
-const mapStateToProps = (state) => {
-    return {
-        item: state.adminPanel_goodsPanel.deleteItem
-    };
+DeleteForm.defaultProps = {
+    item: {},
+    onHide: () => null
 };
 
-export default connect(mapStateToProps)(DeleteForm); 
+const mapStateToProps = state => ({
+    item: state.adminPanel_goodsPanel.deleteItem
+});
+
+export default connect(mapStateToProps)(DeleteForm);

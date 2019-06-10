@@ -1,6 +1,6 @@
 import { ADMIN_PANEL_IMAGES_CONTROL_PANEL } from '../actions/actionTypes';
 
-let InitialState = {
+const InitialState = {
     addingForm: {
         show: false
     },
@@ -17,7 +17,7 @@ let InitialState = {
         url: '',
         createdAt: '',
         updatedAt: ''
-    }, 
+    },
     filters: {
         name: '',
         type: ''
@@ -27,9 +27,9 @@ let InitialState = {
 export default function (state = InitialState, action) {
     switch (action.type) {
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.ADD.OPEN: {
-        let addingForm = Object.assign({}, state.addingForm, action.payload);
-        let editForm = Object.assign({}, state.editForm, { show: false });
-        let deletingForm = Object.assign({}, state.deletingForm, {show: false});
+        const addingForm = Object.assign({}, state.addingForm, action.payload);
+        const editForm = Object.assign({}, state.editForm, { show: false });
+        const deletingForm = Object.assign({}, state.deletingForm, { show: false });
         return {
             ...state,
             deletingForm,
@@ -38,30 +38,30 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.ADD.CLOSE: {
-        let addingForm = Object.assign({}, state.addingForm, action.payload);
+        const addingForm = Object.assign({}, state.addingForm, action.payload);
         return {
             ...state,
             addingForm
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.ADD.SUCCESS: {
-        let imageInWork = Object.assign({}, state.imageInWork);
+        const imageInWork = Object.assign({}, state.imageInWork);
         return {
             ...state,
             imageInWork
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.ADD.FAILED: {
-        let imageInWork = Object.assign({}, state.imageInWork);
+        const imageInWork = Object.assign({}, state.imageInWork);
         return {
             ...state,
             imageInWork
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.OPEN: {
-        let editForm = Object.assign({}, state.editForm, {show: true});
-        let addingForm = Object.assign({}, state.addingForm, {show: false});
-        let imageInWork = Object.assign({}, state.imageInWork, action.payload);
+        const editForm = Object.assign({}, state.editForm, { show: true });
+        const addingForm = Object.assign({}, state.addingForm, { show: false });
+        const imageInWork = Object.assign({}, state.imageInWork, action.payload);
         return {
             ...state,
             addingForm,
@@ -70,8 +70,8 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.CLOSE: {
-        let editForm = Object.assign({}, state.editForm, {show: false});
-        let imageInWork = Object.assign({}, state.imageInWork, {
+        const editForm = Object.assign({}, state.editForm, { show: false });
+        const imageInWork = Object.assign({}, state.imageInWork, {
             id_img: null,
             name: '',
             type: '',
@@ -86,8 +86,8 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.SUCCESS: {
-        let editForm = Object.assign({}, state.editForm, {show: false});
-        let imageInWork = Object.assign({}, state.imageInWork, { 
+        const editForm = Object.assign({}, state.editForm, { show: false });
+        const imageInWork = Object.assign({}, state.imageInWork, {
             id_img: null,
             name: '',
             type: '',
@@ -102,15 +102,15 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.EDIT.FAILED: {
-        let imageInWork = Object.assign({}, state.imageInWork);
+        const imageInWork = Object.assign({}, state.imageInWork);
         return {
             ...state,
             imageInWork
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.OPEN: {
-        let imageInWork = Object.assign({}, state.imageInWork, action.payload);
-        let deletingForm = Object.assign({}, state.deletingForm, {show: true});
+        const imageInWork = Object.assign({}, state.imageInWork, action.payload);
+        const deletingForm = Object.assign({}, state.deletingForm, { show: true });
         return {
             ...state,
             deletingForm,
@@ -118,7 +118,7 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.CLOSE: {
-        let imageInWork = Object.assign({}, state.imageInWork,{
+        const imageInWork = Object.assign({}, state.imageInWork, {
             id_img: null,
             name: '',
             type: '',
@@ -126,7 +126,7 @@ export default function (state = InitialState, action) {
             createdAt: '',
             updatedAt: ''
         });
-        let deletingForm = Object.assign({}, state.deletingForm, {show: false});
+        const deletingForm = Object.assign({}, state.deletingForm, { show: false });
         return {
             ...state,
             deletingForm,
@@ -134,7 +134,7 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.SUCCESS: {
-        let imageInWork = Object.assign({}, state.imageInWork,{
+        const imageInWork = Object.assign({}, state.imageInWork, {
             id_img: null,
             name: '',
             type: '',
@@ -148,14 +148,14 @@ export default function (state = InitialState, action) {
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.DELETE.FAILED: {
-        let imageInWork = Object.assign({}, state.imageInWork);
+        const imageInWork = Object.assign({}, state.imageInWork);
         return {
             ...state,
             imageInWork
         };
     }
     case ADMIN_PANEL_IMAGES_CONTROL_PANEL.IMAGE.FILTERS.SET: {
-        let filters = Object.assign({}, state.filters, action.payload);
+        const filters = Object.assign({}, state.filters, action.payload);
         return {
             ...state,
             filters

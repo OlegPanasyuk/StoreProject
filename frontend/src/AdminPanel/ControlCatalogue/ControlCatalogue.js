@@ -7,21 +7,56 @@ import {
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
     editCatalogueItem,
     editCatalogueItemOpen,
     editCatalogueItemClose,
-    addCatalogueItemOpen,
-    addCatalogueItemClose
+    addCatalogueItemOpen
 } from '../../REDUX/adminPanel/actions/actionsCatalogueControl';
 
-//Component
-import TreeView from './TreeView';
-import EditCatalogueItem from './EditCatalogueItem';
-import AddCatalogueItem from './AddCatalogueItem';
+// Component
+import TreeViewComponent from './TreeView';
+import EditCatalogueItemComponent from './EditCatalogueItem';
+import AddCatalogueItemComponent from './AddCatalogueItem';
 
+function sortData(data) {
+    const tree = {
+        id_catalogue: -1,
+        name: 'tree',
+        children: []
+    };
+
+    const arrG = data.sort((a, b) => -(b.id_catalogue - a.id_catalogue));
+    const arrG1 = arrG.filter(el => el.parent_id === -1);
+    function sorting(arr2, obj = {}) {
+        arr2.forEach((el) => {
+            if (el.parent_id === obj.id_catalogue) {
+                const children = arrG.filter(ele => ele.parent_id === el.id_catalogue);
+                if (obj.children) {
+                    if (children.length > 0) {
+                        sorting(children, el);
+                    }
+                    obj.children.push(el);
+                } else {
+                    Object.defineProperty(obj, 'children', {
+                        value: [],
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    });
+                    if (children.length > 0) {
+                        sorting(children, el);
+                    }
+                    obj.children.push(el);
+                }
+            }
+        });
+        return obj;
+    }
+    return sorting(arrG1, tree).children;
+}
 
 export class ControlCatalogue extends Component {
     constructor(props) {
@@ -35,60 +70,21 @@ export class ControlCatalogue extends Component {
         };
     }
 
-    sortData(data) {
-        var tree = {
-            "id_catalogue": -1,
-            "name": 'tree',
-            children: []
-        };
-
-        let arrG = data.sort((a, b) => {
-            return -(b.id_catalogue - a.id_catalogue);
-        });
-        let arrG1 = arrG.filter(el => {
-            return el.parent_id === -1;
-        });
-        function sorting(arr2, obj = {}) {
-            arr2.forEach((el) => {
-                if (el.parent_id === obj.id_catalogue) {
-                    let children = arrG.filter((ele) => {
-                        return ele.parent_id === el.id_catalogue;
-                    });
-                    if (obj.children) {
-                        if (children.length > 0) {
-                            sorting(children, el);
-                        }
-                        obj.children.push(el);
-                    } else {
-                        obj.children = [];
-                        if (children.length > 0) {
-                            sorting(children, el);
-                        }
-                        obj.children.push(el);
-                    }
-                }
-            });
-            return obj;
-        }
-        return sorting(arrG1, tree).children;
-    }
 
     getCatalogue() {
         const self = this;
         if (fetch) {
-            let myInit = {
-                method: 'GET',
+            const myInit = {
+                method: 'GET'
             };
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue`, myInit)
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
-                    let arr = new Array(...data);
-                    let tree = self.sortData(data);
+                .then(res => res.json())
+                .then((data) => {
+                    const arr = new Array(...data);
+                    const tree = sortData(data);
                     self.setState({
                         arrOfCatalogue: tree,
-                        arrOfCatalogueNotSorted: arr,
+                        arrOfCatalogueNotSorted: arr
                     });
                 });
         }
@@ -98,9 +94,17 @@ export class ControlCatalogue extends Component {
         this.getCatalogue();
     }
 
+
     render() {
-        let data = this.state.arrOfCatalogue;
-        let dataN = this.state.arrOfCatalogueNotSorted;
+        const {
+            arrOfCatalogue,
+            arrOfCatalogueNotSorted,
+            showAddForm,
+            showEditForm
+        } = this.state;
+        const { editCatalogueItem } = this.props;
+        const data = arrOfCatalogue;
+        const dataN = arrOfCatalogueNotSorted;
         return (
             <Container>
                 <Row className='mb-3'>
@@ -119,52 +123,54 @@ export class ControlCatalogue extends Component {
                 </Row>
                 <Row>
                     <Col xs='3'>
-                        <TreeView
+                        <TreeViewComponent
                             data={data}
-                            name="data"
+                            name='data'
                             showEditForm={() => {
-                                this.setState((state) => ({
+                                this.setState({
                                     showEditForm: true,
                                     showAddForm: false
-                                }));
+                                });
                             }}
                             closeEditForm={() => {
-                                this.setState((state) => ({
+                                this.setState({
                                     showEditForm: false
-                                    
-                                }));
+                                });
                             }}
-                            editCatalogueItem={this.props.editCatalogueItem}
+                            editCatalogueItem={editCatalogueItem}
                         />
                     </Col>
                     <Col>
                         {
-                            (this.state.showAddForm) ?
-                                <AddCatalogueItem
-                                    getCatalogue={this.getCatalogue}
-                                    cancel={() => {
-                                        this.setState({
-                                            showAddForm: false
-                                        });
-                                    }}
-                                    arrOfCatalogueNotSorted={dataN}
-                                /> : ''
+                            (showAddForm)
+                                ? (
+                                    <AddCatalogueItemComponent
+                                        getCatalogue={this.getCatalogue}
+                                        cancel={() => {
+                                            this.setState({
+                                                showAddForm: false
+                                            });
+                                        }}
+                                        arrOfCatalogueNotSorted={dataN}
+                                    />
+                                ) : ''
 
                         }
                         {
-                            (this.state.showEditForm)
-                                ?
-                                <EditCatalogueItem
-                                    cancel={() => {
-                                        this.setState({
-                                            showEditForm: false,
-                                            showAddForm: false
-                                        });
-                                    }}
-                                    arrOfCatalogueNotSorted={dataN}
-                                    getCatalogue={this.getCatalogue}
-                                    editCatalogueItem={this.props.editCatalogueItem}
-                                />
+                            (showEditForm)
+                                ? (
+                                    <EditCatalogueItemComponent
+                                        cancel={() => {
+                                            this.setState({
+                                                showEditForm: false,
+                                                showAddForm: false
+                                            });
+                                        }}
+                                        arrOfCatalogueNotSorted={dataN}
+                                        getCatalogue={this.getCatalogue}
+                                        editCatalogueItem={editCatalogueItem}
+                                    />
+                                )
                                 : ''
                         }
 
@@ -175,22 +181,21 @@ export class ControlCatalogue extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        editItem: state.adminPanel_catalogue.editItem,
-        addItem: state.adminPanel_catalogue.addItem
-    };
-};
+const mapStateToProps = state => ({
+    editItem: state.adminPanel_catalogue.editItem,
+    addItem: state.adminPanel_catalogue.addItem
+});
 
 ControlCatalogue.propTypes = {
-    editCatalogueItem: PropTypes.func,
-    addCatalogueItemClose: PropTypes.func
+    editCatalogueItem: PropTypes.func
 };
 
+ControlCatalogue.defaultProps = {
+    editCatalogueItem: () => null
+};
 export default connect(mapStateToProps, {
     editCatalogueItem,
     editCatalogueItemOpen,
     editCatalogueItemClose,
-    addCatalogueItemOpen,
-    addCatalogueItemClose
+    addCatalogueItemOpen
 })(ControlCatalogue);

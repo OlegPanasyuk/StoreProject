@@ -11,16 +11,14 @@ export class FilterGoodsPanel extends Component {
     }
 
     UNSAFE_componentWillMount() {
-        const  self = this;
+        const self = this;
         if (fetch) {
-            let myInit = {
-                method: 'GET',
+            const myInit = {
+                method: 'GET'
             };
             fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/catalogue`, myInit)
-                .then(res => {
-                    return res.json();
-                })
-                .then(data=>{
+                .then(res => res.json())
+                .then((data) => {
                     self.setState({
                         arrOfCatalogue: data
                     });
@@ -29,20 +27,19 @@ export class FilterGoodsPanel extends Component {
     }
 
     render() {
-        let { updateState } = this.props;
+        const { updateState } = this.props;
+        const { arrOfCatalogue } = this.state;
         return (
             <Form>
                 <Form.Group>
                     <Form.Control
                         type='text'
                         placeholder='text input for search name'
-                        onChange={
-                            (e) => {
-                                updateState(null, {
-                                    nameSearch: e.target.value
-                                });
-                            }
-                        }
+                        onChange={(e) => {
+                            updateState(null, {
+                                nameSearch: e.target.value
+                            });
+                        }}
                     />
                 </Form.Group>
                 <Form.Group>
@@ -75,7 +72,7 @@ export class FilterGoodsPanel extends Component {
                     <Form.Label>Category:</Form.Label>
                     <Form.Control
                         as='select'
-                        defaultValue = 'Select category'
+                        defaultValue='Select category'
                         onChange={(e) => {
                             updateState(null, {
                                 id_catalogue: e.target.value
@@ -83,12 +80,11 @@ export class FilterGoodsPanel extends Component {
                         }}
                     >
                         <option disabled>Select category</option>
-                        {this.state.arrOfCatalogue.map((el,i) => {
-                            return (
-                                <option key={`cat-filter-${i}`} value={el.id_catalogue}>
-                                    {`${el.name}`}
-                                </option>);
-                        })}
+                        {arrOfCatalogue.map(el => (
+                            <option key={`cat-filter-${el.id_catalogue}`} value={el.id_catalogue}>
+                                {`${el.name}`}
+                            </option>
+                        ))}
                     </Form.Control>
                 </Form.Group>
             </Form>
@@ -99,6 +95,10 @@ export class FilterGoodsPanel extends Component {
 
 FilterGoodsPanel.propTypes = {
     updateState: PropTypes.func
+};
+
+FilterGoodsPanel.defaultProps = {
+    updateState: () => null
 };
 
 export default FilterGoodsPanel;

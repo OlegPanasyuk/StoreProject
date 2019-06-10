@@ -1,22 +1,14 @@
 var express = require('express');
-var router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStratagy = require('../authorization/jwt');
+const jwtStrategy = require('../authorization/jwt');
 const { Users } = require('../../models/index');
 
-passport.use(jwtStratagy);
+var router = express.Router();
 
-function checkAdmin(req, res, next) {
-    if (req.body.user && req.body.user.p === 'admin') {
-        next();
-    } else {
-        res.status(401).send('You are not admin');
-    }
-}
+passport.use(jwtStrategy);
 
-
-router.post('/reg', (req, res, next) => {
+router.post('/reg', (req, res) => {
     let { email, password1, password2 } = req.body;
     const regExEmail = /[\w_.-]+@\w+.\w+/gmi;
     let arr = regExEmail.exec(email);
@@ -43,9 +35,6 @@ router.post('/reg', (req, res, next) => {
                     role: 'User'
                 }
             }).then(([user, created]) => {
-                // console.log(user.get({
-                //     plain: true
-                // }));
                 res.status(201).json({
                     message: (created) ? 'User was cteated' : `User with '${user.email}' email is exist`,
                     status: created,
@@ -73,9 +62,6 @@ router.post('/login', (req, res) => {
         checkRights = JSON.parse(req.headers['checkrights']);
     }
     let roles = ['Consultant', 'Admin', 'SuperAdmin'];
-    // need find user in DB
-    // AND compare pass with pass in DB
-    // secret word must be taken from env
     Users.findOne({ where: { email: email } }).then((user) => {
         if (user && user.email === email) {
             if (password === user.password) {
@@ -84,7 +70,7 @@ router.post('/login', (req, res) => {
                         const opts = {};
                         const role = user.role;
                         opts.expiresIn = 1200;
-                        const secret = 'Oleg';
+                        const secret = process.env.SECRET_KEY_AUTH;
                         const token = jwt.sign({ email, role }, secret, opts);
                         return res.status(200).json({
                             message: 'Auth Passed',
@@ -92,12 +78,11 @@ router.post('/login', (req, res) => {
                             role: user.role,
                             username: user.username
                         });
-                    } 
-                    
+                    }
                 } else {
                     const opts = {};
                     opts.expiresIn = 1200;
-                    const secret = 'Oleg';
+                    const secret = process.env.SECRET_KEY_AUTH;
                     const token = jwt.sign({ email }, secret, opts);
                     return res.status(200).json({
                         message: 'Auth Passed',
@@ -106,55 +91,37 @@ router.post('/login', (req, res) => {
                         username: user.username
                     });
                 }
-                
+
             } else {
-                res.status(401).send(`Password or email is incorrect`);
+                res.status(401).send('Password or email is incorrect');
             }
         } else {
-            res.status(401).send(`Password or email is incorrect`);
+            res.status(401).send('Password or email is incorrect');
         }
         res.status(401).send(`${email} ${password} Auth failed`);
     });
 });
 
-// router.get('/p', passport.authenticate('jwt', { session: false}, (err, user, info)=>{
-//     console.log(user);
-//     next();
-// }) , (req, res) => {
-//     return res.status(200).send('Ok');
-// });
-
-//passport.authenticate('jwt', { session: false}),
-
-router.post('/logintoken',  function (req, res) {
+router.post('/logintoken', function (req, res) {
     let token = req.headers['authorization'].split(' ')[1];
-    jwt.verify(token, 'Oleg', (err, decode) => {
+    jwt.verify(token, process.env.SECRET_KEY_AUTH, (err, payload) => {
         if (err) {
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+            return res.status(400).send({ auth: false, message: 'Failed to authenticate token.' });
         }
-        let email = decode.email;
+        let email = payload.email;
         Users.findOne({ where: { email } }).then((user) => {
             const opts = {};
             opts.expiresIn = 1200;
-            const secret = 'Oleg';
-            const token = jwt.sign({ email: decode.email }, secret, opts);
+            const secret = process.env.SECRET_KEY_AUTH;
+            const token = jwt.sign({ email: payload.email }, secret, opts);
             return res.status(200).json({
                 message: 'Auth Passed',
                 token,
                 role: user.role,
                 username: user.username
             });
-
-
-            //res.status(401).send(`${decode.email} Auth failed`);
         });
-        // res.status(401).send(`${decode.email} Auth failed`);
     });
-
-    // res.status(200).json({
-    //     message: 'logintoken OK',
-
-    // });
 });
 
 module.exports = router;

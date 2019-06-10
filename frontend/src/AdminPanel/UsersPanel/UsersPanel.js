@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, CardColumns, Button } from 'react-bootstrap';
+import {
+    Container, Row, Col, CardColumns, Button
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Redux 
+// Redux
 import { connect } from 'react-redux';
 import {
     showUsers,
@@ -10,11 +12,11 @@ import {
     filterUsers
 } from '../../REDUX/adminPanel/actions/actionsUsersPanel';
 
-//Components 
-import UserItem from './UserItem';
+// Components
+import UserItemComponent from './UserItem';
 import ListOfPages from './ListOfPages';
 import FilterUsers from './FilterUsers';
-import AddingUser from './AddingUser';
+import AddingUserComponent from './AddingUser';
 import EditUser from './EditForm';
 
 export class UsersPanel extends Component {
@@ -30,12 +32,12 @@ export class UsersPanel extends Component {
     }
 
     prepareSearchRow() {
-        let searchStr = [];
-        let { filters } = this.props;
+        const searchStr = [];
+        const { filters } = this.props;
         Object.keys(filters).forEach((el) => {
             if ((el === 'nameSearch') && (filters[el] !== '')) {
                 searchStr.push(`${el}=${filters[el]}`);
-            } 
+            }
             if ((el === 'role') && (filters[el] !== '')) {
                 searchStr.push(`${el}=${filters[el]}`);
             }
@@ -48,11 +50,10 @@ export class UsersPanel extends Component {
         if (e) {
             e.preventDefault();
         }
-
+        const { filterUsers } = this.props;
         // I don't like it
-        let a = new Promise((res, rej) => {
-            
-            this.props.filterUsers(obj);
+        const a = new Promise((res, rej) => {
+            filterUsers(obj);
             res(true);
             if (!obj) rej();
         });
@@ -64,14 +65,14 @@ export class UsersPanel extends Component {
     }
 
     openPage(i) {
-        let self = this;
         const storage = window.localStorage;
+        const { showUsers, filterUsers } = this.props;
         if (fetch) {
-            let searchStr = this.prepareSearchRow();
-            let myHeaders = new Headers();
+            const searchStr = this.prepareSearchRow();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let myInit = {
+            myHeaders.append('Content-type', 'application/json');
+            const myInit = {
                 method: 'GET',
                 headers: myHeaders,
                 cache: 'default'
@@ -89,9 +90,9 @@ export class UsersPanel extends Component {
                 myInit
             )
                 .then((res) => {
-                    self.props.filterUsers({activePage: i});
-                    res.json().then(function (data) {
-                        self.props.showUsers(data);
+                    filterUsers({ activePage: i });
+                    res.json().then((data) => {
+                        showUsers(data);
                     });
                 });
         }
@@ -100,12 +101,12 @@ export class UsersPanel extends Component {
     UNSAFE_componentWillMount() {
         const self = this;
         const storage = window.localStorage;
+        const { showUsers } = this.props;
         if (fetch) {
-
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let myInit = {
+            myHeaders.append('Content-type', 'application/json');
+            const myInit = {
                 method: 'GET',
                 headers: myHeaders,
                 cache: 'default'
@@ -115,17 +116,17 @@ export class UsersPanel extends Component {
                 .then((users) => {
                     if (users.status === 200) {
                         return users.json();
-                    } else if (users.status === 401) {
+                    } if (users.status === 401) {
                         self.setState({
                             m: 'You are not Unauthorized or not have permission to access of Users Control'
                         });
                     } else {
                         window.location.href = '/adminpanel/';
                     }
-                    
+                    return null;
                 })
                 .then((users) => {
-                    self.props.showUsers(users);
+                    showUsers(users);
                 });
         }
     }
@@ -133,12 +134,16 @@ export class UsersPanel extends Component {
     render() {
         let addingModal = null;
         let editModal = null;
-        let count = this.props.usersToShowCount;
-        let {limit, activePage} = this.props.filters;
-        if (this.state.showAddingModal) {
+        const {
+            usersToShowCount, filters, userToEdit, editUserClose, usersToShow
+        } = this.props;
+        const count = usersToShowCount;
+        const { showAddingModal, m } = this.state;
+        const { limit, activePage } = filters;
+        if (showAddingModal) {
             addingModal = (
-                <AddingUser
-                    show={this.state.showAddingModal}
+                <AddingUserComponent
+                    show={showAddingModal}
                     onHide={() => {
                         this.setState({
                             showAddingModal: false
@@ -149,11 +154,11 @@ export class UsersPanel extends Component {
             );
         }
 
-        if (this.props.userToEdit.show) {
+        if (userToEdit.show) {
             editModal = (
                 <EditUser
                     onHide={() => {
-                        this.props.editUserClose();
+                        editUserClose();
                     }}
                     openPage={this.openPage}
                 />
@@ -164,8 +169,8 @@ export class UsersPanel extends Component {
 
             <Container>
                 {addingModal}
-                {editModal} 
-                {this.state.m}
+                {editModal}
+                {m}
                 <Row className='mb-3'>
                     <Col>
                         <ListOfPages
@@ -187,17 +192,15 @@ export class UsersPanel extends Component {
                         >
                             Add User
                         </Button>
-                        <FilterUsers 
-                            updateState = {this.updateState}
+                        <FilterUsers
+                            updateState={this.updateState}
                         />
                     </Col>
                     <Col className='col-9'>
                         <CardColumns>
-                            {(this.props.usersToShow) && this.props.usersToShow.map((el, i) => {
-                                return (
-                                    <UserItem key={`el${el.username}-${i}`} obj={el} openPage={this.openPage} />
-                                );
-                            })}
+                            {(usersToShow) && usersToShow.map(el => (
+                                <UserItemComponent key={`el${el.username}`} obj={el} openPage={this.openPage} />
+                            ))}
                         </CardColumns>
                     </Col>
                 </Row>
@@ -217,14 +220,22 @@ UsersPanel.propTypes = {
     editUserClose: PropTypes.func
 };
 
-const mapStateToProps = (state) => {
-    return {
-        usersToShow: state.adminPanel_usersPanel.usersToShow.rows,
-        usersToShowCount: state.adminPanel_usersPanel.usersToShow.count,
-        userToEdit: state.adminPanel_usersPanel.userToEdit,
-        filters: state.adminPanel_usersPanel.filters
-    };
+UsersPanel.defaultProps = {
+    showUsers: () => {},
+    filters: {},
+    filterUsers: () => {},
+    userToEdit: {},
+    usersToShow: [],
+    usersToShowCount: 0,
+    editUserClose: () => {}
 };
+
+const mapStateToProps = state => ({
+    usersToShow: state.adminPanel_usersPanel.usersToShow.rows,
+    usersToShowCount: state.adminPanel_usersPanel.usersToShow.count,
+    userToEdit: state.adminPanel_usersPanel.userToEdit,
+    filters: state.adminPanel_usersPanel.filters
+});
 
 export default connect(mapStateToProps, {
     showUsers,

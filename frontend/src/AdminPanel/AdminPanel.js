@@ -1,28 +1,33 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import LoginForm from './LoginForm/LoginForm';
-import NavBarAdminPanel from './NavBarAdminPanel/NavBarAdminPanel';
+import {
+    BrowserRouter as Router,
+    Route,
+    Redirect,
+    Switch
+} from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Place for import components
-import GoodsPanel from './GoodsPanel/GoodsPanel';
-import ErrorLayer from '../Error/ErrorLayer';
-import UsersPanel from './UsersPanel/UsersPanel';
-import ControlCatalogue from './ControlCatalogue/ControlCatalogue';
-import ControlOfImages from './ControlOfImages/ControlOfImages';
+// Cors
+import rest from 'rest';
+import pathPrefix from 'rest/interceptor/pathPrefix';
+import errorCode from 'rest/interceptor/errorCode';
+import mime from 'rest/interceptor/mime';
 
-//Redux 
+// Redux
 import { connect } from 'react-redux';
 import {
     userAuthorizedSuccess
 } from '../REDUX/adminPanel/actions/actionsLoginForm';
 
-//cors
-import rest from 'rest';
-import pathPrefix from 'rest/interceptor/pathPrefix';
-import errorCode from 'rest/interceptor/errorCode';
-import mime from 'rest/interceptor/mime';
+// Place for import components
+import GoodsPanelComponent from './GoodsPanel/GoodsPanel';
+import ErrorLayer from '../Error/ErrorLayer';
+import UsersPanelComponent from './UsersPanel/UsersPanel';
+import ControlCatalogueComponent from './ControlCatalogue/ControlCatalogue';
+import ControlOfImagesComponent from './ControlOfImages/ControlOfImages';
+import LoginFormComponent from './LoginForm/LoginForm';
+import NavBarAdminPanelComponent from './NavBarAdminPanel/NavBarAdminPanel';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
@@ -30,12 +35,9 @@ const client = rest.wrap(mime, { mime: 'application/json' })
 
 
 export class AdminPanel extends Component {
-
-
-
     UNSAFE_componentWillMount() {
-        let token = window.localStorage.getItem('Authorization');
-        
+        const token = window.localStorage.getItem('Authorization');
+        const { userAuthorizedSuccess } = this.props;
         if (token) {
             client({
                 method: 'POST',
@@ -43,49 +45,48 @@ export class AdminPanel extends Component {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then(data => {
+            }).then((data) => {
                 if (data.status.code === 200) {
-                    let storage = window.localStorage;
+                    const storage = window.localStorage;
                     storage.setItem('Authorization', data.entity.token);
-                    this.props.userAuthorizedSuccess(data.entity);
+                    userAuthorizedSuccess(data.entity);
                 }
             }).catch(() => {
                 window.localStorage.removeItem('Authorization');
             });
-        } 
+        }
     }
 
     render() {
-        const { match = { path: '', url: '' } } = this.props;
+        const { match = { path: '', url: '' }, user, errors } = this.props;
         return (
             <Router>
 
                 <Switch>
-                    <Route path={`${match.path}/login`} component={LoginForm}></Route>
+                    <Route path={`${match.path}/login`} component={LoginFormComponent} />
                     <Route render={() => (
-                        (!this.props.user.token)
-                            ?
-                            (
+                        (!user.token)
+                            ? (
                                 <Redirect to={`${match.path}/login`} />
                             )
-                            :
-                            (
+                            : (
                                 <React.Fragment>
-                                    <NavBarAdminPanel match={match} />
+                                    <NavBarAdminPanelComponent match={match} />
                                     <Container className='mt-3'>
                                         <Switch>
-                                            <Route path={`${match.path}/goods`} component={GoodsPanel} />
-                                            <Route path={`${match.path}/users`} component={UsersPanel} />
-                                            <Route path={`${match.path}/catalogue`} component={ControlCatalogue} />
-                                            <Route path={`${match.path}/images`} component={ControlOfImages} />
-                                            <Route component={GoodsPanel} />
+                                            <Route path={`${match.path}/goods`} component={GoodsPanelComponent} />
+                                            <Route path={`${match.path}/users`} component={UsersPanelComponent} />
+                                            <Route path={`${match.path}/catalogue`} component={ControlCatalogueComponent} />
+                                            <Route path={`${match.path}/images`} component={ControlOfImagesComponent} />
+                                            <Route component={GoodsPanelComponent} />
                                         </Switch>
                                     </Container>
                                     <ErrorLayer
-                                        Errors={this.props.errors}
+                                        Errors={errors}
                                     />
                                 </React.Fragment>
-                            ))} />
+                            ))}
+                    />
                 </Switch>
             </Router>
         );
@@ -99,15 +100,18 @@ AdminPanel.propTypes = {
     userAuthorizedSuccess: PropTypes.func
 };
 
-
-const mapStoreToProps = (state) => {
-    return ({
-        user: state.adminPanel_User,
-        errors: state.errorReducers.Errors
-    });
+AdminPanel.defaultProps = {
+    match: {},
+    errors: [],
+    user: {},
+    userAuthorizedSuccess: () => {}
 };
+
+const mapStoreToProps = state => ({
+    user: state.adminPanel_User,
+    errors: state.errorReducers.Errors
+});
 
 export default connect(mapStoreToProps, {
     userAuthorizedSuccess
 })(AdminPanel);
-//

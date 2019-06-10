@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Card, Button, Col, Row, ButtonGroup } from 'react-bootstrap';
+import {
+    Card, Button, Col, Row, ButtonGroup
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-//Redux 
+// Redux
 import { connect } from 'react-redux';
 import {
     openEditGoodsItem,
@@ -19,47 +21,49 @@ export class GoodsItem extends Component {
     }
 
     UNSAFE_componentWillMount() {
-        let self = this;
+        const self = this;
+        const { obj } = this.props;
         if (fetch) {
-            let myInit = {
+            const myInit = {
                 method: 'GET',
                 cache: 'default'
             };
 
-            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/goods/${this.props.obj.idgoods}`, myInit)
-                .then(res => {
+            fetch(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/goods/${obj.idgoods}`, myInit)
+                .then((res) => {
                     if (res.status === 200) {
                         return res.json();
                     }
+                    return null;
                 })
-                .then(img => {
+                .then((img) => {
                     self.setState({
                         id_img: img[0].imgs_id_img
                     });
-
                 });
-
         }
     }
 
     render() {
-        let { obj } = this.props;
-        let { id_img } = this.state;
+        const { obj, openEditGoodsItem, permissionToDelete } = this.props;
+        const { id_img } = this.state;
         let src = '';
 
         src = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/images/${id_img}`;
 
         return (
             <Card className='mb-3'>
-                <Card.Header >
+                <Card.Header>
 
                     <Row>
                         <Col>
                             <Row>
                                 <Col xs={2}>
-                                    <Card.Img variant="top" src={src} style={{
-                                        width: '100%'
-                                    }} />
+                                    <Card.Img
+                                        variant='top' src={src} style={{
+                                            width: '100%'
+                                        }}
+                                    />
                                 </Col>
                                 <Col>
                                     <Card.Title>
@@ -76,21 +80,21 @@ export class GoodsItem extends Component {
                         >
                             <Button
                                 variant='light'
-                                onClick={() => this.props.openEditGoodsItem({
+                                onClick={() => openEditGoodsItem({
                                     ...obj,
                                     id_img,
                                     show: true
                                 })}
                             >
-                                <i className="far fa-edit"></i>
+                                <i className='far fa-edit' />
                             </Button>
                             <Button
                                 variant='light'
                                 onClick={() => {
-                                    this.props.permissionToDelete(obj.idgoods);
+                                    permissionToDelete(obj.idgoods);
                                 }}
                             >
-                                <i className="fas fa-trash-alt"></i>
+                                <i className='fas fa-trash-alt' />
                             </Button>
                         </ButtonGroup>
                     </Row>
@@ -109,11 +113,15 @@ export class GoodsItem extends Component {
 
 GoodsItem.propTypes = {
     obj: PropTypes.object,
-    id: PropTypes.number,
     openEditGoodsItem: PropTypes.func,
     permissionToDelete: PropTypes.func
 };
 
+GoodsItem.defaultProps = {
+    obj: {},
+    openEditGoodsItem: () => null,
+    permissionToDelete: () => null
+};
 
 export default connect(null, {
     openEditGoodsItem,

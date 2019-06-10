@@ -8,11 +8,11 @@ import {
 import md5 from 'md5';
 import PropTypes from 'prop-types';
 
-//Redux
+// Redux
 import { connect } from 'react-redux';
 import {
     addErrorToState
-} from '../../REDUX/actions/actionsErrors.js';
+} from '../../REDUX/actions/actionsErrors';
 import {
     editCatalogueItem
 } from '../../REDUX/adminPanel/actions/actionsCatalogueControl';
@@ -24,15 +24,21 @@ export class DeletingForm extends Component {
     }
 
     sendRequestToDelete() {
-        let self = this;
-        let storage = window.localStorage;
+        const self = this;
+        const storage = window.localStorage;
+        const {
+            getCatalogue,
+            editCatalogueItem,
+            onHide,
+            addErrorToState
+        } = this.props;
         if (fetch) {
-            let myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
-            myHeaders.append("Content-type", 'application/json');
-            let myInit = {
+            myHeaders.append('Content-type', 'application/json');
+            const myInit = {
                 method: 'DELETE',
-                headers: myHeaders,
+                headers: myHeaders
             };
             fetch(
                 `${
@@ -42,28 +48,26 @@ export class DeletingForm extends Component {
                 }/catalogue/${self.props.editItem.id_catalogue}`,
                 myInit
             )
-                .then(res => {
-                    return res.text();
-                })
-                .then(data => {
+                .then(res => res.text())
+                .then((data) => {
                     if (data) {
-                        let d = new Date();
+                        const d = new Date();
                         if (data === 'Item is deleted') {
-                            this.props.getCatalogue();
-                            this.props.editCatalogueItem({
+                            getCatalogue();
+                            editCatalogueItem({
                                 id_catalogue: '',
                                 name: '',
                                 description: '',
                                 parent_id: ''
                             });
-                            this.props.onHide();
-                            this.props.addErrorToState({
+                            onHide();
+                            addErrorToState({
                                 id: md5(`${'Notification from DeletingItem'}${d.valueOf()}`),
                                 level: 'Success',
                                 message: data
                             });
                         } else {
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from DeletingItem'}${d.valueOf()}`),
                                 level: 'Error',
                                 message: data
@@ -72,23 +76,26 @@ export class DeletingForm extends Component {
                     }
                 })
                 .catch((e) => {
-                    let d = new Date();
-                    this.props.addErrorToState({
+                    const d = new Date();
+                    addErrorToState({
                         id: md5(`${'Notification from DeletingItem'}${d.valueOf()}`),
                         level: 'Error',
                         message: e
                     });
                 });
         }
-
     }
 
 
     render() {
+        const {
+            onHide,
+            show
+        } = this.props;
         return (
             <Modal
-                show={this.props.show}
-                onHide={this.props.onHide}
+                show={show}
+                onHide={onHide}
             >
                 <Modal.Header closeButton>
                     Delete this object?
@@ -96,7 +103,7 @@ export class DeletingForm extends Component {
                 <Modal.Body>
                     <Button
                         variant='primary'
-                        onClick={()=>{
+                        onClick={() => {
                             this.sendRequestToDelete();
                         }}
                     >
@@ -104,7 +111,7 @@ export class DeletingForm extends Component {
                     </Button>
                     <Button
                         variant='light'
-                        onClick={this.props.onHide}
+                        onClick={onHide}
                     >
                         Cancel
                     </Button>
@@ -122,11 +129,17 @@ DeletingForm.propTypes = {
     show: PropTypes.bool
 };
 
-const mapStateToProps = (state) => {
-    return {
-        editItem: state.adminPanel_catalogue.editItem
-    };
+DeletingForm.defaultProps = {
+    getCatalogue: () => null,
+    onHide: () => null,
+    editCatalogueItem: () => null,
+    addErrorToState: () => null,
+    show: true
 };
+
+const mapStateToProps = state => ({
+    editItem: state.adminPanel_catalogue.editItem
+});
 
 export default connect(mapStateToProps, {
     addErrorToState,

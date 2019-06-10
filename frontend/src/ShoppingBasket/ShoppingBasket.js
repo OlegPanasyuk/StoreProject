@@ -8,25 +8,10 @@ import {
     Overlay,
     Alert
 } from 'react-bootstrap';
-import ShoppingBasketItem from './ShoppingBasketItem';
+
 import PropsTypes from 'prop-types';
 import './ShoppingBasket.css';
 import md5 from 'md5';
-
-//Redux use
-import { connect } from 'react-redux';
-//import store from '../REDUX/store';
-import {
-    showGoodsInBasketSuccess,
-    deleteGoodsFromBasket
-} from '../REDUX/actions/actionsShoppingBasket';
-import {
-    addErrorToState,
-} from '../REDUX/actions/actionsErrors';
-import {
-    askLogin
-} from '../REDUX/actions/actionsUser';
-
 
 // For Requests to server
 import rest from 'rest';
@@ -34,14 +19,39 @@ import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
 
+// Redux use
+import { connect } from 'react-redux';
+// import store from '../REDUX/store';
+import {
+    showGoodsInBasketSuccess,
+    deleteGoodsFromBasket
+} from '../REDUX/actions/actionsShoppingBasket';
+import {
+    addErrorToState
+} from '../REDUX/actions/actionsErrors';
+import {
+    askLogin
+} from '../REDUX/actions/actionsUser';
+
+import ShoppingBasketItem from './ShoppingBasketItem';
+
+
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`});
+    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
+
+function requestGoodsItem(id) {
+    const query = `?id=${id}`;
+    return client({
+        method: 'GET',
+        path: `goods${query}`
+    }).then(data => data.entity[0]);
+}
 
 export class ShoppingBasket extends Component {
     constructor(props) {
         super(props);
-        this.getTargetTooltip = targetTooltip => { this.setState({ targetTooltip }); };
+        this.getTargetTooltip = (targetTooltip) => { this.setState({ targetTooltip }); };
         this.arrItems = [];
         this.sumTotal = 0;
         this.sendBasketToWork = this.sendBasketToWork.bind(this);
@@ -49,62 +59,60 @@ export class ShoppingBasket extends Component {
             successfulTransaction: false,
             targetTooltip: null,
             messageTooltip: '',
-            show: false,
-            askLogin: false
+            show: false
         };
     }
 
-    requestGoodsItem(id) {
-        let query = `?id=${id}`;
-        return client({
-            method: 'GET',
-            path: 'goods' + query,
-        }).then((data) => {
-            return data.entity[0];
+    componentDidMount() {
+        const { goods, showGoodsInBasketSuccess } = this.props;
+        const arr = [];
+        goods.forEach((val) => {
+            arr.push(requestGoodsItem(val));
+        });
+        Promise.all(arr).then((data) => {
+            showGoodsInBasketSuccess(data);
         });
     }
 
     sendBasketToWork() {
-        let token = window.localStorage.getItem('Authorization');
-        let self = this;
-        if (this.props.goodsData.length === 0) {
+        const token = window.localStorage.getItem('Authorization');
+        const { goodsData, addErrorToState, askLogin } = this.props;
+        const self = this;
+        if (goodsData.length === 0) {
             const d = new Date();
-            this.props.addErrorToState({
+            addErrorToState({
                 id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
                 level: 'Warning',
                 message: 'There is nothing in a basket.'
             });
         } else {
             client({
-                method: "POST",
+                method: 'POST',
                 path: '/basket/',
                 entity: {
-                    cont: JSON.stringify(this.props.goodsData)
+                    cont: JSON.stringify(goodsData)
                 },
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then(data => {
+            }).then((data) => {
                 if (data.entity.id) {
                     window.localStorage.removeItem('ShoppingBasket');
                     self.setState({
                         successfulTransaction: true
                     });
                 } else if (data.entity === 'Unauthorized') {
-                    this.setState({
-                        askLogin: true
-                    });
-                    this.props.askLogin();
+                    askLogin();
                     const d = new Date();
-                    this.props.addErrorToState({
+                    addErrorToState({
                         id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
                         level: 'Warning',
                         message: 'You are not unauthorized.'
                     });
                 }
-            }).catch(err => {
+            }).catch((err) => {
                 const d = new Date();
-                this.props.addErrorToState({
+                addErrorToState({
                     id: md5(`Notification from ShoppingBasket ${d.valueOf()}`),
                     level: 'Error',
                     message: err
@@ -113,24 +121,18 @@ export class ShoppingBasket extends Component {
         }
     }
 
-    componentDidMount() {
-        let { goods } = this.props;
-        let arr = [];
-        goods.forEach(val => {
-            arr.push(this.requestGoodsItem(val));
-        });
-        Promise.all(arr).then((data) => {
-            this.props.showGoodsInBasketSuccess(data);
-        });
-    }
-
     render() {
-        let target = this.state.targetTooltip;
-        let show = this.state.show;
-        let messageTooltip = this.state.messageTooltip;
+        const {
+            show,
+            targetTooltip,
+            messageTooltip,
+            successfulTransaction
+        } = this.state;
+        const { goodsData, deleteGoodsFromBasket } = this.props;
+        const target = targetTooltip;
         this.sumTotal = 0;
         let message = '';
-        if (this.state.successfulTransaction) {
+        if (successfulTransaction) {
             message = (
                 <Container className='mt-3'>
                     <Alert variant='success'>
@@ -143,12 +145,12 @@ export class ShoppingBasket extends Component {
             }, 3000);
         } else {
             message = (
-                <Container  className='mt-3'>
+                <Container className='mt-3'>
                     <Row>
                         <h3>Your Basket:</h3>
                     </Row>
                     <Row>
-                        {this.props.goodsData.length && this.props.goodsData.map((el) => {
+                        {goodsData.length && goodsData.map((el) => {
                             if (el) {
                                 this.sumTotal += el.price;
                             }
@@ -156,7 +158,7 @@ export class ShoppingBasket extends Component {
                                 <ShoppingBasketItem
                                     key={el.idgoods}
                                     obj={el}
-                                    removeItemFromBasket={() => { this.props.deleteGoodsFromBasket(el.idgoods); }}
+                                    removeItemFromBasket={() => { deleteGoodsFromBasket(el.idgoods); }}
                                 />
                             );
                         })}
@@ -177,9 +179,9 @@ export class ShoppingBasket extends Component {
                         >
                             Buy
                         </Button>
-                        <Overlay target={target} show={show} placement="right">
+                        <Overlay target={target} show={show} placement='right'>
                             {props => (
-                                <Tooltip id="overlay-example" {...props} show={show.toString()}>
+                                <Tooltip id='overlay-example' {...props} show={show.toString()}>
                                     {messageTooltip}
                                 </Tooltip>
                             )}
@@ -193,15 +195,12 @@ export class ShoppingBasket extends Component {
     }
 }
 
-const mapStoreToProps = function (state) {
-    return (
-        {
-            goods: state.shoppingBasketReducers.goodsInBasket,
-            goodsData: state.shoppingBasketReducers.goodsInBasketData,
-            userInfo: state.userHeaderReducers.userInfo
-        }
-    );
-};
+const mapStoreToProps = state => ({
+    goods: state.shoppingBasketReducers.goodsInBasket,
+    goodsData: state.shoppingBasketReducers.goodsInBasketData,
+    userInfo: state.userHeaderReducers.userInfo
+});
+
 
 ShoppingBasket.propTypes = {
     goods: PropsTypes.object,
@@ -210,6 +209,15 @@ ShoppingBasket.propTypes = {
     deleteGoodsFromBasket: PropsTypes.func,
     addErrorToState: PropsTypes.func,
     askLogin: PropsTypes.func
+};
+
+ShoppingBasket.defaultProps = {
+    goods: {},
+    goodsData: [],
+    showGoodsInBasketSuccess: () => { },
+    deleteGoodsFromBasket: () => { },
+    addErrorToState: () => { },
+    askLogin: () => { }
 };
 
 export default connect(mapStoreToProps, {

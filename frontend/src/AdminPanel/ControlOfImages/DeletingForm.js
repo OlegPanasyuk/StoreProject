@@ -5,7 +5,7 @@ import md5 from 'md5';
 
 import { connect } from 'react-redux';
 import {
-    addErrorToState,
+    addErrorToState
 } from '../../REDUX/actions/actionsErrors';
 import {
     deletingFormClose,
@@ -20,8 +20,16 @@ export class DeletingFrom extends Component {
     }
 
     sendRequestToDelete() {
+        const {
+            imageInWork,
+            openPage,
+            deletingFormClose,
+            deletingFormSuccess,
+            addErrorToState,
+            deletingFormFailed
+        } = this.props;
         if (fetch) {
-            let myInit = {
+            const myInit = {
                 method: 'DELETE',
                 cache: 'default'
             };
@@ -31,28 +39,27 @@ export class DeletingFrom extends Component {
             }:${
                 process.env.REACT_APP_API_PORT
             }/images/${
-                this.props.imageInWork.id_img
+                imageInWork.id_img
             }`, myInit)
                 .then((res) => {
-                    
                     if (res.status === 200) {
-                        res.text().then(data => {
-                            this.props.openPage(1);
-                            this.props.deletingFormClose();
-                            this.props.deletingFormSuccess();
+                        res.text().then((data) => {
+                            openPage(1);
+                            deletingFormClose();
+                            deletingFormSuccess();
                             const d = new Date();
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from Deleting Image'}${d.valueOf()}`),
                                 level: 'Success',
                                 message: data
                             });
                         });
                     }
-                    if (res.status === 400 ) {
-                        res.text().then(data => {
-                            this.props.deletingFormFailed();
+                    if (res.status === 400) {
+                        res.text().then((data) => {
+                            deletingFormFailed();
                             const d = new Date();
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from Deleting Image'}${d.valueOf()}`),
                                 level: 'Error',
                                 message: data
@@ -60,10 +67,10 @@ export class DeletingFrom extends Component {
                         });
                     }
                     if (res.status === 403) {
-                        res.json().then(data => {
-                            this.props.deletingFormFailed();
+                        res.json().then((data) => {
+                            deletingFormFailed();
                             const d = new Date();
-                            this.props.addErrorToState({
+                            addErrorToState({
                                 id: md5(`${'Notification from Deleting Image'}${d.valueOf()}`),
                                 level: 'Error',
                                 message: data
@@ -75,7 +82,7 @@ export class DeletingFrom extends Component {
     }
 
     render() {
-        let { show, onHide } = this.props;
+        const { show, onHide } = this.props;
         return (
             <Modal
                 show={show}
@@ -114,11 +121,20 @@ DeletingFrom.propTypes = {
     addErrorToState: PropTypes.func
 };
 
-const mapStateToProps = (state) => {
-    return {
-        imageInWork: state.adminPanel_imagesPanel.imageInWork
-    };
+DeletingFrom.defaultProps = {
+    show: true,
+    onHide: () => null,
+    imageInWork: {},
+    openPage: () => null,
+    deletingFormClose: () => null,
+    deletingFormSuccess: () => null,
+    deletingFormFailed: () => null,
+    addErrorToState: () => null
 };
+
+const mapStateToProps = state => ({
+    imageInWork: state.adminPanel_imagesPanel.imageInWork
+});
 
 export default connect(mapStateToProps, {
     addErrorToState,
