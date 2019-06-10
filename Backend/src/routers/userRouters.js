@@ -10,15 +10,14 @@ passport.use(jwtStrategy);
 
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     let token = req.headers['authorization'].split(' ')[1];
-    jwt.verify(token, 'Oleg', (err, decode) => {
+    jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
         if (err) {
             res.status(401).send(err);
         }
-        if (decode) {
+        if (payload) {
             Users.findOne({ where: { 
-                email: decode.email 
+                email: payload.email 
             } }).then(user => {
-                //It needs to use Sequelize attributes. It resolve problem of unused variable
                 const { password, ...userP} = user.dataValues;
                 const { id,  ...userId} = userP;
                 res.status(200).json(JSON.stringify(userId));
@@ -39,34 +38,29 @@ router.delete('/', passport.authenticate('jwt', { session: false }), checkSuperA
         });
 });
 
-// function checkAdminRight(req, res, next) {
-//     checkRight(req, res, next, ['Admin', 'SuperAdmin']);
-// }
-
 function checkSuperAdminRight(req, res, next) {
     checkRight(req, res, next, ['SuperAdmin']);
 }
 
 function checkRight(req, res, next, roles = ['SuperAdmin']) {
-    // let roles = ['SuperAdmin'];
     let token = null;
     if (req.headers['authorization']) {
         token = req.headers['authorization'].split(' ')[1];    
     }
     if (token) {
-        jwt.verify(token, 'Oleg', (err, decode) => {
+        jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
             if (err) {
                 return res.status(500).send({auth: false, message: 'Auth failed'});
             } else {
-                let email = decode.email;
-                if ((decode.role) && (roles.indexOf(decode.role) >= 0)) {
+                let email = payload.email;
+                if ((payload.role) && (roles.indexOf(payload.role) >= 0)) {
                     next();
                 } else {
                     Users.findOne({where: {email: email}}).then((user) => {
                         if ((user.role) && (roles.indexOf(user.role) >= 0)) {
                             next();
                         } else {
-                            res.status(401).send({
+                            res.status(401).json({
                                 auth: true,
                                 right: false, 
                                 message: 'You have not permission on operation'
@@ -77,7 +71,7 @@ function checkRight(req, res, next, roles = ['SuperAdmin']) {
             }
         });
     } else {
-        res.status(401).send({
+        res.status(401).json({
             auth: false,
             right: false, 
             message: 'Access denied'

@@ -20,14 +20,14 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 
     } else if (!user_id) {
         let token = req.headers['authorization'].split(' ')[1];
-        jwt.verify(token, 'Oleg', (err, decode) => {
+        jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
             if (err) {
                 res.status(401).send(err);
             }
-            if (decode) {
+            if (payload) {
                 Users.findOne({
                     where: {
-                        email: decode.email
+                        email: payload.email
                     }
                 }).then((data) => {
                     Basket_History_Users.create({
@@ -67,14 +67,14 @@ router.get('/:basketID', (req, res) => {
 
 router.get('/users/history', passport.authenticate('jwt', { session: false }), (req, res) => {
     let token = req.headers['authorization'].split(' ')[1];
-    jwt.verify(token, 'Oleg', (err, decode) => {
+    jwt.verify(token, `${process.env.SECRET_KEY_AUTH}`, (err, payload) => {
         if (err) {
             res.status(401).send(err);
         }
-        if (decode) {
+        if (payload) {
             Users.findOne({
                 where: {
-                    email: decode.email
+                    email: payload.email
                 }
             }).then(user => {
                 return Basket_History_Users.findAll({
@@ -87,7 +87,6 @@ router.get('/users/history', passport.authenticate('jwt', { session: false }), (
             });
         }
     });
-    // res.send(`There are history of baskets`);
 });
 
 //Need protection with jwt passport

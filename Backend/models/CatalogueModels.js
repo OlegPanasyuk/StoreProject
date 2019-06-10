@@ -1,5 +1,3 @@
-
-
 module.exports = (sequalize, type) => {
     return sequalize.define( 'Catalogue', {
         id_catalogue : {
