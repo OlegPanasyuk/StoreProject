@@ -1,7 +1,7 @@
 var express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const jwtStrategy = require('../authorization/jwt');
+const jwtStrategy = require('./jwt');
 const { Users } = require('../../models/index');
 
 var router = express.Router();

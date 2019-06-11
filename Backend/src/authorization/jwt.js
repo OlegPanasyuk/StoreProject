@@ -5,8 +5,6 @@ const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.SECRET_KEY_AUTH; //normally store this in process.env.secret
 
-console.log(process.env.SECRET_KEY_AUTH);
-
 module.exports = new JwtStrategy(opts, (jwt_payload, done) => {
     Users.findOne({ where: { email: jwt_payload.email } } )
         .then((user, err)=> {

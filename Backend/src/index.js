@@ -10,13 +10,13 @@ const os = require('os');
 const passport = require('passport');
 const jwtStrategy = require('./authorization/jwt');
 const cookieParser = require('cookie-parser');
-const registrationUser = require('./authorization/auth');
-const basketShopping = require('./routers/shoppingBasket');
-const userRouter = require('./routers/userRouters');
-const goodsRouter = require('./routers/goodsRouter');
-const usersRouters = require('./routers/usersRouter');
-const catalogueRouter = require('./routers/catalogueRouter');
-const imagesRouter = require('./routers/imagesRouter');
+const registrationUser = require('./authorization/auth.router');
+const basketShopping = require('./routers/shopping.basket.router');
+const userRouter = require('./routers/user.routers');
+const goodsRouter = require('./routers/goods.router');
+const usersRouters = require('./routers/users.router');
+const catalogueRouter = require('./routers/catalogue.router');
+const imagesRouter = require('./routers/images.router');
 
 var serverConfig = config.get('Server');
 
