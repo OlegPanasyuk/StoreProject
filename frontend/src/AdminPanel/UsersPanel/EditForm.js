@@ -40,31 +40,101 @@ export class EditForm extends Component {
                 show: false
             },
             emailValid: {
-                valid: false,
-                noValid: false
+                valid: true,
+                noValid: false,
+                message: ''
+            },
+            passwordValid: {
+                valid: true,
+                noValid: false,
+                message: ''
+            },
+            nameValid: {
+                valid: true,
+                noValid: false,
+                message: ''
             }
         };
     }
 
-    preValid() {
-        let answ = true;
-        const { email } = this.state;
+    
+    handleValid(e) {
+        if (e) e.preventDefault();
+        const { name, value } = e.target;
         const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        if (regEmail.test(email)) {
-            this.setState({
-                emailValid: {
-                    valid: true,
-                    noValid: false
-                }
-            });
+        const regPassWord = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
+        switch (name) {
+        case this.nameRef.current.name: {
+            if (value.length > 0) {
+                this.setState({
+                    nameValid: {
+                        valid: true,
+                        noValid: false,
+                        message: ''
+                    }
+                });
+            } else {
+                this.setState({
+                    nameValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Name must be not empty'
+                    }
+                });
+            }
+            break;
+        }
+        case this.emailRef.current.name: {
+            if (regEmail.test(value)) {
+                this.setState({
+                    emailValid: {
+                        valid: true,
+                        noValid: false,
+                        message: 'Email correct'
+                    }
+                });
+            } else {
+                this.setState({
+                    emailValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Email must looks like: "email@domain.com"'
+                    }
+                });
+            }
+            break;
+        }
+        case this.passwordRef.current.name: {
+            if (regPassWord.test(value)) {
+                this.setState({
+                    passwordValid: {
+                        valid: true,
+                        noValid: false,
+                        message: 'Valid password'
+                    }
+                });
+            } else {
+                this.setState({
+                    passwordValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
+                    }
+                });
+            }
+            break;
+        }
+        default: break;
+        }
+    }
+
+    preValid() {
+        let answ = false;
+        const { emailValid, nameValid, passwordValid } = this.state;
+        if (emailValid.valid && nameValid.valid && passwordValid.valid) {
+            answ = true;
         } else {
             answ = false;
-            this.setState({
-                emailValid: {
-                    valid: false,
-                    noValid: true
-                }
-            });
         }
         return answ;
     }
@@ -141,7 +211,9 @@ export class EditForm extends Component {
     }
 
     render() {
-        const { tooltip, emailValid } = this.state;
+        const {
+            tooltip, emailValid, nameValid, passwordValid
+        } = this.state;
         const { target, show, message } = tooltip;
         const { onHide, userToEdit } = this.props;
         return (
@@ -164,12 +236,18 @@ export class EditForm extends Component {
                                 ref={this.nameRef}
                                 type='text'
                                 defaultValue={userToEdit.username}
-                                onChange={() => {
+                                name='nameUser'
+                                isValid={nameValid.valid}
+                                isInvalid={nameValid.noValid}
+                                onChange={(e) => {
                                     this.setState({
                                         username: this.nameRef.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
                             />
+                            <Form.Control.Feedback>{nameValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{nameValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -178,15 +256,19 @@ export class EditForm extends Component {
                             <Form.Control
                                 ref={this.emailRef}
                                 type='text'
+                                name='email'
                                 defaultValue={userToEdit.email}
                                 isValid={emailValid.valid}
                                 isInvalid={emailValid.noValid}
-                                onChange={() => {
+                                onChange={(e) => {
                                     this.setState({
                                         email: this.emailRef.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
                             />
+                            <Form.Control.Feedback>{emailValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{emailValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -195,13 +277,19 @@ export class EditForm extends Component {
                             <Form.Control
                                 ref={this.passwordRef}
                                 type='text'
+                                name='password'
                                 defaultValue={userToEdit.password}
-                                onChange={() => {
+                                isValid={passwordValid.valid}
+                                isInvalid={passwordValid.noValid}
+                                onChange={(e) => {
                                     this.setState({
                                         password: this.passwordRef.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
                             />
+                            <Form.Control.Feedback>{passwordValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{passwordValid.message}</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group>

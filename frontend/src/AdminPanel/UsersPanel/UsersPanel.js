@@ -199,7 +199,7 @@ export class UsersPanel extends Component {
                     <Col className='col-9'>
                         <CardColumns>
                             {(usersToShow) && usersToShow.map(el => (
-                                <UserItemComponent key={`el${el.username}`} obj={el} openPage={this.openPage} />
+                                <UserItemComponent key={`el${el.username}${el.id}`} obj={el} openPage={this.openPage} />
                             ))}
                         </CardColumns>
                     </Col>

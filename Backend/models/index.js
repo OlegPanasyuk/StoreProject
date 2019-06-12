@@ -26,9 +26,9 @@ fs
     });
 
 Object.keys(db).forEach(modelName => {
-  
+
     if (db[modelName].associate) {
-        
+
         db[modelName].associate(db);
     }
 });
@@ -37,11 +37,13 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.sequelize.sync({ forse: false }).then(() => {
-    db.Users.create({
-        username: 'Admin',
-        email: 'admin@admin.com',
-        password: 'user',
-        role: 'SuperAdmin'
+    db.Users.findOrCreate({
+        where: {
+            username: 'Admin',
+            email: 'admin@admin.com',
+            password: 'user',
+            role: 'SuperAdmin'
+        }
     });
 });
 

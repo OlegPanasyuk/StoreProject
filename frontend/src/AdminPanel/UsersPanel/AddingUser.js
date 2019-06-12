@@ -30,6 +30,7 @@ export class AddingUser extends Component {
         this.password2Ref = React.createRef();
         this.roleRef = React.createRef();
         this.sendUserToAdd = this.sendUserToAdd.bind(this);
+        this.handleValid = this.handleValid.bind(this);
         this.state = {
             name: '',
             password: '',
@@ -40,58 +41,179 @@ export class AddingUser extends Component {
                 message: '',
                 show: false
             },
+            emailValid: {
+                valid: false,
+                noValid: false,
+                message: ''
+            },
             passwordValid: {
+                valid: false,
+                noValid: false,
+                message: ''
+            },
+            nameValid: {
                 valid: false,
                 noValid: false
             },
-            emailValid: {
-                valid: false,
-                noValid: false
-            }
+            equalPass: false
         };
     }
 
-    preValid() {
-        let answ = true;
+
+    handleValid(e) {
+        if (e) e.preventDefault();
+        const { name, value } = e.target;
         const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        const { password, password2, email } = this.state;
-        if (password !== password2) {
-            this.setState({
-                passwordValid: {
-                    valid: false,
-                    noValid: true
-                }
-            });
-            answ = false;
-        } else if (password === '') {
-            answ = false;
-            this.setState({
-                passwordValid: {
-                    valid: false,
-                    noValid: true
-                }
-            });
-        } else {
-            this.setState({
-                passwordValid: {
-                    valid: true,
-                    noValid: false
-                }
-            });
+        const regPassWord = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
+        switch (name) {
+        case this.nameRef.current.name: {
+            if (value.length > 0) {
+                this.setState({
+                    nameValid: {
+                        valid: true,
+                        noValid: false,
+                        message: ''
+                    }
+                });
+            } else {
+                this.setState({
+                    nameValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Name must be not empty'
+                    }
+                });
+            }
+            break;
         }
-        if (regEmail.test(email)) {
+        case this.emailRef.current.name: {
+            if (regEmail.test(value)) {
+                this.setState({
+                    emailValid: {
+                        valid: true,
+                        noValid: false,
+                        message: 'Email correct'
+                    }
+                });
+            } else {
+                this.setState({
+                    emailValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Email must looks like: "email@domain.com"'
+                    }
+                });
+            }
+            break;
+        }
+        case this.passwordRef.current.name: {
+            if (regPassWord.test(value)) {
+                this.password2Ref.current.disabled = false;
+                if (this.password2Ref.current.value !== value) {
+                    this.setState({
+                        passwordValid: {
+                            valid: false,
+                            noValid: true,
+                            message: 'Passwords are not equal'
+                        },
+                        equalPass: false
+                    });
+                } else {
+                    this.setState({
+                        passwordValid: {
+                            valid: true,
+                            noValid: false,
+                            message: 'Valid password'
+                        },
+                        equalPass: true
+                    });
+                }
+            } else {
+                this.setState({
+                    passwordValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
+                    },
+                    equalPass: false
+                });
+            }
+            break;
+        }
+        case this.password2Ref.current.name: {
+            if (regPassWord.test(value)) {
+                if (this.passwordRef.current.value !== value) {
+                    this.setState({
+                        passwordValid: {
+                            valid: false,
+                            noValid: true,
+                            message: 'Passwords are not equal'
+                        },
+                        equalPass: false
+                    });
+                } else {
+                    this.setState({
+                        passwordValid: {
+                            valid: true,
+                            noValid: false,
+                            message: 'Valid password'
+                        },
+                        equalPass: true
+                    });
+                }
+            } else {
+                this.setState({
+                    passwordValid: {
+                        valid: false,
+                        noValid: true,
+                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
+                    },
+                    equalPass: false
+                });
+            }
+            break;
+        }
+        default: break;
+        }
+    }
+
+    preValid() {
+        let answ = false;
+        const {
+            emailValid, passwordValid, equalPass, nameValid
+        } = this.state;
+        if (emailValid.valid && passwordValid.valid && equalPass && nameValid.valid) {
+            answ = true;
+        } else if (this.passwordRef.current.value === '') {
             this.setState({
-                emailValid: {
-                    valid: true,
-                    noValid: false
+                passwordValid: {
+                    valid: false,
+                    noValid: true,
+                    message: 'Enter password'
+                }
+            });
+        } else if (!passwordValid.valid) {
+            this.setState({
+                passwordValid: {
+                    valid: false,
+                    noValid: true,
+                    message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
+                }
+            });
+        } else if (!equalPass) {
+            this.setState({
+                passwordValid: {
+                    valid: false,
+                    noValid: true,
+                    message: 'Passwords are not equal'
                 }
             });
         } else {
-            answ = false;
             this.setState({
-                emailValid: {
+                passwordValid: {
                     valid: false,
-                    noValid: true
+                    noValid: false,
+                    message: ''
                 }
             });
         }
@@ -100,12 +222,6 @@ export class AddingUser extends Component {
 
     sendUserToAdd() {
         const storage = window.localStorage;
-        const {
-            name,
-            password,
-            password2,
-            email
-        } = this.state;
         const { addErrorToState, onHide, openPage } = this.props;
         if (this.preValid()) {
             if (fetch) {
@@ -113,10 +229,10 @@ export class AddingUser extends Component {
                 myHeaders.append('Authorization', `Bearer ${storage.getItem('Authorization')}`);
                 myHeaders.append('Content-type', 'application/json');
                 const body = {
-                    name,
-                    password1: password,
-                    password2,
-                    email,
+                    name: this.nameRef.current.value,
+                    password1: this.passwordRef.current.value,
+                    password2: this.password2Ref.current.value,
+                    email: this.emailRef.current.value,
                     role: this.roleRef.current.value
                 };
 
@@ -180,7 +296,9 @@ export class AddingUser extends Component {
             email,
             emailValid,
             password,
-            passwordValid
+            password2,
+            passwordValid,
+            nameValid
         } = this.state;
         const { target, show, message } = tooltip;
         const { onHide } = this.props;
@@ -204,12 +322,18 @@ export class AddingUser extends Component {
                                 ref={this.nameRef}
                                 type='text'
                                 value={name}
-                                onChange={() => {
+                                name='nameUser'
+                                isValid={nameValid.valid}
+                                isInvalid={nameValid.noValid}
+                                onChange={(e) => {
                                     this.setState({
                                         name: this.nameRef.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
                             />
+                            <Form.Control.Feedback>{nameValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{nameValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -219,16 +343,18 @@ export class AddingUser extends Component {
                                 ref={this.emailRef}
                                 type='email'
                                 value={email}
+                                name='email'
                                 isValid={emailValid.valid}
                                 isInvalid={emailValid.noValid}
-                                onChange={() => {
+                                onChange={(e) => {
                                     this.setState({
                                         email: this.emailRef.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
                             />
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type='invalid'>Incorrect email</Form.Control.Feedback>
+                            <Form.Control.Feedback>{emailValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{emailValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -238,36 +364,39 @@ export class AddingUser extends Component {
                                 ref={this.passwordRef}
                                 type='text'
                                 value={password}
+                                name='password1'
                                 isValid={passwordValid.valid}
                                 isInvalid={passwordValid.noValid}
-                                onChange={() => {
+                                onChange={(e) => {
                                     this.setState({
                                         password: this.passwordRef.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
                             />
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type='invalid'>Password must be not empty or passwords are not equal</Form.Control.Feedback>
+                            <Form.Control.Feedback>{passwordValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{passwordValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
                                 Repeat Password
                             </Form.Label>
                             <Form.Control
-
                                 type='text'
                                 isValid={passwordValid.valid}
                                 isInvalid={passwordValid.noValid}
+                                value={password2}
                                 ref={this.password2Ref}
-                                onChange={() => {
+                                name='password2'
+                                onChange={(e) => {
                                     this.setState({
                                         password2: this.password2Ref.current.value
                                     });
+                                    this.handleValid(e);
                                 }}
+                                disabled
                             >
-
                             </Form.Control>
-                            <Form.Control.Feedback type='valid'>Looks good!</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group>
@@ -275,9 +404,7 @@ export class AddingUser extends Component {
                                 Role
                             </Form.Label>
                             <Form.Control
-
                                 as='select'
-
                                 ref={this.roleRef}
                                 onChange={() => {}}
                             >
