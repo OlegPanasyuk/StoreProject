@@ -13,6 +13,11 @@ import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
 
+import {
+    checkEmail,
+    checkPassword
+} from '../utls/validators';
+
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
     .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
@@ -53,94 +58,26 @@ class RegisrtForm extends Component {
     handleValid(e) {
         if (e) e.preventDefault();
         const { name, value } = e.target;
-        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        const regPassWord = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
         switch (name) {
         case this.emailInputR.current.name: {
-            if (regEmail.test(value)) {
-                this.setState({
-                    emailValid: {
-                        valid: true,
-                        noValid: false,
-                        message: 'Email correct'
-                    }
-                });
-            } else {
-                this.setState({
-                    emailValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Email must looks like: "email@domain.com"'
-                    }
-                });
-            }
+            const emailValid = checkEmail(value);
+            this.setState({ emailValid });
             break;
         }
         case this.passWordInput1.current.name: {
-            if (regPassWord.test(value)) {
-                this.passWordInput2.current.disabled = false;
-                if (this.passWordInput2.current.value !== value) {
-                    this.setState({
-                        passwordValid: {
-                            valid: false,
-                            noValid: true,
-                            message: 'Passwords are not equal'
-                        },
-                        equalPass: false
-                    });
-                } else {
-                    this.setState({
-                        passwordValid: {
-                            valid: true,
-                            noValid: false,
-                            message: 'Valid password'
-                        },
-                        equalPass: true
-                    });
-                }
-            } else {
-                this.setState({
-                    passwordValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
-                    },
-                    equalPass: false
-                });
-            }
+            const { passwordValid, equalPass } = checkPassword(value, this.passWordInput2.current.value);
+            this.setState({
+                passwordValid,
+                equalPass
+            });
             break;
         }
         case this.passWordInput2.current.name: {
-            if (regPassWord.test(value)) {
-                if (this.passWordInput1.current.value !== value) {
-                    this.setState({
-                        passwordValid: {
-                            valid: false,
-                            noValid: true,
-                            message: 'Passwords are not equal'
-                        },
-                        equalPass: false
-                    });
-                } else {
-                    this.setState({
-                        passwordValid: {
-                            valid: true,
-                            noValid: false,
-                            message: 'Valid password'
-                        },
-                        equalPass: true
-                    });
-                }
-            } else {
-                this.setState({
-                    passwordValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
-                    },
-                    equalPass: false
-                });
-            }
+            const { passwordValid, equalPass } = checkPassword(value, this.passWordInput1.current.value);
+            this.setState({
+                passwordValid,
+                equalPass
+            });
             break;
         }
         default: break;
@@ -152,6 +89,14 @@ class RegisrtForm extends Component {
         const { emailValid, passwordValid, equalPass } = this.state;
         if (emailValid.valid && passwordValid.valid && equalPass) {
             answ = true;
+        } else if (this.emailInputR.current.value === '') {
+            this.setState({
+                emailValid: {
+                    valid: false,
+                    noValid: true,
+                    message: 'Enter email looks like: "email@domain.com"'
+                }
+            });
         } else if (this.passWordInput1.current.value === '') {
             this.setState({
                 passwordValid: {
@@ -289,7 +234,6 @@ class RegisrtForm extends Component {
                                     isValid={passwordValid.valid}
                                     isInvalid={passwordValid.noValid}
                                     onChange={this.handleValid}
-                                    disabled
                                 />
                             </Form.Group>
 

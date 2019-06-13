@@ -15,6 +15,12 @@ import {
     addErrorToState
 } from '../../REDUX/actions/actionsErrors';
 
+import {
+    checkEmail,
+    checkPassword,
+    checkName
+} from '../../utls/validators';
+
 export class AddingUser extends Component {
     constructor(props) {
         super(props);
@@ -63,114 +69,35 @@ export class AddingUser extends Component {
     handleValid(e) {
         if (e) e.preventDefault();
         const { name, value } = e.target;
-        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        const regPassWord = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
         switch (name) {
         case this.nameRef.current.name: {
-            if (value.length > 0) {
-                this.setState({
-                    nameValid: {
-                        valid: true,
-                        noValid: false,
-                        message: ''
-                    }
-                });
-            } else {
-                this.setState({
-                    nameValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Name must be not empty'
-                    }
-                });
-            }
+            const nameValid = checkName(value);
+            this.setState({
+                nameValid
+            });
             break;
         }
         case this.emailRef.current.name: {
-            if (regEmail.test(value)) {
-                this.setState({
-                    emailValid: {
-                        valid: true,
-                        noValid: false,
-                        message: 'Email correct'
-                    }
-                });
-            } else {
-                this.setState({
-                    emailValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Email must looks like: "email@domain.com"'
-                    }
-                });
-            }
+            const emailValid = checkEmail(value);
+            this.setState({
+                emailValid
+            });
             break;
         }
         case this.passwordRef.current.name: {
-            if (regPassWord.test(value)) {
-                this.password2Ref.current.disabled = false;
-                if (this.password2Ref.current.value !== value) {
-                    this.setState({
-                        passwordValid: {
-                            valid: false,
-                            noValid: true,
-                            message: 'Passwords are not equal'
-                        },
-                        equalPass: false
-                    });
-                } else {
-                    this.setState({
-                        passwordValid: {
-                            valid: true,
-                            noValid: false,
-                            message: 'Valid password'
-                        },
-                        equalPass: true
-                    });
-                }
-            } else {
-                this.setState({
-                    passwordValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
-                    },
-                    equalPass: false
-                });
-            }
+            const { passwordValid, equalPass } = checkPassword(value, this.password2Ref.current.value);
+            this.setState({
+                passwordValid,
+                equalPass
+            });
             break;
         }
         case this.password2Ref.current.name: {
-            if (regPassWord.test(value)) {
-                if (this.passwordRef.current.value !== value) {
-                    this.setState({
-                        passwordValid: {
-                            valid: false,
-                            noValid: true,
-                            message: 'Passwords are not equal'
-                        },
-                        equalPass: false
-                    });
-                } else {
-                    this.setState({
-                        passwordValid: {
-                            valid: true,
-                            noValid: false,
-                            message: 'Valid password'
-                        },
-                        equalPass: true
-                    });
-                }
-            } else {
-                this.setState({
-                    passwordValid: {
-                        valid: false,
-                        noValid: true,
-                        message: 'Must have length more then 8, have !@#$%^&*, letter uppercase and lowercase, number'
-                    },
-                    equalPass: false
-                });
-            }
+            const { passwordValid, equalPass } = checkPassword(value, this.passwordRef.current.value);
+            this.setState({
+                passwordValid,
+                equalPass
+            });
             break;
         }
         default: break;
@@ -394,7 +321,6 @@ export class AddingUser extends Component {
                                     });
                                     this.handleValid(e);
                                 }}
-                                disabled
                             >
                             </Form.Control>
                         </Form.Group>

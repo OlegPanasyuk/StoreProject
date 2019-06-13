@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 import PropsTypes from 'prop-types';
 import md5 from 'md5';
 
-
 import rest from 'rest';
 import pathPrefix from 'rest/interceptor/pathPrefix';
 import errorCode from 'rest/interceptor/errorCode';
@@ -15,6 +14,11 @@ import { connect } from 'react-redux';
 import {
     addErrorToState
 } from '../REDUX/actions/actionsErrors';
+
+import {
+    checkEmail,
+    checkPasswordValid
+} from '../utls/validators';
 
 const client = rest.wrap(mime, { mime: 'application/json' })
     .wrap(errorCode, { code: 500 })
@@ -36,52 +40,25 @@ export class LoginForm extends Component {
         this.state = {
             emailValid: {
                 valid: false,
-                noValid: false
+                noValid: false,
+                message: ''
             },
             passwordValid: {
                 valid: false,
-                noValid: false
+                noValid: false,
+                message: ''
             }
         };
     }
 
     preValid() {
-        let answ = true;
-        const regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i;
-        if (regEmail.test(this.emailInput.current.value)) {
-            this.setState({
-                emailValid: {
-                    valid: true,
-                    noValid: false
-                }
-            });
-        } else {
-            answ = false;
-            this.setState({
-                emailValid: {
-                    valid: false,
-                    noValid: true
-                }
-            });
-        }
-        if (this.passWordInput.current.value !== '') {
-            answ = true;
-            this.setState({
-                passwordValid: {
-                    valid: true,
-                    noValid: false
-                }
-            });
-        } else {
-            answ = false;
-            this.setState({
-                passwordValid: {
-                    valid: false,
-                    noValid: true
-                }
-            });
-        }
-        return answ;
+        const emailValid = checkEmail(this.emailInput.current.value);
+        const passwordValid = checkPasswordValid(this.passWordInput.current.value);
+        this.setState({
+            emailValid,
+            passwordValid
+        });
+        return emailValid.valid && passwordValid.valid;
     }
 
     sendLoginRequest(e) {
@@ -149,8 +126,8 @@ export class LoginForm extends Component {
                                 isInvalid={emailValid.noValid}
 
                             />
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type='invalid'>Incorrect email</Form.Control.Feedback>
+                            <Form.Control.Feedback>{emailValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{emailValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className=' mb-3' controlId='formGridPassword'>
                             <Form.Control
@@ -162,6 +139,8 @@ export class LoginForm extends Component {
                                 isValid={passwordValid.valid}
                                 isInvalid={passwordValid.noValid}
                             />
+                            <Form.Control.Feedback>{passwordValid.message}</Form.Control.Feedback>
+                            <Form.Control.Feedback type='invalid'>{passwordValid.message}</Form.Control.Feedback>
                         </Form.Group>
                         <div className='d-flex justify-content-end'>
                             <Button
