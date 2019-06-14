@@ -62,16 +62,29 @@ router.post('/login', (req, res) => {
         checkRights = JSON.parse(req.headers['checkrights']);
     }
     let roles = ['Consultant', 'Admin', 'SuperAdmin'];
-    Users.findOne({ where: { email: email } }).then((user) => {
-        if (user && user.email === email) {
-            if (password === user.password) {
-                if (checkRights === true) {
-                    if (roles.indexOf(user.role) >= 0) {
+    Users.findOne({ where: { email: email } })
+        .then((user) => {
+            if (user && user.email === email) {
+                if (password === user.password) {
+                    if (checkRights === true) {
+                        if (roles.indexOf(user.role) >= 0) {
+                            const opts = {};
+                            const role = user.role;
+                            opts.expiresIn = 1200;
+                            const secret = process.env.SECRET_KEY_AUTH;
+                            const token = jwt.sign({ email, role }, secret, opts);
+                            return res.status(200).json({
+                                message: 'Auth Passed',
+                                token,
+                                role: user.role,
+                                username: user.username
+                            });
+                        }
+                    } else {
                         const opts = {};
-                        const role = user.role;
                         opts.expiresIn = 1200;
                         const secret = process.env.SECRET_KEY_AUTH;
-                        const token = jwt.sign({ email, role }, secret, opts);
+                        const token = jwt.sign({ email }, secret, opts);
                         return res.status(200).json({
                             message: 'Auth Passed',
                             token,
@@ -79,27 +92,14 @@ router.post('/login', (req, res) => {
                             username: user.username
                         });
                     }
-                } else {
-                    const opts = {};
-                    opts.expiresIn = 1200;
-                    const secret = process.env.SECRET_KEY_AUTH;
-                    const token = jwt.sign({ email }, secret, opts);
-                    return res.status(200).json({
-                        message: 'Auth Passed',
-                        token,
-                        role: user.role,
-                        username: user.username
-                    });
-                }
 
+                } else {
+                    res.status(401).send('Password or email is incorrect');
+                }
             } else {
                 res.status(401).send('Password or email is incorrect');
             }
-        } else {
-            res.status(401).send('Password or email is incorrect');
-        }
-        res.status(401).send(`${email} ${password} Auth failed`);
-    });
+        });
 });
 
 router.post('/logintoken', function (req, res) {
