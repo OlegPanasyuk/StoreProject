@@ -7,7 +7,6 @@ export const showCatalogue = () => ({
     }
 });
 
-
 export const showUserHistory = () => ({
     type: SHOW_MAIN_CONTENT.USER_HISTORY,
     payload: {

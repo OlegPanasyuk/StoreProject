@@ -4,11 +4,6 @@ import { NavLink } from 'react-router-dom';
 import PropsTypes from 'prop-types';
 import md5 from 'md5';
 
-import rest from 'rest';
-import pathPrefix from 'rest/interceptor/pathPrefix';
-import errorCode from 'rest/interceptor/errorCode';
-import mime from 'rest/interceptor/mime';
-
 // Redux
 import { connect } from 'react-redux';
 import {
@@ -20,16 +15,13 @@ import {
     checkPasswordValid
 } from '../utls/validators';
 
-const client = rest.wrap(mime, { mime: 'application/json' })
-    .wrap(errorCode, { code: 500 })
-    .wrap(pathPrefix, { prefix: `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}` });
+import HTTPService from '../Services/HTTPService';
 
 function handle(e) {
     if (e.keyCode === 13) {
         document.getElementById('buttonLoginForm').click();
     }
 }
-
 export class LoginForm extends Component {
     constructor(props) {
         super(props);
@@ -69,20 +61,23 @@ export class LoginForm extends Component {
             password: this.passWordInput.current.value
         };
         if (this.preValid()) {
-            client({ method: 'POST', path: 'login', entity: objToRequest })
-                .then((data) => {
+            HTTPService.post({
+                url: 'login',
+                body: objToRequest
+            })
+                .then((res) => {
                     const storage = window.localStorage;
-
-                    if (data.status.code === 200) {
-                        storage.setItem('Authorization', data.entity.token);
-                        handleSetStateInApp(data.entity);
+                    const { status, data } = res;
+                    if (status === 200) {
+                        storage.setItem('Authorization', data.token);
+                        handleSetStateInApp(data);
                         onHide();
-                    } else if (data.status.code === 401) {
+                    } else if (status === 401) {
                         const d = new Date();
                         addErrorToState({
                             id: md5(`${'Notification from LoginForm'}${d.valueOf()}`),
                             level: 'Warning',
-                            message: data.entity
+                            message: data
                         });
                     }
                 }).catch((err) => {
