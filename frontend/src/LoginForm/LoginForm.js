@@ -23,27 +23,24 @@ function handle(e) {
     }
 }
 export class LoginForm extends Component {
-    constructor(props) {
-        super(props);
-        this.emailInput = React.createRef();
-        this.passWordInput = React.createRef();
-        this.sendLoginRequest = this.sendLoginRequest.bind(this);
-        this.preValid = this.preValid.bind(this);
-        this.state = {
-            emailValid: {
-                valid: false,
-                noValid: false,
-                message: ''
-            },
-            passwordValid: {
-                valid: false,
-                noValid: false,
-                message: ''
-            }
-        };
-    }
+    emailInput = React.createRef();
 
-    preValid() {
+    passWordInput = React.createRef();
+
+    state = {
+        emailValid: {
+            valid: false,
+            noValid: false,
+            message: ''
+        },
+        passwordValid: {
+            valid: false,
+            noValid: false,
+            message: ''
+        }
+    };
+
+    preValid = () => {
         const emailValid = checkEmail(this.emailInput.current.value);
         const passwordValid = checkPasswordValid(this.passWordInput.current.value);
         this.setState({
@@ -53,7 +50,7 @@ export class LoginForm extends Component {
         return emailValid.valid && passwordValid.valid;
     }
 
-    sendLoginRequest(e) {
+    sendLoginRequest = (e) => {
         e.preventDefault();
         const { handleSetStateInApp, onHide, addErrorToState } = this.props;
         const objToRequest = {
