@@ -16,17 +16,9 @@ class HTTPService {
                 headers,
                 query
             };
-            const data = await FetchRequests.request(objToRequest);
-            response = new Promise((resolved, reject) => {
-                console.log('data ', data);
-                if (data) {
-                    resolved(data);
-                } else {
-                    reject(new Error('no data'));
-                }
-            });
+            response = await FetchRequests.request(objToRequest);
         } catch (e) {
-            console.error(e);
+            throw new Error(e);
         }
         return response;
     }
@@ -46,12 +38,9 @@ class HTTPService {
                 headers,
                 query
             };
-            const data = await FetchRequests.request(objToRequest);
-            response = new Promise((resolved) => {
-                resolved(data);
-            });
+            response = await FetchRequests.request(objToRequest);
         } catch (e) {
-            console.error(e);
+            throw new Error(e);
         }
         return response;
     }
@@ -71,12 +60,9 @@ class HTTPService {
                 headers,
                 query
             };
-            const data = await FetchRequests.request(objToRequest);
-            response = new Promise((resolved) => {
-                resolved(data);
-            });
+            response = await FetchRequests.request(objToRequest);
         } catch (e) {
-            console.error(e);
+            throw new Error(e);
         }
         return response;
     }
@@ -96,12 +82,9 @@ class HTTPService {
                 headers,
                 query
             };
-            const data = await FetchRequests.request(objToRequest);
-            response = new Promise((resolved) => {
-                resolved(data);
-            });
+            response = await FetchRequests.request(objToRequest);
         } catch (e) {
-            console.error(e);
+            throw new Error(e);
         }
         return response;
     }

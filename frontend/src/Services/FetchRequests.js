@@ -12,15 +12,15 @@ class FetchRequests {
             if (fetch) {
                 const queryStr = queryObjToString(query);
                 const myHeaders = new Headers();
-                Object.keys(headers).forEach((el) => {
-                    myHeaders.append(el, headers[el]);
-                });
                 const bodyR = Object.assign({}, body);
                 const myInit = {
                     method,
                     headers: myHeaders,
                     body: JSON.stringify(bodyR)
                 };
+                Object.keys(headers).forEach((el) => {
+                    myHeaders.append(el, headers[el]);
+                });
                 fetch(`${
                     process.env.REACT_APP_API_HOST
                 }:${
@@ -31,7 +31,6 @@ class FetchRequests {
                     queryStr
                 }`, myInit)
                     .then((res) => {
-                        console.log(res);
                         const { status, statusText } = res;
                         if (res.ok) {
                             res.json().then((data) => {

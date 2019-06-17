@@ -153,6 +153,7 @@ export class LoginForm extends Component {
                                 Registration
                             </NavLink>
                         </div>
+                        
                     </Form>
                 </Modal.Body>
             </Modal>
