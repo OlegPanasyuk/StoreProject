@@ -32,12 +32,10 @@ function CatalogueMenu({
             element = (
                 <ListGroup.Item
                     className='catalogue__list-item'
-                    onClick={
-                        () => {
-                            handleClick(el);
-                            requestGoods(el);
-                        }
-                    }
+                    onClick={() => {
+                        handleClick(el);
+                        requestGoods(el);
+                    }}
 
                     key={el}
                 >

@@ -3,3 +3,4 @@
 /Model_DB/*
 /backend/*.env
 /frontend/*.env
+/.vscode/
