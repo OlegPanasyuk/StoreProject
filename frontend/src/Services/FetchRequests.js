@@ -15,9 +15,11 @@ class FetchRequests {
                 const bodyR = Object.assign({}, body);
                 const myInit = {
                     method,
-                    headers: myHeaders,
-                    body: JSON.stringify(bodyR)
+                    headers: myHeaders
                 };
+                if (Object.keys(body).length > 0) {
+                    Object.assign(myInit, { body: JSON.stringify(bodyR) });
+                }
                 Object.keys(headers).forEach((el) => {
                     myHeaders.append(el, headers[el]);
                 });
