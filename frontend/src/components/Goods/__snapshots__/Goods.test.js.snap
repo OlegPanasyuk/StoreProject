@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Goods Component Component must be created and props must be correct 1`] = `
+<CardColumns
+  style={
+    Object {
+      "columnGap": "1em",
+    }
+  }
+>
+  <ConnectFunction
+    addItemToBacket={[Function]}
+    id={1}
+    key="Goods-1"
+    obj={
+      Object {
+        "catalogue_id_catalogue": 4,
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.         Blanditiis provident quo quaerat repellat fuga debitis nemo voluptates         quis voluptate, dolorem modi non? Nisi, maxime a.",
+        "idgoods": 1,
+        "name": "Honda Civic",
+      }
+    }
+  />
+  <ConnectFunction
+    addItemToBacket={[Function]}
+    id={2}
+    key="Goods-2"
+    obj={
+      Object {
+        "catalogue_id_catalogue": 4,
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.         Blanditiis provident quo quaerat repellat fuga debitis nemo voluptates         quis voluptate, dolorem modi non? Nisi, maxime a.",
+        "idgoods": 2,
+        "name": "Volvo",
+      }
+    }
+  />
+</CardColumns>
+`;

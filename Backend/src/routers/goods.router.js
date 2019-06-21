@@ -36,18 +36,17 @@ router.get('/', function (req, res) {
         }
     });
     if (Object.keys(query).length) {
-        Goods.findAll({ where: query }).then(good => res.json(good));
+        Goods.findAll({ where: query }).then(good => res.status(200).json(good));
     } else if (Object.keys(queryLimit).length) {
-        Goods.findAll(queryLimit).then(good => res.json(good));
+        Goods.findAll(queryLimit).then(good => res.status(200).json(good));
     } else if (count) {
-        Goods.count().then(good => res.json(good));
+        Goods.count().then(good => res.status(200).json(good));
     } else {
-        Goods.findAll().then(good => res.json(good));
+        Goods.findAll().then(good => res.status(200).json(good));
     }
 });
 
 router.get('/filter', function (req, res) {
-    
     let query = {};
     let queryLimit = {};
     let count = false;

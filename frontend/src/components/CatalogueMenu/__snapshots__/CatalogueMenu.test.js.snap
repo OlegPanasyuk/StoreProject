@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CatalogueMenu Component must be created and props must be correct 1`] = `
+<Fragment>
+  <ForwardRef>
+    <Bootstrap(ListGroupItem)
+      className="catalogue__list-item"
+      key="1"
+      onClick={[Function]}
+    >
+      Car
+    </Bootstrap(ListGroupItem)>
+    <Bootstrap(ListGroupItem)
+      className="catalogue__list-item"
+      key="2"
+      onClick={[Function]}
+    >
+      BigCars
+    </Bootstrap(ListGroupItem)>
+  </ForwardRef>
+</Fragment>
+`;

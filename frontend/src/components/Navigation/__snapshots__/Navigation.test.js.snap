@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navigation  +++ component must be created 1`] = `
+<Bootstrap(undefined)
+  expand="md"
+  style={
+    Object {
+      "backgroundColor": "var(--primary)",
+    }
+  }
+>
+  <Container
+    as="div"
+    fluid={false}
+  >
+    <NavbarBrand
+      style={
+        Object {
+          "color": "var(--light)",
+        }
+      }
+    >
+      StoreProject
+    </NavbarBrand>
+    <NavbarToggle
+      as="button"
+      label="Toggle navigation"
+      style={
+        Object {
+          "border": "none",
+          "opacity": "0.8",
+        }
+      }
+    >
+      <i
+        className="fas fa-bars"
+        style={
+          Object {
+            "color": "var(--light)",
+          }
+        }
+      />
+    </NavbarToggle>
+    <NavbarCollapse>
+      <Nav
+        as="div"
+        className=" mr-auto"
+        fill={false}
+        justify={false}
+      >
+        <NavItem
+          as="div"
+        >
+          <NavLink
+            className="p-3"
+            to="/"
+          >
+            Home
+          </NavLink>
+        </NavItem>
+        <NavItem
+          as="div"
+        >
+          <NavLink
+            className="p-3"
+            to="/about"
+          >
+            About
+          </NavLink>
+        </NavItem>
+        <NavItem
+          as="div"
+        >
+          <NavLink
+            className="p-3"
+            to="/catalogue"
+          >
+            Catalogue
+          </NavLink>
+        </NavItem>
+        <NavItem
+          as="div"
+        >
+          <NavLink
+            className="p-3"
+            to="/contacts"
+          >
+            Contacts
+          </NavLink>
+        </NavItem>
+      </Nav>
+    </NavbarCollapse>
+  </Container>
+</Bootstrap(undefined)>
+`;

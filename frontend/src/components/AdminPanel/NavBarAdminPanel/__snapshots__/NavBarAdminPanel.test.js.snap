@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavBarAdminPanel --- Snapshot +++capturing Snapshot of ShoppingBasket 1`] = `
+<Bootstrap(undefined)
+  style={
+    Object {
+      "backgroundColor": "var(--primary)",
+    }
+  }
+>
+  <Container
+    as="div"
+    fluid={false}
+  >
+    <Nav
+      as="div"
+      fill={false}
+      justify={false}
+    >
+      <NavItem
+        as="div"
+      >
+        <NavLink
+          className="p-3"
+          exact={true}
+          to="/adminpanel/goods"
+        >
+          Goods
+        </NavLink>
+      </NavItem>
+      <NavItem
+        as="div"
+      >
+        <NavLink
+          className="p-3"
+          to="/adminpanel/users"
+        >
+          Users
+        </NavLink>
+      </NavItem>
+      <NavItem
+        as="div"
+      >
+        <NavLink
+          className="p-3"
+          to="/adminpanel/catalogue"
+        >
+          Catalogue
+        </NavLink>
+      </NavItem>
+      <NavItem
+        as="div"
+      >
+        <NavLink
+          className="p-3"
+          to="/adminpanel/images"
+        >
+          Images
+        </NavLink>
+      </NavItem>
+    </Nav>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="primary"
+    >
+      Logout
+    </Button>
+  </Container>
+</Bootstrap(undefined)>
+`;

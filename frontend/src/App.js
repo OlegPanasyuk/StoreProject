@@ -15,31 +15,31 @@ import {
     showUserHistory,
     showShoppingBasket,
     showUserProfile
-} from './REDUX/actions/actionsMainContent';
+} from './actions/actionsMainContent';
 import {
     initBasketFromLocalStorage
-} from './REDUX/actions/actionsShoppingBasket';
+} from './actions/actionsShoppingBasket';
 import {
     addErrorToState,
     deleteErrorFromState
-} from './REDUX/actions/actionsErrors';
+} from './actions/actionsErrors';
 import {
     askLogin,
     setUserInfo,
     askReg
-} from './REDUX/actions/actionsUser';
+} from './actions/actionsUser';
 
-import Catalogue from './Catalogue/Catalogue';
-import LoginForm from './LoginForm/LoginForm';
-import RegForm from './RegistrForm/RegistrForm';
-import UserHeader from './User/UserHeader';
-import ShoppingBasketHeader from './ShoppingBasket/ShoppingBasketHeader';
-import ShoppingBasket from './ShoppingBasket/ShoppingBasket';
-import UserHistory from './User/UserHistory';
-import UserProfile from './User/UserProfile';
-import MainPage from './MainPage/MainPage';
-import ErrorLayer from './Error/ErrorLayer';
-import Navigation from './Navigation/Navigation';
+import Catalogue from './components/Catalogue/Catalogue';
+import LoginForm from './containers/LoginForm/LoginForm';
+import RegForm from './components/RegistrForm/RegistrForm';
+import UserHeader from './containers/User/UserHeader';
+import ShoppingBasketHeader from './containers/ShoppingBasket/ShoppingBasketHeader';
+import ShoppingBasket from './containers/ShoppingBasket/ShoppingBasket';
+import UserHistory from './containers/User/UserHistory';
+import UserProfile from './containers/User/UserProfile';
+import MainPage from './components/MainPage/MainPage';
+import ErrorLayer from './components/ErrorLayer/ErrorLayer';
+import Navigation from './components/Navigation/Navigation';
 
 
 import './asserts/css/App.css';
