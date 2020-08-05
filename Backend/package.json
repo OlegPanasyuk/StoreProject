@@ -23,7 +23,7 @@
     "config": "^3.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
-    "express-fileupload": "^1.1.4",
+    "express-fileupload": "^1.1.9",
     "express-form-data": "^2.0.8",
     "sequelize-cli": "^5.4.0",
     "winston": "^3.2.1"
